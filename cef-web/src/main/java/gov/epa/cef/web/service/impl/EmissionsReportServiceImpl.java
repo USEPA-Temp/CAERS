@@ -27,7 +27,7 @@ import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.ReportAction;
-import gov.epa.cef.web.domain.ReportAttachment;
+import gov.epa.cef.web.domain.Attachment;
 import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationException;
@@ -35,7 +35,7 @@ import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.MasterFacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
-import gov.epa.cef.web.repository.ReportAttachmentRepository;
+import gov.epa.cef.web.repository.AttachmentRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.CersXmlService;
 import gov.epa.cef.web.service.EmissionsReportService;
@@ -96,7 +96,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     private MasterFacilityRecordRepository mfrRepo;
 
     @Autowired
-    private ReportAttachmentRepository reportAttachmentsRepo;
+    private AttachmentRepository reportAttachmentsRepo;
     
     @Autowired
     private MasterFacilityNAICSXrefRepository mfNaicsXrefRepo;
@@ -500,7 +500,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     	List<EmissionsReportDto> updatedReports = statusService.rejectEmissionsReports(reviewDTO.getReportIds());
 
     	if(reviewDTO.getAttachmentId() != null) {
-    		ReportAttachment attachment = this.reportAttachmentsRepo.findById(reviewDTO.getAttachmentId())
+    		Attachment attachment = this.reportAttachmentsRepo.findById(reviewDTO.getAttachmentId())
     			.orElseThrow(() -> new NotExistException("Report Attachment", reviewDTO.getAttachmentId()));
 
     		this.erRepo.findAllById(reviewDTO.getReportIds())
@@ -510,11 +510,11 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     				reportService.createReportHistory(report.getId(), ReportAction.REJECTED, reviewDTO.getComments(), attachment);
 
     			} else {
-    				ReportAttachment copyAttachment = new ReportAttachment(attachment);
+    				Attachment copyAttachment = new Attachment(attachment);
     	    		copyAttachment.clearId();
     	    		copyAttachment.setEmissionsReport(report);
 
-    	    		ReportAttachment result = reportAttachmentsRepo.save(copyAttachment);
+    	    		Attachment result = reportAttachmentsRepo.save(copyAttachment);
     	    		reportService.createReportHistory(report.getId(), ReportAction.REJECTED, reviewDTO.getComments(), result);
     			}
     		});

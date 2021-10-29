@@ -25,7 +25,7 @@ import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.FacilityAccessException;
 import gov.epa.cef.web.exception.ReportAttachmentValidationException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
-import gov.epa.cef.web.service.dto.ReportAttachmentDto;
+import gov.epa.cef.web.service.dto.AttachmentDto;
 import gov.epa.cef.web.util.TempFile;
 
 import org.junit.Before;
@@ -61,7 +61,7 @@ public class ReportAttachmentServiceImplTest extends BaseServiceDatabaseTest {
 	EmissionsReportRepository reportRepo;
     
     @Autowired
-    private ReportAttachmentServiceImpl rptAttachmentSvc;
+    private AttachmentServiceImpl rptAttachmentSvc;
     
     @Autowired
     WebApplicationContext webContext;
@@ -95,7 +95,7 @@ public class ReportAttachmentServiceImplTest extends BaseServiceDatabaseTest {
         
         TempFile temp = TempFile.from(file.getInputStream(), file.getOriginalFilename());
         
-        ReportAttachmentDto dto = new ReportAttachmentDto();
+        AttachmentDto dto = new AttachmentDto();
         dto.setId(1L);
         dto.setReportId(report.getId());
         dto.setFileName(file.getOriginalFilename());
@@ -126,7 +126,7 @@ public class ReportAttachmentServiceImplTest extends BaseServiceDatabaseTest {
         
         TempFile temp = TempFile.from(file.getInputStream(), file.getOriginalFilename());
         
-        ReportAttachmentDto dto = new ReportAttachmentDto();
+        AttachmentDto dto = new AttachmentDto();
         dto.setId(1L);
         dto.setReportId(report.getId());
         dto.setFileName(file.getOriginalFilename());

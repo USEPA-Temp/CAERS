@@ -17,17 +17,21 @@
 package gov.epa.cef.web.service;
 
 import java.io.OutputStream;
-import gov.epa.cef.web.service.dto.ReportAttachmentDto;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import gov.epa.cef.web.service.dto.AttachmentDto;
+import gov.epa.cef.web.service.dto.CommunicationDto;
 import gov.epa.cef.web.util.TempFile;
 
-public interface ReportAttachmentService {
+public interface AttachmentService {
 	
 	/***
      * Return attachment for the chosen attachment id
      * @param id
      * @return
      */
-	 ReportAttachmentDto findAttachmentById(Long id);
+	 AttachmentDto findAttachmentById(Long id);
 	
 	/***
      * Write file to output stream
@@ -41,7 +45,7 @@ public interface ReportAttachmentService {
      * @param dto
      * @return
      */
-    ReportAttachmentDto saveAttachment(TempFile file, ReportAttachmentDto metadata);
+    AttachmentDto saveAttachment(TempFile file, AttachmentDto metadata);
     
     /**
      * Delete an report attachment record for a given id

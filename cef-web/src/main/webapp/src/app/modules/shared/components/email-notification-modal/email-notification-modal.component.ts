@@ -16,16 +16,16 @@
 */
 import { Component, OnInit, Input, ViewChild, ElementRef, TemplateRef } from '@angular/core';
 import { NgbActiveModal, NgbModalRef, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Validators, FormBuilder, RequiredValidator } from '@angular/forms';
+import { Validators, FormBuilder } from '@angular/forms';
 import bsCustomFileInput from 'bs-custom-file-input';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { EMPTY } from 'rxjs';
 import { UserService } from 'src/app/core/services/user.service';
-import { SharedService } from 'src/app/core/services/shared.service';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 import { User } from 'src/app/shared/models/user';
-import { AttachmentService } from 'src/app/core/services/attachment.service';
+import { Communication } from 'src/app/shared/models/communication';
 import { Attachment } from 'src/app/shared/models/attachment';
+import { CommunicationService } from 'src/app/core/services/communication.service';
 
 interface PleaseWaitConfig {
     modal: NgbModalRef;
@@ -43,24 +43,25 @@ interface WorksheetError {
 }
 
 @Component({
-  selector: 'app-file-attachment-modal',
-  templateUrl: './file-attachment-modal.component.html',
-  styleUrls: ['./file-attachment-modal.component.scss']
+  selector: 'app-email-notification-modal',
+  templateUrl: './email-notification-modal.component.html',
+  styleUrls: ['./email-notification-modal.component.scss']
 })
-export class FileAttachmentModalComponent implements OnInit {
+export class EmailNotificationModalComponent implements OnInit {
 
   @Input() title: string;
   @Input() message: string;
   @Input() cancelButtonText = 'Cancel';
   @Input() confirmButtonText = 'OK';
-  @Input() reportId: number;
   attachment: Attachment;
   selectedFile: File = null;
+  attachmentId: number;
   maxFileSize: number;
   acceptedMIMEtypes: string [];
   user: User;
   bsflags: any;
   disableButton = false;
+  communication: Communication;
 
   @ViewChild('fileAttachment', {static: true})
   fileAttachment: ElementRef;
@@ -77,15 +78,15 @@ export class FileAttachmentModalComponent implements OnInit {
 
   attachmentForm = this.fb.group({
     attachment: [null],
-    comments: [null, [Validators.maxLength(2000)]]
+	subject: [null, [Validators.maxLength(255), Validators.required]],
+	content: [null, [Validators.required]],
   });
 
   constructor(public activeModal: NgbActiveModal,
               private fb: FormBuilder,
-              private reportAttachmentService: AttachmentService,
               private userService: UserService,
-              private sharedService: SharedService,
               private propertyService: ConfigPropertyService,
+			  private communicationService: CommunicationService,
               private modalService: NgbModal) {
 
     this.bsflags = {
@@ -126,14 +127,11 @@ export class FileAttachmentModalComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.selectedFile === null && !this.user.isReviewer()) {
-      this.attachmentForm.get('attachment').setErrors({required: true});
-      this.attachmentForm.get('attachment').markAsTouched();
-    }
-
+	this.communication = new Communication();
+	Object.assign(this.communication, this.attachmentForm.value);
+	
     if (!this.selectedFile && this.user.isReviewer() && this.isValid()) {
-
-      this.activeModal.close(this.attachmentForm.value);
+      this.activeModal.close(this.communication);
 
     } else {
 
@@ -157,18 +155,16 @@ export class FileAttachmentModalComponent implements OnInit {
         this.uploadFailed = false;
         this.uploadFile = this.selectedFile.name;
 
-        const reportAttachment = new Attachment();
-        reportAttachment.reportId = this.reportId;
-        Object.assign(reportAttachment, this.attachmentForm.value);
+        const attachment = new Attachment();
+        Object.assign(attachment, this.attachmentForm.value);
 
-        this.sharedService.emitReportIdChange(this.reportId);
-        this.reportAttachmentService.uploadAttachment(
-          reportAttachment, this.selectedFile)
+        this.communicationService.uploadAttachment(
+          attachment, this.selectedFile)
           .subscribe(respEvent =>
             this.onUploadEvent(respEvent),
-            errorResp => this.onUploadError(errorResp),
+            errorResp => this.onUploadError(errorResp)
           );
-      }
+	  }
     }
   }
 
@@ -230,9 +226,11 @@ export class FileAttachmentModalComponent implements OnInit {
             case HttpEventType.Response:
 
                 // 200 - Success
+				if(event['body']){
+					this.communication.attachmentId = event['body']['id'];
+				}
                 this.onUploadComplete();
-
-                this.activeModal.close(event.body);
+                this.activeModal.close(this.communication);
 
             default:
 
@@ -275,7 +273,7 @@ export class FileAttachmentModalComponent implements OnInit {
     }
 
     onUploadComplete() {
-
+			
         this.pleaseWait.modal.dismiss();
 
         clearInterval(this.pleaseWait.serverTicker);

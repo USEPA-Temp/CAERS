@@ -230,7 +230,7 @@ public class UserFacilityAssociationServiceImpl {
         return this.ufaMapper.toDto(association, profile);
     }
 
-    private List<UserFacilityAssociationDto> mapAssociations(List<UserFacilityAssociation> associations) {
+    public List<UserFacilityAssociationDto> mapAssociations(List<UserFacilityAssociation> associations) {
         
         RegistrationUserSearchCriteria criteria = new RegistrationUserSearchCriteria();
         criteria.setDataflow("CAER");

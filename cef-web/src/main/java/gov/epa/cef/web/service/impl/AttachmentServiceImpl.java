@@ -19,24 +19,22 @@ package gov.epa.cef.web.service.impl;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.AttachmentMIMEType;
 import gov.epa.cef.web.domain.ReportAction;
-import gov.epa.cef.web.domain.ReportAttachment;
+import gov.epa.cef.web.domain.Attachment;
 import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.domain.SLTConfigProperty;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.exception.ReportAttachmentValidationException;
-import gov.epa.cef.web.repository.EmissionRepository;
-import gov.epa.cef.web.repository.ReportAttachmentRepository;
+import gov.epa.cef.web.repository.CommunicationRepository;
+import gov.epa.cef.web.repository.AttachmentRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.SLTConfigRepository;
 import gov.epa.cef.web.service.EmissionsReportService;
-import gov.epa.cef.web.service.ReportAttachmentService;
+import gov.epa.cef.web.service.AttachmentService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserService;
-import gov.epa.cef.web.service.dto.ReportAttachmentDto;
+import gov.epa.cef.web.service.dto.AttachmentDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
-import gov.epa.cef.web.service.mapper.ReportAttachmentMapper;
-import gov.epa.cef.web.service.mapper.ReportHistoryMapper;
-import gov.epa.cef.web.service.mapper.ReportSummaryMapper;
+import gov.epa.cef.web.service.mapper.AttachmentMapper;
 import gov.epa.cef.web.util.TempFile;
 
 import org.slf4j.Logger;
@@ -60,30 +58,27 @@ import javax.validation.constraints.NotNull;
 
 @Service
 @Transactional
-public class ReportAttachmentServiceImpl implements ReportAttachmentService {
+public class AttachmentServiceImpl implements AttachmentService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @Autowired
-    private ReportAttachmentRepository reportAttachmentsRepo;
+    private AttachmentRepository attachmentsRepo;
     
     @Autowired
     private ReportHistoryRepository reportHistoryRepo;
     
     @Autowired
+    private CommunicationRepository commRepo;
+    
+    @Autowired
     private SLTConfigRepository sltConfigRepo;
 
-    @Autowired
-    private ReportSummaryMapper reportSummaryMapper;
-
-    @Autowired
-    private ReportHistoryMapper reportHistoryMapper;
-    
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
     
     @Autowired
-    private ReportAttachmentMapper reportAttachmentMapper;
+    private AttachmentMapper attachmentMapper;
     
     @Autowired
     private ReportService reportService;
@@ -102,10 +97,10 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
      * @param id
      * @return
      */
-    public ReportAttachmentDto findAttachmentById(Long id) {
-		ReportAttachment attachment = reportAttachmentsRepo.findById(id).orElse(null);
+    public AttachmentDto findAttachmentById(Long id) {
+		Attachment attachment = attachmentsRepo.findById(id).orElse(null);
 		
-		return reportAttachmentMapper.toDto(attachment);
+		return attachmentMapper.toDto(attachment);
 	}
     
     /***
@@ -115,7 +110,7 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
      */    
     public void writeFileTo (Long fileId, OutputStream outputStream) {
     	
-    	reportAttachmentsRepo.findById(fileId).ifPresent(file -> {
+    	attachmentsRepo.findById(fileId).ifPresent(file -> {
     		
     		if (file.getAttachment() != null) {
     			try (InputStream inputStream = file.getAttachment().getBinaryStream()) {
@@ -134,12 +129,25 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
      * @param file
      * @return
      */
-    public ReportAttachmentDto saveAttachment(@NotNull TempFile file, @NotNull ReportAttachmentDto metadata) {
+    public AttachmentDto saveAttachment(@NotNull TempFile file, @NotNull AttachmentDto metadata) {
 
     	Preconditions.checkArgument(file != null, "File can not be null");
     	
-    	ReportAttachment attachment = reportAttachmentMapper.fromDto(metadata);
-    	attachment.getEmissionsReport().setId(metadata.getReportId());
+    	Attachment attachment = attachmentMapper.fromDto(metadata);
+    	String programSystemCode;
+    	
+    	if (metadata.getReportId() != null) {
+    		attachment.getEmissionsReport().setId(metadata.getReportId());
+    		programSystemCode = emissionsReportService.findById(metadata.getReportId()).getProgramSystemCode().getCode();
+    	} else {
+    		attachment.setEmissionsReport(null);
+    		programSystemCode = this.userService.getCurrentUser().getProgramSystemCode();
+    	}
+    	if (metadata.getCommunicationId() != null){
+    		attachment.setCommunication(commRepo.findById(metadata.getCommunicationId()).orElse(null));
+    	} else {
+    		attachment.setCommunication(null);
+    	}
     	
 		 try {
 		
@@ -176,7 +184,6 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
         }
         
         boolean acceptedTypeSlt = false;
-    	String programSystemCode = emissionsReportService.findById(metadata.getReportId()).getProgramSystemCode().getCode();
 	    String fileType = AttachmentMIMEType.fromLabel(metadata.getFileType()).code().toLowerCase();
 	    String fileExtensionString = fileName.substring(fileName.indexOf('.') + 1, fileName.length());
 	    final String csv = "csv";
@@ -205,13 +212,12 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
                     Collections.singletonList(WorksheetError.createSystemError(msg)));
         }
 		 
-		ReportAttachment result = reportAttachmentsRepo.save(attachment);
-		
+		Attachment result = attachmentsRepo.save(attachment);
 		if (!this.userService.getCurrentUser().getRole().equalsIgnoreCase("Reviewer")) {
 			reportService.createReportHistory(attachment.getEmissionsReport().getId(), ReportAction.ATTACHMENT, attachment.getComments(), result);
 		}
 		
-		return reportAttachmentMapper.toDto(result);
+		return attachmentMapper.toDto(result);
 
     }
     
@@ -220,16 +226,16 @@ public class ReportAttachmentServiceImpl implements ReportAttachmentService {
      * @param id
      */
     public void deleteAttachment(Long id) {
-    	ReportAttachment attachment = reportAttachmentsRepo.findById(id)
+    	Attachment attachment = attachmentsRepo.findById(id)
     			.orElseThrow(() -> new NotExistException("Report Attachment", id));
     	
     	String comment = "\"" + attachment.getFileName() + "\" was deleted.";
     	
     	reportService.createReportHistory(attachment.getEmissionsReport().getId(), ReportAction.ATTACHMENT_DELETED, comment);
     	ReportHistory history = reportHistoryRepo.findByAttachmentId(attachment.getId());
-        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(attachment.getId()), ReportAttachmentRepository.class);
+        reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(attachment.getId()), AttachmentRepository.class);
 
     	reportService.updateReportHistoryDeletedAttachment(history.getId(), true);
-        reportAttachmentsRepo.deleteById(id);
+        attachmentsRepo.deleteById(id);
     }
 }

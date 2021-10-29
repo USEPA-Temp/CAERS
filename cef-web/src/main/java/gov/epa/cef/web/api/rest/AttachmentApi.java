@@ -20,10 +20,10 @@ import gov.epa.cef.web.client.soap.VirusScanClient;
 import gov.epa.cef.web.exception.ReportAttachmentValidationException;
 import gov.epa.cef.web.exception.VirusScanException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
-import gov.epa.cef.web.repository.ReportAttachmentRepository;
+import gov.epa.cef.web.repository.AttachmentRepository;
 import gov.epa.cef.web.security.SecurityService;
-import gov.epa.cef.web.service.ReportAttachmentService;
-import gov.epa.cef.web.service.dto.ReportAttachmentDto;
+import gov.epa.cef.web.service.AttachmentService;
+import gov.epa.cef.web.service.dto.AttachmentDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.util.TempFile;
 
@@ -50,45 +50,37 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @RestController
 @RequestMapping("api/reports/{reportId}/attachments")
-public class ReportAttachmentApi {
+public class AttachmentApi {
 
-    private final ReportAttachmentService reportAttachmentService;
+    private final AttachmentService attachmentService;
     
-    private final ReportAttachmentRepository attachmentRepo;
-    
-    private final EmissionsReportRepository erRepo;
-
     private final SecurityService securityService;
     
     private final VirusScanClient virusScanClient;
     
     private ObjectMapper objectMapper;
     
-    Logger LOGGER = LoggerFactory.getLogger(ReportAttachmentApi.class);
+    Logger LOGGER = LoggerFactory.getLogger(AttachmentApi.class);
 
     @Autowired
-    ReportAttachmentApi( SecurityService securityService,
-    		ReportAttachmentService reportAttachmentService,
-    		ReportAttachmentRepository attachmentRepo,
-    		EmissionsReportRepository erRepo,
+    AttachmentApi( SecurityService securityService,
+    		AttachmentService attachmentService,
     		VirusScanClient virusScanClient,
     		ObjectMapper objectMapper) {
 
-    	this.reportAttachmentService = reportAttachmentService;
-    	this.attachmentRepo = attachmentRepo;
-    	this.erRepo = erRepo;
-        this.securityService = securityService;
         this.virusScanClient = virusScanClient;
+    	this.attachmentService = attachmentService;
+    	this.securityService = securityService;
         this.objectMapper = objectMapper;
     }
     
@@ -97,15 +89,15 @@ public class ReportAttachmentApi {
     public ResponseEntity<StreamingResponseBody> downloadAttachment(
     		@NotNull @PathVariable Long reportId,
     		@NotNull @PathVariable Long id) {
-    	this.securityService.facilityEnforcer().enforceEntity(id, ReportAttachmentRepository.class);
+    	this.securityService.facilityEnforcer().enforceEntity(id, AttachmentRepository.class);
     	
-    	ReportAttachmentDto result = reportAttachmentService.findAttachmentById(id);
+    	AttachmentDto result = attachmentService.findAttachmentById(id);
     	
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(result.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + result.getFileName() + "\"")
                 .body(outputStream -> {
-                		reportAttachmentService.writeFileTo(id, outputStream);
+                	attachmentService.writeFileTo(id, outputStream);
                 });
     }
     
@@ -118,17 +110,17 @@ public class ReportAttachmentApi {
      * @return
      */
     @PostMapping(value = "/uploadAttachment")
-    public ResponseEntity<ReportAttachmentDto> uploadAttachment(
+    public ResponseEntity<AttachmentDto> uploadAttachment(
     	@NotBlank @RequestPart("file") MultipartFile file,
-	    @NotNull @RequestPart("metadata") ReportAttachmentDto reportAttachment,
+	    @NotNull @RequestPart("metadata") AttachmentDto reportAttachment,
 	    @NotNull @PathVariable Long reportId)  {
     	
     	this.securityService.facilityEnforcer().enforceEntity(reportId, EmissionsReportRepository.class);
     	
-    	ReportAttachmentDto result = null;
-    	HttpStatus status = HttpStatus.NO_CONTENT;
-    	
-    	try (TempFile tempFile = TempFile.from(file.getInputStream(), file.getOriginalFilename())) {
+        AttachmentDto result = null;
+        HttpStatus status = HttpStatus.NO_CONTENT;
+        
+        try (TempFile tempFile = TempFile.from(file.getInputStream(), file.getOriginalFilename())) {
 
             LOGGER.debug("Attachment filename {}", tempFile.getFileName());
             LOGGER.debug("ReportAttachmentsDto {}", reportAttachment);
@@ -146,7 +138,7 @@ public class ReportAttachmentApi {
             reportAttachment.setReportId(reportAttachment.getReportId());
             reportAttachment.setAttachment(tempFile);
             
-            result = reportAttachmentService.saveAttachment(tempFile, reportAttachment);
+            result = attachmentService.saveAttachment(tempFile, reportAttachment);
 
             status = HttpStatus.OK;
             
@@ -191,8 +183,8 @@ public class ReportAttachmentApi {
      */
     @DeleteMapping(value = "/{attachmentId}")
     public void deleteAttachment(@NotNull @PathVariable Long reportId, @NotNull @PathVariable Long attachmentId) {
-        this.securityService.facilityEnforcer().enforceEntity(attachmentId, ReportAttachmentRepository.class);
+        this.securityService.facilityEnforcer().enforceEntity(attachmentId, AttachmentRepository.class);
 
-        reportAttachmentService.deleteAttachment(attachmentId);
+        attachmentService.deleteAttachment(attachmentId);
     }
 }

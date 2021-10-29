@@ -23,6 +23,9 @@ import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
 import { User } from 'src/app/shared/models/user';
 import { LookupService } from 'src/app/core/services/lookup.service';
 import { UserContextService } from 'src/app/core/services/user-context.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { EmailNotificationModalComponent } from 'src/app/modules/shared/components/email-notification-modal/email-notification-modal.component';
+import { CommunicationService } from 'src/app/core/services/communication.service';
 
 const BooleanDataType = 'boolean';
 const BooleanTrue = 'true';
@@ -46,6 +49,8 @@ export class SltPropertiesComponent implements OnInit {
       private userContextService: UserContextService,
 	  private lookupService: LookupService,
       private propertyService: SltPropertyService,
+	  private communicationService: CommunicationService,
+	  private modalService: NgbModal,
       private fb: FormBuilder,
       private toastr: ToastrService) { }
 
@@ -153,4 +158,17 @@ export class SltPropertiesComponent implements OnInit {
     }
   }
 
+  openNotificationEmailModal() {
+	const modalRef = this.modalService.open(EmailNotificationModalComponent, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.title = 'Email Notification';
+    modalRef.componentInstance.message = `Send a notification to all Preparers and NEI Certifiers of facilities associated with ${this.slt}.`
+
+    modalRef.result.then((resp) => {
+		this.communicationService.sendSLTNotificationEmail(resp)
+			.subscribe(resp => {
+	          });
+    }, () => {
+      // needed for dismissing without errors
+    });
+  }
 }

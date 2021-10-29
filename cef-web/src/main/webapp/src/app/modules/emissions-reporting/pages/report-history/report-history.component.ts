@@ -22,8 +22,8 @@ import { SharedService } from 'src/app/core/services/shared.service';
 import { BaseSortableTable } from 'src/app/shared/components/sortable-table/base-sortable-table';
 import { ReportAction } from 'src/app/shared/enums/report-action.enum';
 import { FileDownloadService } from 'src/app/core/services/file-download.service';
-import { ReportAttachmentService } from 'src/app/core/services/report-attachment.service';
 import { ReportHistory } from 'src/app/shared/models/report-history';
+import { AttachmentService } from 'src/app/core/services/attachment.service';
 
 @Component({
   selector: 'app-report-history',
@@ -38,7 +38,7 @@ export class ReportHistoryComponent extends BaseSortableTable implements OnInit 
 
     constructor(
         private reportService: ReportService,
-        private reportAttachmentService: ReportAttachmentService,
+        private reportAttachmentService: AttachmentService,
         private fileDownloadService: FileDownloadService,
         private route: ActivatedRoute,
         private sharedService: SharedService) {
