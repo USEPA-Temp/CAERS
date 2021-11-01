@@ -16,17 +16,25 @@
 */
 package gov.epa.cef.web;
 
+import gov.epa.cdx.shared.hosting.AzureLogbackFilter;
+import gov.epa.cdx.shared.hosting.HealthCheckServlet;
 import gov.epa.cef.web.config.YamlPropertySourceFactory;
+
+import javax.servlet.http.HttpServlet;
+
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
 @SpringBootApplication
 @PropertySources({
     @PropertySource(factory = YamlPropertySourceFactory.class,
-        value = "file:${spring.config.dir}/cef-web/cef-web-config.yml", ignoreResourceNotFound=true)
+        value = "file:${spring.config.dir}/oar-cef-web/cef-web-config.yml", ignoreResourceNotFound=true)
 })
 public class CefWebApplication extends SpringBootServletInitializer {
 
@@ -41,5 +49,28 @@ public class CefWebApplication extends SpringBootServletInitializer {
 
     private static SpringApplicationBuilder configureApplication(SpringApplicationBuilder builder) {
         return builder.sources(CefWebApplication.class);
+    }
+
+    /**
+     * Servlet for AKS healthcheck
+     */
+    @Bean
+    public ServletRegistrationBean<HttpServlet> healthCheck() {
+        ServletRegistrationBean<HttpServlet> servlet = new ServletRegistrationBean<>();
+        servlet.setServlet(new HealthCheckServlet());
+        servlet.addUrlMappings("/HealthCheck");
+        servlet.setLoadOnStartup(1);
+        return servlet;
+    }
+
+    /**
+     * Log filter for AKS logging
+     */
+    @Bean
+    public FilterRegistrationBean azureLogbackFilter() {
+        FilterRegistrationBean filter = new FilterRegistrationBean();
+        filter.setFilter(new AzureLogbackFilter());
+        filter.addUrlPatterns("/*");
+        return filter;
     }
 }
