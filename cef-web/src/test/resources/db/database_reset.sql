@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
 */
+
 --VIEWS
 DROP VIEW IF EXISTS vw_emissions_by_facility_and_cas;
 DROP VIEW IF EXISTS vw_submissions_review_dashboard;
@@ -38,8 +39,9 @@ DROP TABLE IF EXISTS facility_naics_xref;
 DROP TABLE IF EXISTS facility_site_contact;
 DROP TABLE IF EXISTS facility_site;
 DROP TABLE IF EXISTS report_history;
-DROP TABLE IF EXISTS report_attachment;
+DROP TABLE IF EXISTS attachment;
 DROP TABLE IF EXISTS user_feedback;
+DROP TABLE IF EXISTS communication;
 DROP TABLE IF EXISTS eis_tri_xref;
 DROP TABLE IF EXISTS emissions_report;
 DROP TABLE IF EXISTS user_facility_association;

@@ -85,7 +85,7 @@ public class EmissionsReport extends BaseAuditEntity {
     private List<UserFeedback> userFeedback = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
-    private List<ReportAttachment> reportAttachments = new ArrayList<>();
+    private List<Attachment> reportAttachments = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
     private List<ReportHistory> reportHistory = new ArrayList<>();
@@ -259,12 +259,12 @@ public class EmissionsReport extends BaseAuditEntity {
 		this.userFeedback = userFeedback;
 	}
 
-	public List<ReportAttachment> getReportAttachments() {
+	public List<Attachment> getReportAttachments() {
 
         return this.reportAttachments;
     }
 
-    public void setReportAttachments(List<ReportAttachment> reportAttachments) {
+    public void setReportAttachments(List<Attachment> reportAttachments) {
 
         this.reportAttachments.clear();
         if (reportAttachments != null) {

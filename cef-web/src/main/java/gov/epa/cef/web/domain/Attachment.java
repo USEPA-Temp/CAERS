@@ -23,22 +23,28 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
 
 /**
- * ReportAttachments entity
+ * Attachments entity
  */
 @Entity
-@Table(name = "report_attachment")
-public class ReportAttachment extends BaseAuditEntity {
+@Table(name = "attachment")
+public class Attachment extends BaseAuditEntity {
 
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")
     private EmissionsReport emissionsReport;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "communication_id")
+    private Communication communication;
 
 	@Column(name = "file_name", length = 255)
 	private String fileName;
@@ -56,13 +62,13 @@ public class ReportAttachment extends BaseAuditEntity {
 	/***
      * Default constructor
      */
-    public ReportAttachment() {}
+    public Attachment() {}
     
     /***
      * Copy constructor
      * 
      */
-    public ReportAttachment(ReportAttachment originalAttachment) {
+    public Attachment(Attachment originalAttachment) {
     	this.fileName = originalAttachment.fileName;
     	this.attachment = originalAttachment.attachment;
     	this.fileType = originalAttachment.fileType;
@@ -75,6 +81,14 @@ public class ReportAttachment extends BaseAuditEntity {
 
 	public void setEmissionsReport(EmissionsReport emissionsReport) {
 		this.emissionsReport = emissionsReport;
+	}
+
+	public Communication getCommunication() {
+		return communication;
+	}
+
+	public void setCommunication(Communication communication) {
+		this.communication = communication;
 	}
 
 	public String getFileName() {

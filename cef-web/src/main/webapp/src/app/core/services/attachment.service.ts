@@ -17,13 +17,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpEvent } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ReportAttachment } from 'src/app/shared/models/report-attachment';
 import { SharedService } from './shared.service';
+import { Attachment } from 'src/app/shared/models/attachment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ReportAttachmentService {
+export class AttachmentService {
   reportId: string;
 
   private baseUrl = 'api/reports/reportId/attachments';  // URL to web api
@@ -44,8 +44,8 @@ export class ReportAttachmentService {
   }
 
   /** POST upload report attachment */
-  uploadAttachment( reportAttachment: ReportAttachment,
-                    attachment: File): Observable<HttpEvent<ReportAttachment>> {
+  uploadAttachment( reportAttachment: Attachment,
+                    attachment: File): Observable<HttpEvent<Attachment>> {
 
     const url = `${this.baseUrl}/uploadAttachment`;
 
@@ -59,13 +59,13 @@ export class ReportAttachmentService {
       type: 'application/json'
     }));
 
-    return this.http.post<ReportAttachment>(url, formData, {
+    return this.http.post<Attachment>(url, formData, {
       observe: 'events',
       reportProgress: true
     });
   }
 
-  /** Delete specified eport attachment from the database */
+  /** Delete specified attachment from the database */
   deleteAttachment(attachmentId: number): Observable<{}> {
     const url = `${this.baseUrl}/${attachmentId}`;
     return this.http.delete(url);

@@ -25,19 +25,19 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import gov.epa.cef.web.config.CacheName;
-import gov.epa.cef.web.domain.ReportAttachment;
+import gov.epa.cef.web.domain.Attachment;
 
-public interface ReportAttachmentRepository extends CrudRepository<ReportAttachment, Long>, ProgramIdRetriever, ReportIdRetriever {
+public interface AttachmentRepository extends CrudRepository<Attachment, Long>, ProgramIdRetriever, ReportIdRetriever {
 
 	/**
    * Find all attachments with the specified report id
    * @param reportId
    * @return
    */
-	@Query("select ra from ReportAttachment ra join ra.emissionsReport r where r.id = :reportId")	
-	List<ReportAttachment> findAllByReportId(@Param("reportId") Long reportId);
+	@Query("select ra from Attachment ra join ra.emissionsReport r where r.id = :reportId")	
+	List<Attachment> findAllByReportId(@Param("reportId") Long reportId);
 
-   @Query("select mfr.id from ReportAttachment ra join ra.emissionsReport r join r.masterFacilityRecord mfr where ra.id = :id")
+   @Query("select mfr.id from Attachment ra join ra.emissionsReport r join r.masterFacilityRecord mfr where ra.id = :id")
    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
    
    
@@ -47,7 +47,7 @@ public interface ReportAttachmentRepository extends CrudRepository<ReportAttachm
    * @return Emissions Report id
    */
   @Cacheable(value = CacheName.ReportAttachmentReportIds)
-  @Query("select r.id from ReportAttachment ra join ra.emissionsReport r where ra.id = :id")
+  @Query("select r.id from Attachment ra join ra.emissionsReport r where ra.id = :id")
   Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
 
 }

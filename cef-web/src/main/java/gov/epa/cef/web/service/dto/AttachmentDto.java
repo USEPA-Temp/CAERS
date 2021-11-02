@@ -19,11 +19,12 @@ package gov.epa.cef.web.service.dto;
 import java.io.Serializable;
 import gov.epa.cef.web.util.TempFile;
 
-public class ReportAttachmentDto implements Serializable {
+public class AttachmentDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private Long reportId;
+	private Long communicationId;
 	private String fileName;
 	private TempFile attachment;
 	private String fileType;
@@ -35,6 +36,14 @@ public class ReportAttachmentDto implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getCommunicationId() {
+		return communicationId;
+	}
+
+	public void setCommunicationId(Long communicationId) {
+		this.communicationId = communicationId;
 	}
 
 	public String getComments() {

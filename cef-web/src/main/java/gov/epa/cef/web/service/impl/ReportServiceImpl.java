@@ -17,13 +17,11 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.ReportAction;
-import gov.epa.cef.web.domain.ReportAttachment;
+import gov.epa.cef.web.domain.Attachment;
 import gov.epa.cef.web.domain.ReportDownloadView;
 import gov.epa.cef.web.domain.ReportHistory;
 import gov.epa.cef.web.domain.ReportSummary;
-import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
-import gov.epa.cef.web.repository.ReportAttachmentRepository;
 import gov.epa.cef.web.repository.ReportDownloadRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.ReportSummaryRepository;
@@ -62,9 +60,6 @@ public class ReportServiceImpl implements ReportService {
     @Autowired
     private EmissionsReportRepository erRepo;
     
-    @Autowired
-    private ReportAttachmentRepository reportAttachmentsRepo;
-
     @Autowired
     ReportSummaryMapper reportSummaryMapper;
 
@@ -112,7 +107,7 @@ public class ReportServiceImpl implements ReportService {
      * @param cromerrActivityId
      * @param cromerrDocumentId
      */
-    public void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, ReportAttachment reportAttachment,
+    public void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, Attachment reportAttachment,
                                     String cromerrActivityId, String cromerrDocumentId) {
 
     	UserDto appUser = this.userService.getCurrentUser();
@@ -188,7 +183,7 @@ public class ReportServiceImpl implements ReportService {
      * @param reportAction
      * @param reportAttachment
      */
-    public void createReportHistory(Long reportId, ReportAction reportAction, String comments, ReportAttachment reportAttachment) {
+    public void createReportHistory(Long reportId, ReportAction reportAction, String comments, Attachment reportAttachment) {
     	
     	createReportHistory(Collections.singletonList(reportId), reportAction, comments, reportAttachment, null, null);
     	
