@@ -71,8 +71,12 @@ public class EmissionsUnit extends BaseAuditEntity {
 
     @Column(name = "comments", length = 400)
     private String comments;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "previous_year_status_code", nullable = false)
+    private OperatingStatusCode previousYearOperatingStatusCode;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsUnit")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsUnit")
     private List<EmissionsProcess> emissionsProcesses = new ArrayList<>();
 
     /***
@@ -173,7 +177,14 @@ public class EmissionsUnit extends BaseAuditEntity {
         this.comments = comments;
     }
 
+    public OperatingStatusCode getPreviousYearOperatingStatusCode() {
+		return previousYearOperatingStatusCode;
+	}
 
+	public void setPreviousYearOperatingStatusCode(OperatingStatusCode previousYearOperatingStatusCode) {
+		this.previousYearOperatingStatusCode = previousYearOperatingStatusCode;
+	}
+	
     public List<EmissionsProcess> getEmissionsProcesses() {
         return this.emissionsProcesses;
     }

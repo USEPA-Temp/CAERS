@@ -39,6 +39,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.domain.AircraftEngineTypeCode;
+import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
@@ -727,6 +728,26 @@ public class EmissionsProcessValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_YEAR.value()) && errorMap.get(ValidationField.PROCESS_STATUS_YEAR.value()).size() == 1);
     }
     
+    @Test
+    public void operationStatusPSPreviousYearOpCurrentYearFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsProcess testData = createBaseEmissionsProcess();
+
+        OperatingStatusCode opStatusCode = new OperatingStatusCode();
+        OperatingStatusCode psStatusCode = new OperatingStatusCode();
+        opStatusCode.setCode("OP");
+        psStatusCode.setCode("PS");
+        testData.setOperatingStatusCode(opStatusCode);
+        testData.setPreviousYearOperatingStatusCode(psStatusCode);
+        testData.setStatusYear((short) 2019);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.PROCESS_STATUS_CODE.value()) && errorMap.get(ValidationField.PROCESS_STATUS_CODE.value()).size() == 1);
+    }
 
     private EmissionsProcess createBaseEmissionsProcess() {
 
