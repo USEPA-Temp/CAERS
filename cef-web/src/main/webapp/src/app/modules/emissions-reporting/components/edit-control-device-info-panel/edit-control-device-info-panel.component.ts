@@ -73,7 +73,6 @@ export class EditControlDeviceInfoPanelComponent implements OnInit, OnChanges {
         upgradeDate: [null],
         endDate: [null],
         description: ['', [
-            Validators.required,
             Validators.maxLength(200)
         ]],
         comments: [null, Validators.maxLength(400)]
