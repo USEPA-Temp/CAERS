@@ -342,6 +342,19 @@ public class ControlValidator extends BaseValidator<Control> {
                         createValidationDetails(control));
             }
         }
+        
+        // if control was PS in previous year report and is not PS in this report
+        if (control.getPreviousYearOperatingStatusCode() != null) {
+	        if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(control.getPreviousYearOperatingStatusCode().getCode()) &&
+	        	!ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(control.getOperatingStatusCode().getCode())) {
+	        	
+	            result = false;
+	            context.addFederalError(
+	                    ValidationField.CONTROL_STATUS_CODE.value(),
+	                    "control.statusTypeCode.psPreviousYear",
+	                    createValidationDetails(control));
+	        }
+        }
 
         return result;
     }

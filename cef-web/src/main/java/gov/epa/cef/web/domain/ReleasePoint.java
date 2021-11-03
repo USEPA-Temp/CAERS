@@ -155,6 +155,10 @@ public class ReleasePoint extends BaseAuditEntity {
     @Column(name = "comments", length = 400)
     private String comments;
 
+	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "previous_year_status_code", nullable = true)
+    private OperatingStatusCode previousYearOperatingStatusCode;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "releasePoint")
     private List<ReleasePointAppt> releasePointAppts = new ArrayList<ReleasePointAppt>(0);
 
@@ -472,6 +476,14 @@ public class ReleasePoint extends BaseAuditEntity {
     public void setFugitiveAngle(Long fugitiveAngle) {
         this.fugitiveAngle = fugitiveAngle;
     }
+    
+    public OperatingStatusCode getPreviousYearOperatingStatusCode() {
+		return previousYearOperatingStatusCode;
+	}
+
+	public void setPreviousYearOperatingStatusCode(OperatingStatusCode previousYearOperatingStatusCode) {
+		this.previousYearOperatingStatusCode = previousYearOperatingStatusCode;
+	}
 
     public List<ReleasePointAppt> getReleasePointAppts() {
         return this.releasePointAppts;
