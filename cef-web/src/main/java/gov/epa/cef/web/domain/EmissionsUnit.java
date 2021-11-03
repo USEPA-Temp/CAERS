@@ -73,7 +73,7 @@ public class EmissionsUnit extends BaseAuditEntity {
     private String comments;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "previous_year_status_code", nullable = false)
+    @JoinColumn(name = "previous_year_status_code", nullable = true)
     private OperatingStatusCode previousYearOperatingStatusCode;
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsUnit")
