@@ -477,6 +477,7 @@ export class EmissionDetailsComponent implements OnInit {
 
       const saveEmission = new Emission();
       Object.assign(saveEmission, this.emissionForm.value);
+	  saveEmission.energyConversionFactor = this.energyConversionFactor;
 
       saveEmission.variables = this.generateFormulaVariableDtos();
       if (this.emission) {
