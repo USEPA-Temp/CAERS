@@ -24,19 +24,23 @@ import gov.epa.cef.web.provider.system.AdminPropertyProvider;
 import gov.epa.cef.web.repository.AttachmentRepository;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.dto.UserFeedbackDto;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Map;
 
@@ -139,7 +143,8 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
     
-    public void sendMassHtmlMessage(String bcc, String cc, String from, String subject, String body) {
+    public void sendMassHtmlMessage(String bcc, String cc, String from, String subject, String body,   
+    		MultipartFile file) {
     	MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
             messageHelper.setFrom(from);
@@ -151,11 +156,23 @@ public class NotificationServiceImpl implements NotificationService {
             if (bcc != null) {
             	messageHelper.setBcc(InternetAddress.parse(bcc));
             }
+
+            if (file != null && !file.isEmpty()) {
+            	String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            	InputStreamSource source = new InputStreamSource() {
+
+    				@Override
+    				public InputStream getInputStream() throws IOException {
+    					return file.getInputStream();
+    				}
+            	};
+            	messageHelper.addAttachment(fileName, source);
+            }
         };
         try {
         	emailSender.send(messagePreparator);
         } catch (MailException e) {
-        	logger.error("sendBulkHTMLMessage - unable to send email message. - {}", e.getMessage());
+        	logger.error("sendMassHTMLMessage - unable to send email message. - {}", e.getMessage());
         }
     }
     
@@ -270,8 +287,7 @@ public class NotificationServiceImpl implements NotificationService {
         sendHtmlMessage(to, from, emailSubject, emailBody);
     }
     
-    public void sendSLTNotification(String cc, String from, String sltEmail, Communication communication)
-    {
+    public void sendSLTNotification(String cc, String from, String sltEmail, Communication communication, MultipartFile file) {
         String emailSubject = communication.getSubject();
         Context context = new Context();
         context.setVariable("content", communication.getContent());
@@ -279,15 +295,12 @@ public class NotificationServiceImpl implements NotificationService {
         context.setVariable("slt", communication.getProgramSystemCode().getCode());
         context.setVariable("sltDescription", communication.getProgramSystemCode().getDescription());
         
-        if (communication.getAttachments() != null) {
-            Attachment attachment = attachmentsRepo.findById(communication.getAttachments().getId())
-                    .orElseThrow(() -> new NotExistException("Communication Attachment", communication.getAttachments().getId()));
-            
-            context.setVariable("attachment", attachment.getFileName());
+        if (file != null && !file.isEmpty()) {
+        	context.setVariable("attachmentName", file.getOriginalFilename());
         }
         
         String emailBody = templateEngine.process(SLT_NOTIFICATION_GENERIC_BODY_TEMPLATE, context);
-        sendMassHtmlMessage(communication.getRecipientEmail(), cc, from, emailSubject, emailBody);
+        sendMassHtmlMessage(communication.getRecipientEmail(), cc, from, emailSubject, emailBody, file);
     }
 
     public void sendUserAssociationRejectedNotification(String to, String from, String facilityName, String role, String comments)

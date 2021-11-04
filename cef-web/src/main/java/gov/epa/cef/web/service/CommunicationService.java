@@ -16,11 +16,21 @@
 */
 package gov.epa.cef.web.service;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import gov.epa.cef.web.domain.Communication;
 import gov.epa.cef.web.service.dto.CommunicationDto;
 
 public interface CommunicationService {
 	
-	public Communication sendNotification(CommunicationDto communication);
+	public Communication sendNotification(Communication communication, MultipartFile file);
+	
+	public Communication sendNotification(Communication communication);
+	
+	public Communication save(CommunicationDto dto);
+	
+	public void deleteCommunication(Communication comm);
+	
+	public void deleteAllEmailStatusNotSent();
 
 }
