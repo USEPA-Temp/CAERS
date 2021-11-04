@@ -207,6 +207,19 @@ public class EmissionsUnitValidator extends BaseValidator<EmissionsUnit> {
             }
         }
         
+        // if emissions unit was PS in previous year report and is not PS in this report
+        if (emissionsUnit.getPreviousYearOperatingStatusCode() != null) {
+	        if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getPreviousYearOperatingStatusCode().getCode()) &&
+	        	!ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsUnit.getOperatingStatusCode().getCode())) {
+	        	
+	            result = false;
+	            context.addFederalError(
+	                    ValidationField.EMISSIONS_UNIT_STATUS_CODE.value(),
+	                    "emissionsUnit.statusTypeCode.psPreviousYear",
+	                    createValidationDetails(emissionsUnit));
+	        }
+        }
+        
         if (emissionsUnit.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode() != null 
         		&& ConstantUtils.FACILITY_SOURCE_LANDFILL_CODE.contentEquals(emissionsUnit.getFacilitySite().getEmissionsReport().getMasterFacilityRecord().getFacilitySourceTypeCode().getCode())) {
         	

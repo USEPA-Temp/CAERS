@@ -88,8 +88,12 @@ public class Control extends BaseAuditEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "control_measure_code", nullable = false)
     private ControlMeasureCode controlMeasureCode;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "previous_year_status_code", nullable = true)
+    private OperatingStatusCode previousYearOperatingStatusCode;
 
-    /**
+	/**
      * Default constructor
      */
     public Control() {}
@@ -254,7 +258,14 @@ public class Control extends BaseAuditEntity {
 	public void setStatusYear(Short statusYear) {
 		this.statusYear = statusYear;
 	}
+	
+    public OperatingStatusCode getPreviousYearOperatingStatusCode() {
+		return previousYearOperatingStatusCode;
+	}
 
+	public void setPreviousYearOperatingStatusCode(OperatingStatusCode previousYearOperatingStatusCode) {
+		this.previousYearOperatingStatusCode = previousYearOperatingStatusCode;
+	}
 
 	/***
      * Set the id property to null for this object and the id for it's direct children.  This method is useful to INSERT the updated object instead of UPDATE.

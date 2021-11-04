@@ -744,6 +744,19 @@ public class ReleasePointValidator extends BaseValidator<ReleasePoint> {
                         createValidationDetails(releasePoint));
             }
         }
+        
+        // if release point was PS in previous year report and is not PS in this report
+        if (releasePoint.getPreviousYearOperatingStatusCode() != null) {
+	        if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(releasePoint.getPreviousYearOperatingStatusCode().getCode()) &&
+	        	!ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(releasePoint.getOperatingStatusCode().getCode())) {
+	        	
+	            result = false;
+	            context.addFederalError(
+	                    ValidationField.RP_STATUS_CODE.value(),
+	                    "releasePoint.statusTypeCode.psPreviousYear",
+	                    createValidationDetails(releasePoint));
+	        }
+        }
 
         return result;
     }

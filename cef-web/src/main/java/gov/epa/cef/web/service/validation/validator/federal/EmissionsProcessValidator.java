@@ -358,6 +358,19 @@ public class EmissionsProcessValidator extends BaseValidator<EmissionsProcess> {
 			}
 		}
 		
+		// if emissions process was PS in previous year report and is not PS in this report
+        if (emissionsProcess.getPreviousYearOperatingStatusCode() != null) {
+	        if (ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getPreviousYearOperatingStatusCode().getCode()) &&
+	        	!ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN.contentEquals(emissionsProcess.getOperatingStatusCode().getCode())) {
+	        	
+	            result = false;
+	            context.addFederalError(
+	                    ValidationField.PROCESS_STATUS_CODE.value(),
+	                    "emissionsProcess.statusTypeCode.psPreviousYear",
+	                    createValidationDetails(emissionsProcess));
+	        }
+        }
+		
 		if (emissionsProcess.getStatusYear() != null) {
 			// Status year must be between 1900 and the report year
 	        if (emissionsProcess.getStatusYear() < 1900 || emissionsProcess.getStatusYear() > emissionsProcess.getEmissionsUnit().getFacilitySite().getEmissionsReport().getYear()) {
