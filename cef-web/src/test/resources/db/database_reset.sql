@@ -50,6 +50,7 @@ DROP TABLE IF EXISTS master_facility_record;
 DROP TABLE IF EXISTS admin_properties;
 
 --REFERENCE TABLES
+DROP TABLE IF EXISTS energy_conversion_factor;
 DROP TABLE IF EXISTS emission_formula_variable_code;
 DROP TABLE IF EXISTS emission_factor;
 DROP TABLE IF EXISTS agency;

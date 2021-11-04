@@ -31,6 +31,7 @@ import { FipsCounty } from 'src/app/shared/models/fips-county';
 import { InventoryYearCodeLookup } from 'src/app/shared/models/inventory-year-code-lookup';
 import { CalculationMaterialCode } from 'src/app/shared/models/calculation-material-code';
 import { MasterFacilityNaicsCode } from 'src/app/shared/models/master-facility-naics-code';
+import { EnergyConversionFactor } from 'src/app/shared/models/energy-conversion-factor';
 
 @Injectable({
   providedIn: 'root'
@@ -224,6 +225,11 @@ export class LookupService {
   basicSccSearch(searchTerm: string): Observable<PointSourceSccCode[]> {
 	const url = `${this.baseUrl}/${searchTerm}`;
 	return this.http.get<PointSourceSccCode[]>(url);
+  }
+
+  retrieveEnergyConversionFactor(calcMaterial: string): Observable<EnergyConversionFactor> {
+    const url = `${this.baseUrl}/energyConversionFactor/${calcMaterial}`;
+    return this.http.get<EnergyConversionFactor>(url);
   }
 
 }
