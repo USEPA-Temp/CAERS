@@ -45,6 +45,7 @@ import { legacyUomValidator } from 'src/app/modules/shared/directives/legacy-uom
 import { UserContextService } from 'src/app/core/services/user-context.service';
 import { legacyItemValidator } from 'src/app/modules/shared/directives/legacy-item-validator.directive';
 import { UtilityService } from 'src/app/core/services/utility.service';
+import { EnergyConversionFactor } from 'src/app/shared/models/energy-conversion-factor';
 
 @Component({
   selector: 'app-emission-details',
@@ -108,6 +109,7 @@ export class EmissionDetailsComponent implements OnInit {
   numeratorUomValues: UnitMeasureCode[];
   denominatorUomValues: UnitMeasureCode[];
   currentCalcMethod: CalculationMethodCode;
+  energyConversionFactor: EnergyConversionFactor;
 
   constructor(
     private emissionService: EmissionService,
@@ -341,14 +343,49 @@ export class EmissionDetailsComponent implements OnInit {
       }
 
       if (this.reportingPeriod.calculationParameterUom && this.emissionForm.get('emissionsDenominatorUom').value) {
-        if (this.reportingPeriod.calculationParameterUom.unitType !== this.emissionForm.get('emissionsDenominatorUom').value.unitType) {
-          this.failedRpCalcDesc = this.reportingPeriod.calculationParameterUom.description;
-          this.failedDenomDesc = this.emissionForm.get('emissionsDenominatorUom').value.description;
-          this.efDenominatorMismatch = true;
-        } else {
-          this.efDenominatorMismatch = false;
-          this.failedRpCalcDesc = null;
-          this.failedDenomDesc = null;
+	
+		// IF THROUGHPUT UOM TYPE DOES NOT MATCH EF DENOMINATOR UOM TYPE
+		if (this.reportingPeriod.calculationParameterUom.unitType !== this.emissionForm.get('emissionsDenominatorUom').value.unitType) {
+			
+			// IF THROUGHPUT UOM UNIT IS FUEL USE UOM OR HEAT CONTENT UOM
+	        if (this.reportingPeriod.calculationParameterUom.fuelUseUom || this.reportingPeriod.calculationParameterUom.heatContentUom) {
+				
+				// GET CF BY CALC MATERIAL CODE
+				this.lookupService.retrieveEnergyConversionFactor(this.reportingPeriod.calculationMaterialCode.code)
+			    .subscribe(result => {
+			      this.energyConversionFactor = result;
+
+			    	if (this.energyConversionFactor.conversionFactor) {
+						// if cf numerator uom type != ef denominator uom type, or cf denominator uom type != throughput uom type
+		        		// or if cf denominator uom type != ef denominator uom type, or cf numerator uom type != throughput uom type
+						if ((this.energyConversionFactor?.emissionsDenominatorUom?.unitType === this.reportingPeriod?.calculationParameterUom?.unitType
+							&& this.energyConversionFactor?.emissionsNumeratorUom?.unitType === this.emissionForm.get('emissionsDenominatorUom').value?.unitType)
+							|| (this.energyConversionFactor?.emissionsDenominatorUom?.unitType === this.emissionForm.get('emissionsDenominatorUom').value?.unitType 
+							&& this.energyConversionFactor?.emissionsNumeratorUom?.unitType === this.reportingPeriod?.calculationParameterUom?.unitType)) {
+							
+							this.efDenominatorMismatch = false;
+							this.failedRpCalcDesc = null;
+							this.failedDenomDesc = null;
+						} else {
+							this.failedRpCalcDesc = this.reportingPeriod.calculationParameterUom.description;
+							this.failedDenomDesc = this.emissionForm.get('emissionsDenominatorUom').value.description;
+							this.efDenominatorMismatch = true;
+						}
+					} else {
+						this.failedRpCalcDesc = this.reportingPeriod.calculationParameterUom.description;
+						this.failedDenomDesc = this.emissionForm.get('emissionsDenominatorUom').value.description;
+						this.efDenominatorMismatch = true;
+					}
+				});
+			} else {
+				this.failedRpCalcDesc = this.reportingPeriod.calculationParameterUom.description;
+				this.failedDenomDesc = this.emissionForm.get('emissionsDenominatorUom').value.description;
+				this.efDenominatorMismatch = true;
+			}
+		} else {
+			this.efDenominatorMismatch = false;
+			this.failedRpCalcDesc = null;
+			this.failedDenomDesc = null;
         }
       }
 
@@ -369,26 +406,27 @@ export class EmissionDetailsComponent implements OnInit {
         this.calcParamValue = true;
       }
 
-      if (!(this.efNumeratorMismatch || this.efDenominatorMismatch) && this.calcParamValue) {
-        const calcEmission = new Emission();
-        Object.assign(calcEmission, this.emissionForm.value);
-
-        calcEmission.variables = this.generateFormulaVariableDtos();
-        calcEmission.reportingPeriodId = this.reportingPeriod.id;
-
-        this.emissionService.calculateEmissionTotal(calcEmission)
-          .subscribe(result => {
-
-            this.needsCalculation = false;
-            if (result.formulaIndicator) {
-              this.emissionForm.get('emissionsFactor').setValue(result.emissionsFactor, {emitEvent: false});
-            }
-            this.emissionForm.get('totalEmissions').setValue(result.totalEmissions);
-            this.toastr.success('', 'Total emissions successfully calculated');
-
-          });
-
-      }
+	  setTimeout(() => {
+	      if (!(this.efNumeratorMismatch || this.efDenominatorMismatch) && this.calcParamValue) {
+	        const calcEmission = new Emission();
+	        Object.assign(calcEmission, this.emissionForm.value);
+	
+	        calcEmission.variables = this.generateFormulaVariableDtos();
+	        calcEmission.reportingPeriodId = this.reportingPeriod.id;
+	
+	        this.emissionService.calculateEmissionTotal(calcEmission)
+	          .subscribe(result => {
+	
+	            this.needsCalculation = false;
+	            if (result.formulaIndicator) {
+	              this.emissionForm.get('emissionsFactor').setValue(result.emissionsFactor, {emitEvent: false});
+	            }
+	            this.emissionForm.get('totalEmissions').setValue(result.totalEmissions);
+	            this.toastr.success('', 'Total emissions successfully calculated');
+	
+	          });
+	      }
+	  }, 1000);
     }
   }
 
@@ -439,6 +477,7 @@ export class EmissionDetailsComponent implements OnInit {
 
       const saveEmission = new Emission();
       Object.assign(saveEmission, this.emissionForm.value);
+	  saveEmission.energyConversionFactor = this.energyConversionFactor;
 
       saveEmission.variables = this.generateFormulaVariableDtos();
       if (this.emission) {

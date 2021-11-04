@@ -81,6 +81,9 @@ public class LookupRepositories {
 	
 	@Autowired
 	private FacilityCategoryCodeRepository facilityCategoryCodeRepo;
+	
+	@Autowired
+	private EnergyConversionFactorRepository energyConversionFactorRepo;
 
 	public CalculationMaterialCodeRepository materialCodeRepo() {
 		return materialCodeRepo;
@@ -162,4 +165,7 @@ public class LookupRepositories {
 		return facilityCategoryCodeRepo;
 	}
 
+	public EnergyConversionFactorRepository energyConversionFactorRepo() {
+		return energyConversionFactorRepo;
+	}
 }
