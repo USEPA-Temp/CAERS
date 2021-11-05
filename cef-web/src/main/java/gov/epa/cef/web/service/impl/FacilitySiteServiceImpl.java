@@ -18,7 +18,6 @@ package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
-import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.NaicsCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.repository.FacilityNAICSXrefRepository;
@@ -27,6 +26,9 @@ import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilityNAICSBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.FacilitySiteMapper;
 import gov.epa.cef.web.util.ConstantUtils;
@@ -37,6 +39,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -53,6 +56,8 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
     private final FacilitySiteMapper facilitySiteMapper;
 
     private final FacilityNAICSMapper facilityNaicsMapper;
+    
+    private BulkUploadMapper bulkUploadMapper;
 
     @Autowired
     FacilitySiteServiceImpl(FacilitySiteRepository facSiteRepo,
@@ -60,7 +65,8 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
                             FacilityNAICSXrefRepository facilityNaicsXrefRepo,
                             NaicsCodeRepository naicsCodeRepo,
                             FacilityNAICSMapper facilityNaicsMapper,
-                            EmissionsReportStatusServiceImpl reportStatusService) {
+                            EmissionsReportStatusServiceImpl reportStatusService,
+                            BulkUploadMapper bulkUploadMapper) {
 
         this.facSiteRepo = facSiteRepo;
         this.facilitySiteMapper = facilitySiteMapper;
@@ -68,6 +74,7 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
         this.naicsCodeRepo = naicsCodeRepo;
         this.facilityNaicsMapper = facilityNaicsMapper;
         this.reportStatusService = reportStatusService;
+        this.bulkUploadMapper = bulkUploadMapper;
     }
 
     @Override
@@ -196,5 +203,41 @@ public class FacilitySiteServiceImpl implements FacilitySiteService {
     public void deleteFacilityNaics(Long facilityNaicsId) {
     	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(facilityNaicsId), FacilityNAICSXrefRepository.class);
     	facilityNaicsXrefRepo.deleteById(facilityNaicsId);
+    }
+
+
+    /**
+     * Retrieve a list of facility site IDs for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<Long> getFacilityIds(String programSystemCode, Short year) {
+    	List<Long> facilityIds = facSiteRepo.findFacilityIds(programSystemCode, year);
+    	return facilityIds;
+    }
+
+
+    /**
+     * Retrieve a list of facilities for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<FacilitySiteBulkUploadDto> retrieveFacilities(String programSystemCode, Short emissionsReportYear) {
+    	List<FacilitySite> facilities = facSiteRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.facilitySiteToDtoList(facilities);
+    }
+
+
+    /**
+     * Retrieve a list of facility NAICS codes for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<FacilityNAICSBulkUploadDto> retrieveFacilityNaics(String programSystemCode, Short emissionsReportYear) {
+    	List<FacilityNAICSXref> naics = facilityNaicsXrefRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.faciliytNAICSToDtoList(naics);
     }
 }

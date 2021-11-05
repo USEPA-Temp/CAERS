@@ -20,8 +20,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "release_points.csv")
 public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -108,6 +113,8 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @NotBlank(message = "Operating Status Code is required.")
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCode;
+    
+    private String operatingStatusDescription;
 
     @NotBlank(message = "Release Point Identifier is required.")
     @Size(max = 20, message = "Release Point Identifier can not exceed {max} chars; found '${validatedValue}'.")
@@ -149,12 +156,15 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     @NotBlank(message = "Type Code is required.")
     @Size(max = 20, message = "Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String typeCode;
+    
+    private String typeDescription;
 
     public ReleasePointBulkUploadDto() {
 
         super(WorksheetName.ReleasePoint);
     }
 
+    @CsvColumn(name = "Comments", order = 34)
     public String getComments() {
 
         return comments;
@@ -165,6 +175,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.comments = comments;
     }
 
+    @CsvColumn(name = "Description", order = 5)
     public String getDescription() {
 
         return description;
@@ -175,6 +186,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.description = description;
     }
 
+    @CsvColumn(name = "Exit Gas Flow Rate", order = 23)
     public String getExitGasFlowRate() {
 
         return exitGasFlowRate;
@@ -185,6 +197,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.exitGasFlowRate = exitGasFlowRate;
     }
 
+    @CsvColumn(name = "Exit Gas Flow Rate UOM", order = 24)
     public String getExitGasFlowUomCode() {
 
         return exitGasFlowUomCode;
@@ -195,6 +208,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.exitGasFlowUomCode = exitGasFlowUomCode;
     }
 
+    @CsvColumn(name = "Exit Gas Temperature", order = 22)
     public String getExitGasTemperature() {
 
         return exitGasTemperature;
@@ -205,6 +219,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.exitGasTemperature = exitGasTemperature;
     }
 
+    @CsvColumn(name = "Exit Gas Velocity", order = 20)
     public String getExitGasVelocity() {
 
         return exitGasVelocity;
@@ -215,6 +230,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.exitGasVelocity = exitGasVelocity;
     }
 
+    @CsvColumn(name = "Exit Gas Velocity UOM", order = 21)
     public String getExitGasVelocityUomCode() {
 
         return exitGasVelocityUomCode;
@@ -225,6 +241,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.exitGasVelocityUomCode = exitGasVelicityUomCode;
     }
 
+    @CsvColumn(name = "Facility Site ID", order = 1)
     public Long getFacilitySiteId() {
 
         return facilitySiteId;
@@ -235,6 +252,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.facilitySiteId = facilitySiteId;
     }
 
+    @CsvColumn(name = "Fence Line Distance", order = 25)
     public String getFenceLineDistance() {
 
         return fenceLineDistance;
@@ -245,6 +263,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.fenceLineDistance = fenceLineDistance;
     }
 
+    @CsvColumn(name = "Fence Line Distance UOM", order = 26)
     public String getFenceLineUomCode() {
 
         return fenceLineUomCode;
@@ -255,6 +274,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.fenceLineUomCode = fenceLineUomCode;
     }
 
+    @CsvColumn(name = "Fugitive Angle", order = 33)
     public String getFugitiveAngle() {
 
         return fugitiveAngle;
@@ -265,6 +285,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.fugitiveAngle = fugitiveAngle;
     }
 
+    @CsvColumn(name = "Fugitive Height", order = 27)
     public String getFugitiveHeight() {
 
         return fugitiveHeight;
@@ -275,6 +296,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.fugitiveHeight = fugitiveHeight;
     }
 
+    @CsvColumn(name = "Fugitive Height UOM", order = 28)
     public String getFugitiveHeightUomCode() {
 
         return fugitiveHeightUomCode;
@@ -285,6 +307,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.fugitiveHeightUomCode = fugitiveHeightUomCode;
     }
 
+    @CsvColumn(name = "Fugitive Length", order = 31)
     public String getFugitiveLength() {
 
         return fugitiveLength;
@@ -295,6 +318,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.fugitiveLength = fugitiveLength;
     }
 
+    @CsvColumn(name = "Fugitive Length UOM", order = 32)
     public String getFugitiveLengthUomCode() {
 
         return fugitiveLengthUomCode;
@@ -305,6 +329,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.fugitiveLengthUomCode = fugitiveLengthUomCode;
     }
 
+    @CsvColumn(name = "Fugitive Midpoint 2 Latitude", order = 10)
     public String getFugitiveLine2Latitude() {
 		return fugitiveLine2Latitude;
 	}
@@ -313,6 +338,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
 		this.fugitiveLine2Latitude = fugitiveLine2Latitude;
 	}
 
+    @CsvColumn(name = "Fugitive Midpoint 2 Longitude", order = 11)
 	public String getFugitiveLine2Longitude() {
 		return fugitiveLine2Longitude;
 	}
@@ -321,6 +347,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
 		this.fugitiveLine2Longitude = fugitiveLine2Longitude;
 	}
 
+    @CsvColumn(name = "Fugitive Width", order = 29)
     public String getFugitiveWidth() {
 
         return fugitiveWidth;
@@ -331,6 +358,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.fugitiveWidth = fugitiveWidth;
     }
 
+    @CsvColumn(name = "Fugitive Width UOM", order = 30)
     public String getFugitiveWidthUomCode() {
 
         return fugitiveWidthUomCode;
@@ -341,6 +369,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.fugitiveWidthUomCode = fugitiveWidthUomCode;
     }
 
+    @CsvColumn(name = "ID", order = 3)
     public Long getId() {
 
         return id;
@@ -351,6 +380,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.id = id;
     }
 
+    @CsvColumn(name = "Latitude", order = 8)
     public String getLatitude() {
 
         return latitude;
@@ -361,6 +391,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.latitude = latitude;
     }
 
+    @CsvColumn(name = "Longitude", order = 9)
     public String getLongitude() {
 
         return longitude;
@@ -371,6 +402,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.longitude = longitude;
     }
 
+    @CsvColumn(name = "Operating Status Code", order = 6)
     public String getOperatingStatusCode() {
 
         return operatingStatusCode;
@@ -381,6 +413,15 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.operatingStatusCode = operatingStatusCode;
     }
 
+    @CsvColumn(name = "Operating Status Description", order = 6)
+    public String getOperatingStatusDescription() {
+        return operatingStatusDescription;
+    }
+    public void setOperatingStatusDescription(String operatingStatusDescription) {
+        this.operatingStatusDescription = operatingStatusDescription;
+    }
+
+    @CsvColumn(name = "Release Point Identifier", order = 2)
     public String getReleasePointIdentifier() {
 
         return releasePointIdentifier;
@@ -391,6 +432,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.releasePointIdentifier = releasePointIdentifier;
     }
 
+    @CsvColumn(name = "Stack Diameter", order = 14)
     public String getStackDiameter() {
 
         return stackDiameter;
@@ -401,6 +443,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.stackDiameter = stackDiameter;
     }
 
+    @CsvColumn(name = "Stack Diameter UOM", order = 15)
     public String getStackDiameterUomCode() {
 
         return stackDiameterUomCode;
@@ -411,6 +454,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.stackDiameterUomCode = stackDiameterUomCode;
     }
 
+    @CsvColumn(name = "Stack Height", order = 12)
     public String getStackHeight() {
 
         return stackHeight;
@@ -421,6 +465,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.stackHeight = stackHeight;
     }
 
+    @CsvColumn(name = "Stack Height UOM", order = 13)
     public String getStackHeightUomCode() {
 
         return stackHeightUomCode;
@@ -431,6 +476,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.stackHeightUomCode = stackHeightUomCode;
     }
 
+    @CsvColumn(name = "Stack Width", order = 16)
     public String getStackWidth() {
         return stackWidth;
     }
@@ -439,6 +485,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.stackWidth = stackWidth;
     }
 
+    @CsvColumn(name = "Stack Width UOM", order = 17)
     public String getStackWidthUomCode() {
         return stackWidthUomCode;
     }
@@ -447,6 +494,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.stackWidthUomCode = stackWidthUomCode;
     }
 
+    @CsvColumn(name = "Stack Length", order = 18)
     public String getStackLength() {
         return stackLength;
     }
@@ -455,6 +503,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.stackLength = stackLength;
     }
 
+    @CsvColumn(name = "Stack Length UOM", order = 19)
     public String getStackLengthUomCode() {
         return stackLengthUomCode;
     }
@@ -463,6 +512,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.stackLengthUomCode = stackLengthUomCode;
     }
 
+    @CsvColumn(name = "Status Year", order = 7)
     public String getStatusYear() {
 
         return statusYear;
@@ -473,6 +523,7 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
         this.statusYear = statusYear;
     }
 
+    @CsvColumn(name = "Type Code", order = 4)
     public String getTypeCode() {
 
         return typeCode;
@@ -481,6 +532,16 @@ public class ReleasePointBulkUploadDto extends BaseWorksheetDto implements Seria
     public void setTypeCode(String typeCode) {
 
         this.typeCode = typeCode;
+    }
+
+    @CsvColumn(name = "Type Description", order = 4)
+    public String getTypeDescription() {
+
+        return typeDescription;
+    }
+    public void setTypeDescription(String typeDescription) {
+
+        this.typeDescription = typeDescription;
     }
 
 }

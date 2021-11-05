@@ -39,7 +39,11 @@ import gov.epa.cef.web.service.ControlService;
 import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.ControlPollutantDto;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.ControlMapper;
 import gov.epa.cef.web.service.mapper.ControlPollutantMapper;
 
@@ -66,6 +70,9 @@ public class ControlServiceImpl implements ControlService {
 
     @Autowired
     private EmissionsReportRepository reportRepo;
+    
+    @Autowired
+    private BulkUploadMapper bulkUploadMapper;
 
     /**
      * Create a new Control from a DTO object
@@ -293,4 +300,40 @@ public class ControlServiceImpl implements ControlService {
 		}
 		return false;
 	}
+
+
+    /**
+     * Retrieve a list of controls for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */  
+    public List<ControlBulkUploadDto> retrieveControls(String programSystemCode, Short emissionsReportYear) {
+    	List<Control> controls = repo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.controlToDtoList(controls);
+    }
+
+
+    /**
+     * Retrieve a list of control assignments for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<ControlAssignmentBulkUploadDto> retrieveControlAssignments(String programSystemCode, Short emissionsReportYear) {
+    	List<ControlAssignment> controlAssignments = assignmentRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.controlAssignmentToDtoList(controlAssignments);
+    }
+
+
+    /**
+     * Retrieve a list of control pollutants for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<ControlPollutantBulkUploadDto> retrieveControlPollutants(String programSystemCode, Short emissionsReportYear) {
+    	List<ControlPollutant> controlPollutants = pollutantRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.controlPollutantToDtoList(controlPollutants);
+    }
 }

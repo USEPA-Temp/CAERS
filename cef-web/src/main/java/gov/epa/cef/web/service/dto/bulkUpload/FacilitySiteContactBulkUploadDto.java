@@ -20,8 +20,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "facility_site_contacts.csv")
 public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -35,6 +40,8 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
     @NotBlank(message = "Facility Site Contact Type is required.")
     @Size(max = 150, message = "Facility Site Contact Type can not exceed {max} chars; found '${validatedValue}'.")
 	private String type;
+    
+    private String contactTypeDescription;
 
     @Size(max = 15, message = "Prefix can not exceed {max} chars; found '${validatedValue}'.")
 	private String prefix;
@@ -108,6 +115,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
         super(WorksheetName.FacilitySiteContact);
     }
 
+    @CsvColumn(name = "ID", order = 1)
     public Long getId() {
 		return id;
 	}
@@ -116,6 +124,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.id = id;
 	}
 
+    @CsvColumn(name = "Facility Site ID", order = 2)
 	public Long getFacilitySiteId() {
 		return facilitySiteId;
 	}
@@ -124,6 +133,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.facilitySiteId = facilitySiteId;
 	}
 
+    @CsvColumn(name = "Type", order = 3)
 	public String getType() {
 		return type;
 	}
@@ -132,6 +142,15 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.type = type;
 	}
 
+    @CsvColumn(name = "Contact Type Description", order = 3)
+	public String getContactTypeDescription() {
+		return contactTypeDescription;
+	}
+	public void setContactTypeDescription(String contactTypeDescription) {
+		this.contactTypeDescription = contactTypeDescription;
+	}    
+	
+    @CsvColumn(name = "Prefix", order = 4)
 	public String getPrefix() {
 		return prefix;
 	}
@@ -140,6 +159,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.prefix = prefix;
 	}
 
+    @CsvColumn(name = "First Name", order = 5)
 	public String getFirstName() {
 		return firstName;
 	}
@@ -148,6 +168,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.firstName = firstName;
 	}
 
+    @CsvColumn(name = "Last Name", order = 6)
 	public String getLastName() {
 		return lastName;
 	}
@@ -156,6 +177,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.lastName = lastName;
 	}
 
+    @CsvColumn(name = "Email", order = 7)
 	public String getEmail() {
 		return email;
 	}
@@ -164,6 +186,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.email = email;
 	}
 
+    @CsvColumn(name = "Phone", order = 8)
 	public String getPhone() {
 		return phone;
 	}
@@ -172,6 +195,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.phone = phone;
 	}
 
+    @CsvColumn(name = "Phone Extension", order = 9)
 	public String getPhoneExt() {
 		return phoneExt;
 	}
@@ -180,6 +204,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.phoneExt = phoneExt;
 	}
 
+    @CsvColumn(name = "Street Address", order = 10)
 	public String getStreetAddress() {
 		return streetAddress;
 	}
@@ -188,6 +213,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.streetAddress = streetAddress;
 	}
 
+    @CsvColumn(name = "City", order = 11)
 	public String getCity() {
 		return city;
 	}
@@ -196,6 +222,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.city = city;
 	}
 
+    @CsvColumn(name = "County", order = 15)
 	public String getCounty() {
 		return county;
 	}
@@ -204,6 +231,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.county = county;
 	}
 
+    @CsvColumn(name = "County Code", order = 14)
 	public String getCountyCode() {
         return countyCode;
     }
@@ -212,6 +240,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
         this.countyCode = countyCode;
     }
 
+    @CsvColumn(name = "State Code", order = 13)
     public String getStateCode() {
 		return stateCode;
 	}
@@ -220,6 +249,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.stateCode = stateCode;
 	}
 
+    @CsvColumn(name = "State FIPS Code", order = 12)
 	public String getStateFipsCode() {
         return stateFipsCode;
     }
@@ -228,6 +258,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
         this.stateFipsCode = stateFipsCode;
     }
 
+    @CsvColumn(name = "Country Code", order = 16)
     public String getCountryCode() {
 		return countryCode;
 	}
@@ -236,6 +267,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.countryCode = countryCode;
 	}
 
+    @CsvColumn(name = "Postal Code", order = 17)
 	public String getPostalCode() {
 		return postalCode;
 	}
@@ -244,6 +276,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.postalCode = postalCode;
 	}
 
+    @CsvColumn(name = "Mailing Street Address", order = 18)
 	public String getMailingStreetAddress() {
 		return mailingStreetAddress;
 	}
@@ -252,6 +285,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.mailingStreetAddress = mailingStreetAddress;
 	}
 
+    @CsvColumn(name = "Mailing City", order = 19)
 	public String getMailingCity() {
 		return mailingCity;
 	}
@@ -260,6 +294,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.mailingCity = mailingCity;
 	}
 
+    @CsvColumn(name = "Mailing State Code", order = 20)
 	public String getMailingStateCode() {
 		return mailingStateCode;
 	}
@@ -268,6 +303,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.mailingStateCode = mailingStateCode;
 	}
 
+    @CsvColumn(name = "Mailing Postal Code", order = 22)
 	public String getMailingPostalCode() {
 		return mailingPostalCode;
 	}
@@ -276,6 +312,7 @@ public class FacilitySiteContactBulkUploadDto extends BaseWorksheetDto implement
 		this.mailingPostalCode = mailingPostalCode;
 	}
 
+    @CsvColumn(name = "Mailing Country Code", order = 21)
 	public String getMailingCountryCode() {
 		return mailingCountryCode;
 	}

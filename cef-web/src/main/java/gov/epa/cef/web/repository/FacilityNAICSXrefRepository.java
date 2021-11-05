@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
+import gov.epa.cef.web.domain.FacilitySiteContact;
 
 public interface FacilityNAICSXrefRepository extends CrudRepository<FacilityNAICSXref, Long>, ProgramIdRetriever, ReportIdRetriever {
 
@@ -57,5 +58,14 @@ public interface FacilityNAICSXrefRepository extends CrudRepository<FacilityNAIC
     @Cacheable(value = CacheName.FacilityNAICSEmissionsReportIds)
     @Query("select er.id from FacilityNAICSXref fn join fn.facilitySite fs join fs.emissionsReport er where fn.id = :id")
     Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+    
+    /**
+     * Retrieve a list of all facility NAICS codes for a specific program system code and emissions reporting year
+     * @param psc Program System Code
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select fnx from FacilityNAICSXref fnx join fnx.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<FacilityNAICSXref> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
 
 }

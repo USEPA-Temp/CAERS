@@ -24,6 +24,8 @@ import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.service.EmissionsUnitService;
 import gov.epa.cef.web.service.dto.EmissionsUnitDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.EmissionsUnitMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,8 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
 
+    @Autowired
+    private BulkUploadMapper bulkUploadMapper;
 
     /**
      * Retrieve Emissions Unit by its id
@@ -172,6 +176,18 @@ public class EmissionsUnitServiceImpl implements EmissionsUnitService {
         }
 
         return Collections.emptyList();
+    }
+
+
+    /**
+     * Retrieve a list of emissions units for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<EmissionsUnitBulkUploadDto> retrieveEmissionsUnits(String programSystemCode, Short emissionsReportYear) {
+    	List<EmissionsUnit> units = unitRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.emissionsUnitToDtoList(units);
     }
 
 }

@@ -24,10 +24,11 @@ import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.FacilitySiteContact;
-import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.FacilitySiteContactRepository;
 import gov.epa.cef.web.service.FacilitySiteContactService;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteContactBulkUploadDto;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.FacilitySiteContactMapper;
 
 @Service
@@ -35,9 +36,6 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
 
     @Autowired
     private FacilitySiteContactRepository contactRepo;
-    
-    @Autowired
-    private ContactTypeCodeRepository typeRepo;
 
     @Autowired
     private FacilitySiteContactMapper mapper;
@@ -47,6 +45,9 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
     
     @Autowired
     private LookupServiceImpl lookupService;
+    
+    @Autowired
+    private BulkUploadMapper bulkUploadMapper;
     
     private static final String EMISSIONS_INVENTORY_CONTACT_TYPE_CODE = "EI";
     
@@ -100,6 +101,18 @@ public class FacilitySiteContactServiceImpl implements FacilitySiteContactServic
     	ContactTypeCode eiContactType = lookupService.retrieveContactTypeEntityByCode(EMISSIONS_INVENTORY_CONTACT_TYPE_CODE);
         List<FacilitySiteContact> result = contactRepo.findByFacilitySiteIdAndType(facilitySiteId, eiContactType);
         return mapper.toDtoList(result);
+    }
+
+
+    /**
+     * Retrieve a list of facility site contacts for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */  
+    public List<FacilitySiteContactBulkUploadDto> retrieveFacilitySiteContacts(String programSystemCode, Short emissionsReportYear) {
+    	List<FacilitySiteContact> facilitySiteContact = contactRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.facilitySiteContactToDtoList(facilitySiteContact);
     }
 
 

@@ -21,6 +21,9 @@ import java.util.List;
 import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.ControlPollutantDto;
 import gov.epa.cef.web.service.dto.EmissionsReportItemDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlAssignmentBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPollutantBulkUploadDto;
 import gov.epa.cef.web.service.dto.postOrder.ControlPostOrderDto;
 
 public interface ControlService {
@@ -92,4 +95,28 @@ public interface ControlService {
      * @param controlId
      */
     void deleteControlPollutant(Long controlPollutantId);
+
+    /**
+     * Retrieve a list of controls for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<ControlBulkUploadDto> retrieveControls(String programSystemCode, Short emissionsReportYear);
+
+    /**
+     * Retrieve a list of control assignments for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<ControlAssignmentBulkUploadDto> retrieveControlAssignments(String programSystemCode, Short emissionsReportYear);
+
+    /**
+     * Retrieve a list of control pollutants for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<ControlPollutantBulkUploadDto> retrieveControlPollutants(String programSystemCode, Short emissionsReportYear);
 }

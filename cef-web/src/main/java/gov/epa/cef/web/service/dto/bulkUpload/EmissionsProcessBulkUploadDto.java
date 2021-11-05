@@ -20,8 +20,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "emissions_processes.csv")
 public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,6 +36,8 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
 
     @NotNull(message = "Emissions Unit ID is required.")
     private Long emissionsUnitId;
+    
+    private String emissionsUnitName;
 
     @NotBlank(message = "Emissions Process Identifier is required.")
     @Size(max = 20, message = "Emissions Process Identifier can not exceed {max} chars; found '${validatedValue}'.")
@@ -41,6 +48,8 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
     @NotBlank(message = "Operating Status Code is required.")
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCode;
+    
+    private String operatingStatusCodeDescription;
 
     @NotBlank(message = "Operating Status Year is required.")
     @Pattern(regexp = YearPattern,
@@ -60,6 +69,8 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
 
     @Size(max = 10, message = "Aircraft Engine Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String aircraftEngineTypeCode;
+    
+    private String aircraftEngineTypeCodeDescription;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
@@ -72,6 +83,7 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
         super(WorksheetName.EmissionsProcess);
     }
 
+    @CsvColumn(name = "ID", order = 3)
     public Long getId() {
         return id;
     }
@@ -79,6 +91,7 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
         this.id = id;
     }
 
+    @CsvColumn(name = "Emissions Unit ID", order = 1)
     public Long getEmissionsUnitId() {
         return emissionsUnitId;
     }
@@ -86,6 +99,15 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
         this.emissionsUnitId = emissionsUnitId;
     }
 
+    @CsvColumn(name = "Emissions Unit Name", order = 1)
+    public String getEmissionsUnitName() {
+        return emissionsUnitName;
+    }
+    public void setEmissionsUnitName(String emissionsUnitName) {
+        this.emissionsUnitName = emissionsUnitName;
+    }
+
+    @CsvColumn(name = "Aircraft Engine Type Code", order = 9)
     public String getAircraftEngineTypeCode() {
         return aircraftEngineTypeCode;
     }
@@ -93,6 +115,15 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
         this.aircraftEngineTypeCode = aircraftEngineTypeCode;
     }
 
+    @CsvColumn(name = "Aircraft Engine Type Code Description", order = 9)
+    public String getAircraftEngineTypeCodeDescription() {
+        return aircraftEngineTypeCodeDescription;
+    }
+    public void setAircraftEngineTypeCodeDescription(String aircraftEngineTypeCodeDescription) {
+        this.aircraftEngineTypeCodeDescription = aircraftEngineTypeCodeDescription;
+    }
+
+    @CsvColumn(name = "Operating Status Code", order = 5)
     public String getOperatingStatusCode() {
         return operatingStatusCode;
     }
@@ -100,6 +131,15 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
         this.operatingStatusCode = operatingStatusCode;
     }
 
+    @CsvColumn(name = "Operating Status Code Description", order = 5)
+    public String getOperatingStatusCodeDescription() {
+        return operatingStatusCodeDescription;
+    }
+    public void setOperatingStatusCodeDescription(String operatingStatusCodeDescription) {
+        this.operatingStatusCodeDescription = operatingStatusCodeDescription;
+    }
+
+    @CsvColumn(name = "Emissions Process Identifier", order = 2)
     public String getEmissionsProcessIdentifier() {
         return emissionsProcessIdentifier;
     }
@@ -114,6 +154,7 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
         this.displayName = displayName;
     }
 
+    @CsvColumn(name = "Status Year", order = 6)
     public String getStatusYear() {
         return statusYear;
     }
@@ -121,6 +162,7 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
         this.statusYear = statusYear;
     }
 
+    @CsvColumn(name = "SCC Code", order = 8)
     public String getSccCode() {
         return sccCode;
     }
@@ -128,6 +170,7 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
         this.sccCode = sccCode;
     }
 
+    @CsvColumn(name = "SCC Description", order = 7)
     public String getSccDescription() {
         return sccDescription;
     }
@@ -142,6 +185,7 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
         this.sccShortName = sccShortName;
     }
 
+    @CsvColumn(name = "Description", order = 4)
     public String getDescription() {
         return description;
     }
@@ -149,6 +193,7 @@ public class EmissionsProcessBulkUploadDto extends BaseWorksheetDto implements S
         this.description = description;
     }
 
+    @CsvColumn(name = "Comments", order = 10)
     public String getComments() {
         return comments;
     }

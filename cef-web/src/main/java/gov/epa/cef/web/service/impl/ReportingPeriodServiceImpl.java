@@ -30,6 +30,8 @@ import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodBulkEntryDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.ReportingPeriodMapper;
 import gov.epa.cef.web.util.CalculationUtils;
 import gov.epa.cef.web.util.ConstantUtils;
@@ -68,6 +70,9 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
 
     @Autowired
     private EmissionServiceImpl emissionService;
+    
+    @Autowired
+    private BulkUploadMapper bulkUploadMapper;
 
     public ReportingPeriodDto create(ReportingPeriodDto dto) {
 
@@ -281,6 +286,18 @@ public class ReportingPeriodServiceImpl implements ReportingPeriodService {
             logger.debug("Could not perform emission conversion. {}", ex.getLocalizedMessage());
             return null;
         }
+    }
+
+
+    /**
+     * Retrieve a list of reporting periods for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<ReportingPeriodBulkUploadDto>retrieveReportingPeriods(String programSystemCode, Short emissionsReportYear) {
+    	List<ReportingPeriod> reportingPeriods = repo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.reportingPeriodToDtoList(reportingPeriods);
     }
 
 }

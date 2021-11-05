@@ -26,6 +26,7 @@ import org.springframework.data.repository.query.Param;
 
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.ControlAssignment;
+import gov.epa.cef.web.domain.ReportingPeriod;
 
 public interface ControlAssignmentRepository extends CrudRepository<ControlAssignment, Long>, ProgramIdRetriever,ReportIdRetriever  {
 
@@ -54,5 +55,14 @@ public interface ControlAssignmentRepository extends CrudRepository<ControlAssig
     @Cacheable(value = CacheName.ControlAssignmentsMasterIds)
     @Query("select mfr.id from ControlAssignment ca join ca.controlPath cp join cp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where ca.id = :id")
     Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
+    
+    /**
+     * Retrieve a list of all control assignments for a specific program system code and emissions reporting year
+     * @param psc Program System Code
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select ca from ControlAssignment ca join ca.control c join c.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<ControlAssignment> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
     
 }

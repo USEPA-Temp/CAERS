@@ -57,4 +57,13 @@ public interface EmissionsUnitRepository extends CrudRepository<EmissionsUnit, L
     @Cacheable(value = CacheName.UnitEmissionsReportIds)
     @Query("select r.id from EmissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r where eu.id = :id")
     Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+    
+    /**
+     * Retrieve a list of all emissions units for a specific program system code and emissions reporting year
+     * @param psc Program System Code
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select eu from EmissionsUnit eu join eu.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<EmissionsUnit> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
 }

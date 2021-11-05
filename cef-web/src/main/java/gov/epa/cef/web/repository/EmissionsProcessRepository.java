@@ -18,6 +18,8 @@ package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.EmissionsProcess;
+import gov.epa.cef.web.domain.EmissionsUnit;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -57,4 +59,13 @@ public interface EmissionsProcessRepository extends CrudRepository<EmissionsProc
     @Cacheable(value = CacheName.ProcessEmissionsReportIds)
     @Query("select r.id from EmissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r where p.id = :id")
     Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+    
+    /**
+     * Retrieve a list of all emissions processes for a specific program system code and emissions reporting year
+     * @param psc Program System Code
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select ep from EmissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<EmissionsProcess> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
 }

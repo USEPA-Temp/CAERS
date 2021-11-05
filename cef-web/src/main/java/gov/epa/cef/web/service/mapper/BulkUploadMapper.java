@@ -78,9 +78,13 @@ public interface BulkUploadMapper {
     @Mapping(source="mailingStateCode.uspsCode", target="mailingStateCode")
     @Mapping(source="facilityCategoryCode.code", target="facilityCategoryCode")
     @Mapping(source="facilitySourceTypeCode.code", target="facilitySourceTypeCode")
+    @Mapping(source="facilitySourceTypeCode.description", target="facilitySourceTypeCodeDescription")
     @Mapping(source="operatingStatusCode.code", target="operatingStatusCode")
+    @Mapping(source="operatingStatusCode.description", target="operatingStatusDescription")
     @Mapping(source="programSystemCode.code", target="programSystemCode")
+    @Mapping(source="programSystemCode.description", target="programSystemCodeDescription")
     @Mapping(source="tribalCode.code", target="tribalCode")
+    @Mapping(source="tribalCode.description", target="tribalCodeDescription")
     @Mapping(source="emissionsReport.masterFacilityRecord.eisProgramId", target="eisProgramId")
     @Mapping(source="emissionsReport.masterFacilityRecord.id", target="masterFacilityRecordId")
     FacilitySiteBulkUploadDto facilitySiteToDto(FacilitySite source);
@@ -89,7 +93,9 @@ public interface BulkUploadMapper {
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")
     @Mapping(source="unitTypeCode.code", target="typeCode")
+    @Mapping(source="unitTypeCode.description", target="typeDescription")
     @Mapping(source="operatingStatusCode.code", target="operatingStatusCodeDescription")
+    @Mapping(source="operatingStatusCode.description", target="operatingStatusCode")
     @Mapping(source="unitOfMeasureCode.code", target="unitOfMeasureCode")
     EmissionsUnitBulkUploadDto emissionsUnitToDto(EmissionsUnit source);
 
@@ -101,8 +107,11 @@ public interface BulkUploadMapper {
     EmissionsProcess emissionsProcessFromDto(EmissionsProcessBulkUploadDto source);
 
     @Mapping(source="emissionsUnit.id", target="emissionsUnitId")
+    @Mapping(source="emissionsUnit.description", target="emissionsUnitName")
     @Mapping(source="operatingStatusCode.code", target="operatingStatusCode")
+    @Mapping(source="operatingStatusCode.description", target="operatingStatusCodeDescription")
     @Mapping(source="aircraftEngineTypeCode.code", target="aircraftEngineTypeCode")
+    @Mapping(source="aircraftEngineTypeCode.faaAircraftType", target="aircraftEngineTypeCodeDescription")
     EmissionsProcessBulkUploadDto emissionsProcessToDto(EmissionsProcess source);
 
     List<EmissionsProcessBulkUploadDto> emissionsProcessToDtoList(List<EmissionsProcess> source);
@@ -122,11 +131,16 @@ public interface BulkUploadMapper {
     @Mapping(source="reportingPeriodTypeCode.code", target="reportingPeriodTypeCode")
     @Mapping(source="emissionsOperatingTypeCode.code", target="emissionsOperatingTypeCode")
     @Mapping(source="calculationParameterTypeCode.code", target="calculationParameterTypeCode")
+    @Mapping(source="calculationParameterTypeCode.description", target="calculationParameterTypeDescription")
     @Mapping(source="calculationParameterUom.code", target="calculationParameterUom")
     @Mapping(source="calculationMaterialCode.code", target="calculationMaterialCode")
+    @Mapping(source="calculationMaterialCode.description", target="calculationMaterialDescription")
     @Mapping(source="fuelUseUom.code", target="fuelUseUom")
     @Mapping(source="fuelUseMaterialCode.code", target="fuelUseMaterialCode")
+    @Mapping(source="fuelUseMaterialCode.description", target="fuelUseMaterialDescription")
     @Mapping(source="heatContentUom.code", target="heatContentUom")
+    @Mapping(source="emissionsProcess.description", target="emissionsProcessName")
+    @Mapping(source="emissionsOperatingTypeCode.description", target="emissionsOperatingTypeCodeDescription")
     ReportingPeriodBulkUploadDto reportingPeriodToDto(ReportingPeriod source);
 
     List<ReportingPeriodBulkUploadDto> reportingPeriodToDtoList(List<ReportingPeriod> source);
@@ -155,8 +169,10 @@ public interface BulkUploadMapper {
 
     @Mapping(source="reportingPeriod.id", target="reportingPeriodId")
     @Mapping(source="pollutant.pollutantCode", target="pollutantCode")
+    @Mapping(source="pollutant.pollutantName", target="pollutantName")
     @Mapping(source="emissionsUomCode.code", target="emissionsUomCode")
     @Mapping(source="emissionsCalcMethodCode.code", target="emissionsCalcMethodCode")
+    @Mapping(source="emissionsCalcMethodCode.description", target="emissionsCalcMethodDescription")
     @Mapping(source="emissionsNumeratorUom.code", target="emissionsNumeratorUom")
     @Mapping(source="emissionsDenominatorUom.code", target="emissionsDenominatorUom")
     EmissionBulkUploadDto emissionToDto(Emission source);
@@ -165,12 +181,15 @@ public interface BulkUploadMapper {
 
     @Mapping(source="emission.id", target="emissionId")
     @Mapping(source="variableCode.code", target="emissionFormulaVariableCode")
+    @Mapping(source="emission.emissionsFactorFormula", target="emissionsFactorFormula")
+    @Mapping(source="variableCode.description", target="emissionFormulaVariableDescription")
     EmissionFormulaVariableBulkUploadDto emissionFormulaVariableToDto(EmissionFormulaVariable source);
 
     List<EmissionFormulaVariableBulkUploadDto> emissionFormulaVariableToDtoList(List<EmissionFormulaVariable> source);
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")
     @Mapping(source="typeCode.code", target="typeCode")
+    @Mapping(source="typeCode.description", target="typeDescription")
     @Mapping(source="stackHeightUomCode.code", target="stackHeightUomCode")
     @Mapping(source="stackDiameterUomCode.code", target="stackDiameterUomCode")
     @Mapping(source="stackWidthUomCode.code", target="stackWidthUomCode")
@@ -178,6 +197,7 @@ public interface BulkUploadMapper {
     @Mapping(source="exitGasVelocityUomCode.code", target="exitGasVelocityUomCode")
     @Mapping(source="exitGasFlowUomCode.code", target="exitGasFlowUomCode")
     @Mapping(source="operatingStatusCode.code", target="operatingStatusCode")
+    @Mapping(source="operatingStatusCode.description", target="operatingStatusDescription")
     @Mapping(source="fugitiveHeightUomCode.code", target="fugitiveHeightUomCode")
     @Mapping(source="fugitiveWidthUomCode.code", target="fugitiveWidthUomCode")
     @Mapping(source="fugitiveLengthUomCode.code", target="fugitiveLengthUomCode")
@@ -195,8 +215,11 @@ public interface BulkUploadMapper {
     ReleasePointAppt releasePointApptFromDto(ReleasePointApptBulkUploadDto source);
 
     @Mapping(source="releasePoint.id", target="releasePointId")
+    @Mapping(source="releasePoint.releasePointIdentifier", target="releasePointName")
     @Mapping(source="emissionsProcess.id", target="emissionProcessId")
+    @Mapping(source="emissionsProcess.emissionsProcessIdentifier", target="emissionProcessName")
     @Mapping(source="controlPath.id", target="controlPathId")
+    @Mapping(source="controlPath.pathId", target="pathName")
     ReleasePointApptBulkUploadDto releasePointApptToDto(ReleasePointAppt source);
 
     List<ReleasePointApptBulkUploadDto> releasePointApptToDtoList(List<ReleasePointAppt> source);
@@ -216,7 +239,9 @@ public interface BulkUploadMapper {
     ControlPathPollutant controlPathPollutantFromDto(ControlPathPollutantBulkUploadDto source);
 
     @Mapping(source="controlPath.id", target="controlPathId")
+    @Mapping(source="controlPath.pathId", target="pathName")
     @Mapping(source="pollutant.pollutantCode", target="pollutantCode")
+    @Mapping(source="pollutant.pollutantName", target="pollutantName")
     ControlPathPollutantBulkUploadDto controlPollutantToDto(ControlPathPollutant source);
 
     List<ControlPathPollutantBulkUploadDto> controlPathPollutantToDtoList(List<ControlPathPollutant> source);
@@ -230,7 +255,9 @@ public interface BulkUploadMapper {
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")
     @Mapping(source="operatingStatusCode.code", target="operatingStatusCode")
+    @Mapping(source="operatingStatusCode.description", target="operatingStatusCodeDescription")
     @Mapping(source="controlMeasureCode.code", target="controlMeasureCode")
+    @Mapping(source="controlMeasureCode.description", target="controlMeasureCodeDescription")
     ControlBulkUploadDto controlToDto(Control source);
 
     List<ControlBulkUploadDto> controlToDtoList(List<Control> source);
@@ -244,6 +271,9 @@ public interface BulkUploadMapper {
     @Mapping(source="control.id", target="controlId")
     @Mapping(source="controlPath.id", target="controlPathId")
     @Mapping(source="controlPathChild.id", target="controlPathChildId")
+    @Mapping(source="controlPath.pathId", target="pathName")
+    @Mapping(source="controlPathChild.pathId", target="childPathName")
+    @Mapping(source="control.identifier", target="controlName")
     ControlAssignmentBulkUploadDto controlAssignmentToDto(ControlAssignment source);
 
     List<ControlAssignmentBulkUploadDto> controlAssignmentToDtoList(List<ControlAssignment> source);
@@ -254,13 +284,16 @@ public interface BulkUploadMapper {
     ControlPollutant controlPollutantFromDto(ControlPollutantBulkUploadDto source);
 
     @Mapping(source="control.id", target="controlId")
+    @Mapping(source="control.identifier", target="controlName")
     @Mapping(source="pollutant.pollutantCode", target="pollutantCode")
+    @Mapping(source="pollutant.pollutantName", target="pollutantName")
     ControlPollutantBulkUploadDto controlPollutantToDto(ControlPollutant source);
 
     List<ControlPollutantBulkUploadDto> controlPollutantToDtoList(List<ControlPollutant> source);
 
     @Mapping(source="facilitySite.id", target="facilitySiteId")
     @Mapping(source="naicsCode.code", target="code")
+    @Mapping(source="naicsCode.description", target="description")
     FacilityNAICSBulkUploadDto faciliytNAICSToDto(FacilityNAICSXref source);
 
     List<FacilityNAICSBulkUploadDto> faciliytNAICSToDtoList(List<FacilityNAICSXref> source);
@@ -269,6 +302,7 @@ public interface BulkUploadMapper {
     @Mapping(source="countyCode.name", target="county")
     @Mapping(source="countyCode.countyCode", target="countyCode")
     @Mapping(source="type.code", target="type")
+    @Mapping(source="type.description", target="contactTypeDescription")
     @Mapping(source="stateCode.uspsCode", target="stateCode")
     @Mapping(source="mailingStateCode.uspsCode", target="mailingStateCode")
     FacilitySiteContactBulkUploadDto facilitySiteContactToDto(FacilitySiteContact source);

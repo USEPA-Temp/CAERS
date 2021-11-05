@@ -20,8 +20,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "emissions_units.csv")
 public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,6 +51,8 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
     @NotBlank(message = "Operating Status Code is required.")
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCodeDescription;
+    
+    private String operatingStatusCode;
 
     @NotBlank(message = "Operating Status Year is required.")
     @Pattern(regexp = YearPattern,
@@ -55,6 +62,8 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
     @NotBlank(message = "Type Code is required.")
     @Size(max = 20, message = "Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String typeCode;
+    
+    private String typeDescription;
 
     @NotBlank(message = "Unit Identifier is required.")
     @Size(max = 20, message = "Unit Identifier can not exceed {max} chars; found '${validatedValue}'.")
@@ -68,6 +77,7 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
         super(WorksheetName.EmissionsUnit);
     }
 
+    @CsvColumn(name = "Comments", order = 10)
     public String getComments() {
 
         return comments;
@@ -78,6 +88,7 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
         this.comments = comments;
     }
 
+    @CsvColumn(name = "Description", order = 4)
     public String getDescription() {
 
         return this.description;
@@ -88,6 +99,7 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
         this.description = description;
     }
 
+    @CsvColumn(name = "Design Capacity", order = 8)
     public String getDesignCapacity() {
 
         return designCapacity;
@@ -98,6 +110,7 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
         this.designCapacity = designCapacity;
     }
 
+    @CsvColumn(name = "Facility Site ID", order = 1)
     public Long getFacilitySiteId() {
 
         return this.facilitySiteId;
@@ -108,6 +121,7 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
         this.facilitySiteId = facilitySiteId;
     }
 
+    @CsvColumn(name = "ID", order = 3)
     public Long getId() {
 
         return this.id;
@@ -118,6 +132,7 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
         this.id = id;
     }
 
+    @CsvColumn(name = "Operating Status Code", order = 6)
     public String getOperatingStatusCodeDescription() {
 
         return this.operatingStatusCodeDescription;
@@ -128,6 +143,15 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
         this.operatingStatusCodeDescription = operatingStatusCodeDescription;
     }
 
+    @CsvColumn(name = "Operating Status Code Description", order = 6)
+    public String getOperatingStatusCode() {
+        return this.operatingStatusCode;
+    }
+    public void setOperatingStatusCode(String operatingStatusCode) {
+        this.operatingStatusCode = operatingStatusCode;
+    }
+
+    @CsvColumn(name = "Status Year", order = 7)
     public String getStatusYear() {
 
         return this.statusYear;
@@ -138,6 +162,7 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
         this.statusYear = statusYear;
     }
 
+    @CsvColumn(name = "Type Code", order = 5)
     public String getTypeCode() {
 
         return this.typeCode;
@@ -148,6 +173,15 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
         this.typeCode = typeCode;
     }
 
+    @CsvColumn(name = "Type Description", order = 5)
+    public String getTypeDescription() {
+        return this.typeDescription;
+    }
+    public void setTypeDescription(String typeDescription) {
+        this.typeDescription = typeDescription;
+    }
+
+    @CsvColumn(name = "Unit Identifier", order = 2)
     public String getUnitIdentifier() {
 
         return this.unitIdentifier;
@@ -158,6 +192,7 @@ public class EmissionsUnitBulkUploadDto extends BaseWorksheetDto implements Seri
         this.unitIdentifier = unitIdentifier;
     }
 
+    @CsvColumn(name = "Unit of Measure Code", order = 9)
     public String getUnitOfMeasureCode() {
 
         return this.unitOfMeasureCode;

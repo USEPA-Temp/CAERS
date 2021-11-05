@@ -19,8 +19,13 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "operating_details.csv")
 public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Serializable{
 
     /**
@@ -79,6 +84,7 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         super(WorksheetName.OperatingDetail);
     }
 
+    @CsvColumn(name = "ID", order = 1)
     public Long getId() {
         return id;
     }
@@ -87,6 +93,7 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         this.id = id;
     }
 
+    @CsvColumn(name = "Reporting Period ID", order = 2)
     public Long getReportingPeriodId() {
         return reportingPeriodId;
     }
@@ -95,6 +102,7 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         this.reportingPeriodId = reportingPeriodId;
     }
 
+    @CsvColumn(name = "Actual Hours Per Period", order = 3)
     public String getActualHoursPerPeriod() {
         return actualHoursPerPeriod;
     }
@@ -103,6 +111,7 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         this.actualHoursPerPeriod = actualHoursPerPeriod;
     }
 
+    @CsvColumn(name = "Average Hours Per Day", order = 4)
     public String getAverageHoursPerDay() {
         return averageHoursPerDay;
     }
@@ -111,6 +120,7 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         this.averageHoursPerDay = averageHoursPerDay;
     }
 
+    @CsvColumn(name = "Average Days Per Week", order = 5)
     public String getAverageDaysPerWeek() {
         return averageDaysPerWeek;
     }
@@ -119,6 +129,7 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         this.averageDaysPerWeek = averageDaysPerWeek;
     }
 
+    @CsvColumn(name = "Average Weeks Per Period", order = 6)
     public String getAverageWeeksPerPeriod() {
         return averageWeeksPerPeriod;
     }
@@ -127,6 +138,7 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         this.averageWeeksPerPeriod = averageWeeksPerPeriod;
     }
 
+    @CsvColumn(name = "Percent Winter", order = 7)
     public String getPercentWinter() {
         return percentWinter;
     }
@@ -135,6 +147,7 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         this.percentWinter = percentWinter;
     }
 
+    @CsvColumn(name = "Percent Spring", order = 8)
     public String getPercentSpring() {
         return percentSpring;
     }
@@ -143,6 +156,7 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         this.percentSpring = percentSpring;
     }
 
+    @CsvColumn(name = "Percent Summer", order = 9)
     public String getPercentSummer() {
         return percentSummer;
     }
@@ -151,6 +165,7 @@ public class OperatingDetailBulkUploadDto extends BaseWorksheetDto implements Se
         this.percentSummer = percentSummer;
     }
 
+    @CsvColumn(name = "Percent Fall", order = 10)
     public String getPercentFall() {
         return percentFall;
     }

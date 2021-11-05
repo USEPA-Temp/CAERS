@@ -20,8 +20,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "emission_formula_variables.csv")
 public class EmissionFormulaVariableBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,12 +45,17 @@ public class EmissionFormulaVariableBulkUploadDto extends BaseWorksheetDto imple
     @Pattern(regexp = PositiveDecimalPattern,
         message = "Value is not in expected numeric format; found '${validatedValue}'.")
     private String value;
+    
+    private String emissionsFactorFormula;
+    
+    private String emissionFormulaVariableDescription;
 
-    public EmissionFormulaVariableBulkUploadDto() {
+	public EmissionFormulaVariableBulkUploadDto() {
 
         super(WorksheetName.EmissionFormulaVariable);
     }
 
+    @CsvColumn(name = "Emission Formula Variable Code", order = 3)
     public String getEmissionFormulaVariableCode() {
 
         return emissionFormulaVariableCode;
@@ -56,6 +66,7 @@ public class EmissionFormulaVariableBulkUploadDto extends BaseWorksheetDto imple
         this.emissionFormulaVariableCode = emissionFormulaVariableCode;
     }
 
+    @CsvColumn(name = "Emission ID", order = 2)
     public Long getEmissionId() {
 
         return emissionId;
@@ -66,6 +77,7 @@ public class EmissionFormulaVariableBulkUploadDto extends BaseWorksheetDto imple
         this.emissionId = emissionId;
     }
 
+    @CsvColumn(name = "ID", order = 1)
     public Long getId() {
 
         return id;
@@ -76,6 +88,7 @@ public class EmissionFormulaVariableBulkUploadDto extends BaseWorksheetDto imple
         this.id = id;
     }
 
+    @CsvColumn(name = "Value", order = 4)
     public String getValue() {
 
         return value;
@@ -85,5 +98,22 @@ public class EmissionFormulaVariableBulkUploadDto extends BaseWorksheetDto imple
 
         this.value = value;
     }
+
+
+    @CsvColumn(name = "Emissions Factor Formula", order = 5)
+    public String getEmissionsFactorFormula() {
+		return emissionsFactorFormula;
+	}
+	public void setEmissionsFactorFormula(String emissionsFactorFormula) {
+		this.emissionsFactorFormula = emissionsFactorFormula;
+	}
+
+    @CsvColumn(name = "Emission Formula Variable Description", order = 3)
+	public String getEmissionFormulaVariableDescription() {
+		return emissionFormulaVariableDescription;
+	}
+	public void setEmissionFormulaVariableDescription(String emissionFormulaVariableDescription) {
+		this.emissionFormulaVariableDescription = emissionFormulaVariableDescription;
+	}
 
 }

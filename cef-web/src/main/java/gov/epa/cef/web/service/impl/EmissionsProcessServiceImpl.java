@@ -25,6 +25,8 @@ import gov.epa.cef.web.service.EmissionsProcessService;
 import gov.epa.cef.web.service.LookupService;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.EmissionsProcessMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,9 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
 
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
+    
+    @Autowired
+    private BulkUploadMapper bulkUploadMapper;
 
 
     public EmissionsProcessDto create(EmissionsProcessSaveDto dto) {
@@ -219,6 +224,18 @@ public class EmissionsProcessServiceImpl implements EmissionsProcessService {
         }
 
         return Collections.emptyList();
+    }
+
+
+    /**
+     * Retrieve a list of emissions processes for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */     
+    public List<EmissionsProcessBulkUploadDto> retrieveEmissionsProcesses(String programSystemCode, Short emissionsReportYear) {
+    	List<EmissionsProcess> processes = processRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.emissionsProcessToDtoList(processes);
     }
 
 }

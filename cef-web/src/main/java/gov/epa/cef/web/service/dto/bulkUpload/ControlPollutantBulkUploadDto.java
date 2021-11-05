@@ -20,8 +20,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "control_pollutants.csv")
 public class ControlPollutantBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,10 +36,14 @@ public class ControlPollutantBulkUploadDto extends BaseWorksheetDto implements S
 
     @NotNull(message = "Control ID is required.")
     private Long controlId;
+    
+    private String controlName;
 
     @NotBlank(message = "Pollutant Code is required.")
     @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
+    
+    private String pollutantName;
 
     @NotBlank(message = "Percent Reduction is required.")
     @Pattern(regexp = "^\\d{0,3}(\\.\\d{1})?$",
@@ -46,6 +55,7 @@ public class ControlPollutantBulkUploadDto extends BaseWorksheetDto implements S
         super(WorksheetName.ControlPollutant);
     }
 
+    @CsvColumn(name = "ID", order = 1)
     public Long getId() {
         return id;
     }
@@ -54,6 +64,7 @@ public class ControlPollutantBulkUploadDto extends BaseWorksheetDto implements S
         this.id = id;
     }
 
+    @CsvColumn(name = "Control ID", order = 2)
     public Long getControlId() {
         return controlId;
     }
@@ -62,6 +73,15 @@ public class ControlPollutantBulkUploadDto extends BaseWorksheetDto implements S
         this.controlId = controlId;
     }
 
+    @CsvColumn(name = "Control Name", order = 2)
+    public String getControlName() {
+    	return controlName;
+    }
+    public void setControlName(String controlName) {
+    	this.controlName = controlName;
+    }
+    
+    @CsvColumn(name = "Pollutant Code", order = 3)
     public String getPollutantCode() {
         return pollutantCode;
     }
@@ -69,7 +89,16 @@ public class ControlPollutantBulkUploadDto extends BaseWorksheetDto implements S
     public void setPollutantCode(String pollutant) {
         this.pollutantCode = pollutant;
     }
-
+    
+    @CsvColumn(name = "Pollutant Name", order = 3)
+    public String getPollutantName() {
+    	return pollutantName;
+    }
+    public void setPollutantName(String pollutantName) {
+    	this.pollutantName = pollutantName;
+    }
+    
+    @CsvColumn(name = "Percent Reduction", order = 4)
     public String getPercentReduction() {
         return percentReduction;
     }

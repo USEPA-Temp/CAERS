@@ -21,6 +21,8 @@ import java.util.List;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
 import gov.epa.cef.web.service.dto.ControlPathPollutantDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathPollutantBulkUploadDto;
 
 public interface ControlPathService {
 
@@ -146,4 +148,20 @@ public interface ControlPathService {
      * @return
      */
     ControlAssignmentDto updateAssignment(ControlAssignmentDto dto);
+
+    /**
+     * Retrieve a list of control paths for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<ControlPathBulkUploadDto> retrieveControlPaths(String programSystemCode, Short emissionsReportYear);
+
+    /**
+     * Retrieve a list of control path pollutants for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<ControlPathPollutantBulkUploadDto> retrieveControlPathPollutants(String programSystemCode, Short emissionsReportYear);
 }

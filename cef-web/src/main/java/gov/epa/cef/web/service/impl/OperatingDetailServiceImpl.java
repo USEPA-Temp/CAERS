@@ -17,6 +17,7 @@
 package gov.epa.cef.web.service.impl;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,8 @@ import gov.epa.cef.web.domain.OperatingDetail;
 import gov.epa.cef.web.repository.OperatingDetailRepository;
 import gov.epa.cef.web.service.OperatingDetailService;
 import gov.epa.cef.web.service.dto.OperatingDetailDto;
+import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.OperatingDetailMapper;
 
 
@@ -39,6 +42,8 @@ public class OperatingDetailServiceImpl implements OperatingDetailService {
 
     @Autowired
     private EmissionsReportStatusServiceImpl reportStatusService;
+    
+    @Autowired BulkUploadMapper bulkUploadMapper;
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.OperatingDetailService#update(gov.epa.cef.web.service.dto.OperatingDetailDto)
@@ -52,6 +57,18 @@ public class OperatingDetailServiceImpl implements OperatingDetailService {
         OperatingDetailDto result = mapper.toDto(repo.save(entity));
         reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), OperatingDetailRepository.class);
         return result;
+    }
+
+
+    /**
+     * Retrieve a list of operating details for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<OperatingDetailBulkUploadDto> retrieveOperatingDetails(String programSystemCode, Short emissionsReportYear) {
+    	List<OperatingDetail> operatingDetails = repo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.operatingDetailToDtoList(operatingDetails);
     }
 
 }
