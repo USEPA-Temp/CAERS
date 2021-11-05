@@ -71,6 +71,10 @@ public class CefConfig {
     public boolean getFeatureUserFeedbackEnabled() {
         return this.propertyProvider.getBoolean(AppPropertyName.FeatureUserFeedbackEnabled);
     }
+    
+    public boolean FeatureFacilityAutomatedEmailEnabled() {
+        return this.propertyProvider.getBoolean(AppPropertyName.FeatureFacilityAutomatedEmailEnabled);
+    }
 
     public String getLastSccUpdateDate() {
         return this.propertyProvider.getString(AppPropertyName.LastSccUpdateDate);
