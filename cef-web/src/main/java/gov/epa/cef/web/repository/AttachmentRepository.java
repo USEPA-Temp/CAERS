@@ -40,6 +40,8 @@ public interface AttachmentRepository extends CrudRepository<Attachment, Long>, 
    @Query("select mfr.id from Attachment ra join ra.emissionsReport r join r.masterFacilityRecord mfr where ra.id = :id")
    Optional<Long> retrieveMasterFacilityRecordIdById(@Param("id") Long id);
    
+   @Query("select a from Attachment a join a.communication c where c.id = :communicationId")
+   Optional<Attachment> findByCommunication(@Param("communicationId") Long communicationId);
    
    /**
    * Retrieve Emissions Report id for a report attachment

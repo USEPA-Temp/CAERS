@@ -21,16 +21,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.Communication;
-import gov.epa.cef.web.domain.Attachment;
 import gov.epa.cef.web.domain.UserFacilityAssociation;
 import gov.epa.cef.web.repository.CommunicationRepository;
 import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
-import gov.epa.cef.web.repository.AttachmentRepository;
 import gov.epa.cef.web.repository.UserFacilityAssociationRepository;
 import gov.epa.cef.web.service.CommunicationService;
 import gov.epa.cef.web.service.NotificationService;
@@ -44,14 +45,13 @@ import gov.epa.cef.web.util.SLTConfigHelper;
 @Service
 public class CommunicationServiceImpl implements CommunicationService {
 	
+	private static final Logger logger = LoggerFactory.getLogger(CommunicationServiceImpl.class);
+			
 	@Autowired
 	private UserService userService;
 	
 	@Autowired
 	private CommunicationMapper commMapper;
-	
-	@Autowired
-	private AttachmentRepository reportAttachmentsRepo;
 	
 	@Autowired
 	private CommunicationRepository commRepo;
@@ -76,27 +76,15 @@ public class CommunicationServiceImpl implements CommunicationService {
 	
 	private final String PREPARER_ROLE = "Preparer";
 	private final String NEI_CERTIFIER_ROLE = "NEI Certifier";
+	public static final String SENT = "Sent";
 	
-	/**
-     * Send SLT Email Notification
-     */
-	public Communication sendNotification(CommunicationDto dto) {
-		
+	public Communication save(CommunicationDto dto) {
 		Communication comm = commMapper.fromDto(dto);
 		UserDto appUser = this.userService.getCurrentUser();
     	String fullName = String.format("%s %s", appUser.getFirstName(), appUser.getLastName());
     	comm.setSenderName(fullName);
     	comm.setProgramSystemCode(programSystemCodeRepo.findById(appUser.getProgramSystemCode()).orElse(null));
     	
-    	Communication communication = this.commRepo.save(comm);
-    	if (dto.getAttachmentId() != null) {
-	    	Attachment attachment = reportAttachmentsRepo.findById(dto.getAttachmentId()).orElse(null);
-	    	attachment.setCommunication(communication);
-	    	reportAttachmentsRepo.save(attachment);
-    	}
-
-		SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(comm.getProgramSystemCode().getCode());
-
 		List<String> emailList = new ArrayList<>();
 		List<UserFacilityAssociation> userList = this.userFacilityRepo.findByProgramSystemCode(comm.getProgramSystemCode().getCode());
 		Map<Object,List<UserFacilityAssociationDto>> filteredUserList = userFacilityAssocService.mapAssociations(userList).stream()
@@ -109,10 +97,33 @@ public class CommunicationServiceImpl implements CommunicationService {
 		}
 
 		comm.setRecipientEmail(emailList.toString().substring(1, emailList.toString().length() - 1));
-		commRepo.save(comm);
-		notificationService.sendSLTNotification(sltConfig.getSltEmail(), cefConfig.getDefaultEmailAddress(), sltConfig.getSltEmail(), comm);
 		
+		return commRepo.save(comm);
+	}
+	
+	/**
+     * Send SLT Email Notification
+     */
+	public Communication sendNotification(Communication comm, MultipartFile file) {
+		SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(comm.getProgramSystemCode().getCode());
+		
+		notificationService.sendSLTNotification(sltConfig.getSltEmail(), cefConfig.getDefaultEmailAddress(), sltConfig.getSltEmail(), comm, file);
+
+		comm.setEmailStatus(SENT);
+		commRepo.save(comm);
     	return comm;
+	}
+	
+	public Communication sendNotification(Communication comm) {
+		return sendNotification(comm, null);
+	}
+	
+	public void deleteCommunication(Communication comm) {
+		commRepo.delete(comm);
+	}
+	
+	public void deleteAllEmailStatusNotSent () {
+		commRepo.deleteAllEmailStatusNotSent();
 	}
 	
 }

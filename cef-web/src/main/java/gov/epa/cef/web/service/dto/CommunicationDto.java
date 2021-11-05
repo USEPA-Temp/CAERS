@@ -31,6 +31,7 @@ public class CommunicationDto implements Serializable {
     private String content;
     private CodeLookupDto programSystemCode;
     private Long attachmentId;
+    private String emailStatus;
     
 	public Long getId() {
 		return id;
@@ -79,6 +80,12 @@ public class CommunicationDto implements Serializable {
 	}
 	public void setAttachmentId(Long attachmentId) {
 		this.attachmentId = attachmentId;
+	}
+	public String getEmailStatus() {
+		return emailStatus;
+	}
+	public void setEmailStatus(String emailStatus) {
+		this.emailStatus = emailStatus;
 	}
 
 }

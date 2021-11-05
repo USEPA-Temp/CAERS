@@ -45,6 +45,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import gov.epa.cef.web.service.CommunicationService;
 import gov.epa.cef.web.client.soap.VirusScanClient;
+import gov.epa.cef.web.domain.Communication;
 import gov.epa.cef.web.exception.ReportAttachmentValidationException;
 import gov.epa.cef.web.exception.VirusScanException;
 import gov.epa.cef.web.security.SecurityService;
@@ -97,15 +98,15 @@ public class CommunicationApi {
     @PostMapping(value = "/uploadAttachment")
     public ResponseEntity<AttachmentDto> uploadCommunicationAttachment(
     	@NotBlank @RequestPart("file") MultipartFile file,
-	    @NotNull @RequestPart("metadata") AttachmentDto metadata)  {
+	    @NotNull @RequestPart("metadata") CommunicationDto metadata)  {
     	
-    	AttachmentDto result = null;
+    	AttachmentDto result = new AttachmentDto();
     	HttpStatus status = HttpStatus.NO_CONTENT;
-    	
+    	Communication comm = commService.save(metadata);
     	try (TempFile tempFile = TempFile.from(file.getInputStream(), file.getOriginalFilename())) {
 
     		logger.debug("Attachment filename {}", tempFile.getFileName());
-    		logger.debug("AttachmentsDto {}", metadata);
+    		logger.debug("AttachmentsDto {}", result);
 
             this.virusScanClient.scanFile(tempFile);
             
@@ -114,12 +115,14 @@ public class CommunicationApi {
             		securityService.getCurrentApplicationUser().getLastName());
             
             Path path = Paths.get(file.getOriginalFilename());
-            metadata.setFileName(path.getFileName().toString());
-            metadata.setFileType(file.getContentType());
-            metadata.setAttachment(tempFile);
+            result.setFileName(path.getFileName().toString());
+            result.setFileType(file.getContentType());
+            result.setAttachment(tempFile);
             
-            result = attachmentService.saveAttachment(tempFile, metadata);
             
+            result.setCommunicationId(comm.getId());
+            result = attachmentService.saveAttachment(tempFile, result);
+            this.commService.sendNotification(comm, file);
             status = HttpStatus.OK;
             
         } catch (VirusScanException e) {
@@ -147,6 +150,7 @@ public class CommunicationApi {
     @ExceptionHandler(value = ReportAttachmentValidationException.class)
     public ResponseEntity<JsonNode> uploadValidationError(ReportAttachmentValidationException exception) {
 
+    	commService.deleteAllEmailStatusNotSent();
         ObjectNode objectNode = objectMapper.createObjectNode();
         objectNode.put("failed", true);
         ArrayNode arrayNode = objectNode.putArray("errors");
@@ -163,7 +167,8 @@ public class CommunicationApi {
     @PutMapping(value = "/sendSLTNotification")
     public ResponseEntity<CommunicationDto> sendSLTNotificationEmail(@NotNull @RequestBody CommunicationDto communication) {
 
-    	CommunicationDto result = commMapper.toDto(this.commService.sendNotification(communication));
+    	Communication comm = commService.save(communication);
+    	CommunicationDto result = commMapper.toDto(this.commService.sendNotification(comm));
     	
     	return new ResponseEntity<>(result, HttpStatus.OK);
     }

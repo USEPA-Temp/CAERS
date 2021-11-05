@@ -164,9 +164,7 @@ export class SltPropertiesComponent implements OnInit {
     modalRef.componentInstance.message = `Send a notification to all Preparers and NEI Certifiers of facilities associated with ${this.slt}.`
 
     modalRef.result.then((resp) => {
-		this.communicationService.sendSLTNotificationEmail(resp)
-			.subscribe(resp => {
-	          });
+	
     }, () => {
       // needed for dismissing without errors
     });
