@@ -417,10 +417,6 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 List<ReleasePoint> previousRps = releasePointRepo.retrieveByFacilityYear(
                         emissionsReport.getMasterFacilityRecord().getId(), 
                         previousReportYr);
-                
-                List<EmissionsUnit> previousEus = emissionsUnitRepo.retrieveByFacilityYear(
-                        emissionsReport.getMasterFacilityRecord().getId(), 
-                        previousReportYr);
 
                 // Map Release Points
                 for (ReleasePointBulkUploadDto bulkRp : bulkEmissionsReport.getReleasePoints()) {
@@ -443,14 +439,20 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 }
                 
                 for (ReleasePoint previousRp : previousRps) {
-            		ReleasePoint rpToAdd = new ReleasePoint(facility, previousRp);
-            		// id is nulled to stop hibernate from getting mad
-            		rpToAdd.clearId();
-            		// previous year status will be the same since we're pulling from the previous year report
-            		rpToAdd.setPreviousYearOperatingStatusCode(rpToAdd.getOperatingStatusCode());
-                    facility.getReleasePoints().add(rpToAdd);
+                	if (!previousRp.getOperatingStatusCode().getCode().equals("PS")) {
+	            		ReleasePoint rpToAdd = new ReleasePoint(facility, previousRp);
+	            		// id is nulled to stop hibernate from getting mad
+	            		rpToAdd.clearId();
+	            		// previous year status will be the same since we're pulling from the previous year report
+	            		rpToAdd.setPreviousYearOperatingStatusCode(rpToAdd.getOperatingStatusCode());
+	                    facility.getReleasePoints().add(rpToAdd);
+                	}
                 }
 
+                List<EmissionsUnit> previousEus = emissionsUnitRepo.retrieveByFacilityYear(
+                        emissionsReport.getMasterFacilityRecord().getId(), 
+                        previousReportYr);
+                
                 // Map Emissions Units
                 for (EmissionsUnitBulkUploadDto bulkEmissionsUnit : bulkEmissionsReport.getEmissionsUnits()) {
 
@@ -549,13 +551,15 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                             }).collect(Collectors.toList());
                         
                         for (EmissionsProcess previousProc : previousProcs) {
-                        	EmissionsProcess procToAdd = mapToNewProcess(previousProc);
-                        	// update to the current emissions unit
-                        	procToAdd.setEmissionsUnit(emissionsUnit);
-                        	procToAdd.clearId();
-                        	procToAdd.setReleasePointAppts(null);
-                        	
-                            processes.add(procToAdd);
+                        	if (!previousProc.getOperatingStatusCode().getCode().equals("PS")) {
+	                        	EmissionsProcess procToAdd = mapToNewProcess(previousProc);
+	                        	// update to the current emissions unit
+	                        	procToAdd.setEmissionsUnit(emissionsUnit);
+	                        	procToAdd.clearId();
+	                        	procToAdd.setReleasePointAppts(null);
+	                        	
+	                            processes.add(procToAdd);
+                        	}
                         }
 
                         emissionsUnit.setEmissionsProcesses(processes);
@@ -567,18 +571,20 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 }
                 
                 for (EmissionsUnit previousEu : previousEus) {
-                	EmissionsUnit euToAdd = new EmissionsUnit(facility, previousEu);
-                    // id is nulled to stop hibernate from getting mad
-                	euToAdd.clearId();
-                    // previous year status will be the same since we're pulling from the previous year report
-                	euToAdd.setPreviousYearOperatingStatusCode(euToAdd.getOperatingStatusCode());
-                	// also need to set previous op code and current op year for processes
-                	for (EmissionsProcess proc : euToAdd.getEmissionsProcesses()) {
-                		proc.setPreviousYearOperatingStatusCode(proc.getOperatingStatusCode());
-                		proc.setStatusYear(euToAdd.getStatusYear());
-                		proc.setReleasePointAppts(null);
+                	if (!previousEu.getOperatingStatusCode().getCode().equals("PS")) {
+	                	EmissionsUnit euToAdd = new EmissionsUnit(facility, previousEu);
+	                    // id is nulled to stop hibernate from getting mad
+	                	euToAdd.clearId();
+	                    // previous year status will be the same since we're pulling from the previous year report
+	                	euToAdd.setPreviousYearOperatingStatusCode(euToAdd.getOperatingStatusCode());
+	                	// also need to set previous op code and current op year for processes
+	                	for (EmissionsProcess proc : euToAdd.getEmissionsProcesses()) {
+	                		proc.setPreviousYearOperatingStatusCode(proc.getOperatingStatusCode());
+	                		proc.setStatusYear(euToAdd.getStatusYear());
+	                		proc.setReleasePointAppts(null);
+	                	}
+	                    facility.getEmissionsUnits().add(euToAdd);
                 	}
-                    facility.getEmissionsUnits().add(euToAdd);
                 }
 
                 // Map Control Paths
@@ -646,12 +652,16 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                     }).collect(Collectors.toList());
                 
                 for (Control previousControl : previousControls) {
-                	Control controlToAdd = new Control(facility, previousControl);
-                	
-                	controlToAdd.clearId();
-                	controlToAdd.setPreviousYearOperatingStatusCode(controlToAdd.getOperatingStatusCode());
-                	
-                	controls.add(controlToAdd);
+                	if (!previousControl.getOperatingStatusCode().getCode().equals("PS")) {
+                		
+	                	Control controlToAdd = new Control(facility, previousControl);
+	                	// id is nulled to stop hibernate from getting mad
+	                	controlToAdd.clearId();
+	                	// previous year status will be the same since we're pulling from the previous year report
+	                	controlToAdd.setPreviousYearOperatingStatusCode(controlToAdd.getOperatingStatusCode());
+	                	
+	                	controls.add(controlToAdd);
+                	}
                 }
 
                 facility.setControls(controls);
