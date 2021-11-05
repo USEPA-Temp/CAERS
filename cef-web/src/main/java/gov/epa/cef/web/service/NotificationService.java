@@ -18,6 +18,9 @@ package gov.epa.cef.web.service;
 
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import gov.epa.cef.web.domain.Communication;
 import gov.epa.cef.web.service.dto.UserFeedbackDto;
 
 public interface NotificationService {
@@ -31,6 +34,7 @@ public interface NotificationService {
     void sendUserAssociationAcceptedNotification(String to, String from, String facilityName, String role);
     void sendUserAssociationRejectedNotification(String to, String from, String facilityName, String role, String comments);
     void sendUserFeedbackNotification(UserFeedbackDto userFeedback);
+    void sendSLTNotification(String bcc, String from, String sltEmail, Communication communication, MultipartFile file);
     
     void sendAdminNotification(AdminEmailType type, Map<String, Object> context);
 

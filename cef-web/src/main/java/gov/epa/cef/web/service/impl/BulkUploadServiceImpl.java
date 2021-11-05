@@ -21,10 +21,13 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -76,8 +79,12 @@ import gov.epa.cef.web.repository.CalculationMethodCodeRepository;
 import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
 import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
+import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.repository.EmissionFormulaVariableCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
+import gov.epa.cef.web.repository.EmissionsProcessRepository;
+import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.repository.FacilityCategoryCodeRepository;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.repository.FacilitySourceTypeCodeRepository;
@@ -88,6 +95,7 @@ import gov.epa.cef.web.repository.NaicsCodeRepository;
 import gov.epa.cef.web.repository.OperatingStatusCodeRepository;
 import gov.epa.cef.web.repository.PollutantRepository;
 import gov.epa.cef.web.repository.ProgramSystemCodeRepository;
+import gov.epa.cef.web.repository.ReleasePointRepository;
 import gov.epa.cef.web.repository.ReleasePointTypeCodeRepository;
 import gov.epa.cef.web.repository.ReportingPeriodCodeRepository;
 import gov.epa.cef.web.repository.TribalCodeRepository;
@@ -119,6 +127,7 @@ import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
 import gov.epa.cef.web.service.dto.bulkUpload.WorksheetError;
 import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.util.CalculationUtils;
+import gov.epa.cef.web.util.ConstantUtils;
 import gov.epa.cef.web.util.MassUomConversion;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import gov.epa.cef.web.util.TempFile;
@@ -215,6 +224,21 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     
     @Autowired
     private SLTConfigHelper sltConfigHelper;
+    
+    @Autowired
+    private EmissionsReportRepository emissionsReportRepo;
+    
+    @Autowired
+    private ReleasePointRepository releasePointRepo;
+    
+    @Autowired
+    private EmissionsUnitRepository emissionsUnitRepo;
+    
+    @Autowired
+    private ControlRepository controlRepo;
+    
+    @Autowired
+    private EmissionsProcessRepository emissionsProcessRepo;
 
     @Override
     public Function<JsonNode, EmissionsReportBulkUploadDto> parseJsonNode(boolean failUnknownProperties) {
@@ -237,6 +261,7 @@ public class BulkUploadServiceImpl implements BulkUploadService {
         // and reset the validation, report, and CROMERR status for the report
         Optional<EmissionsReport> previousReport = this.emissionsReportService.retrieveByMasterFacilityRecordIdAndYear(bulkEmissionsReport.getMasterFacilityRecordId(), 
                                                                                                                        bulkEmissionsReport.getYear());
+        
         if (previousReport.isPresent()) {
         	
         	//remove any previous facilitySites from the report (the main report data)
@@ -381,17 +406,53 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                     }
                 }
 
+                // get the previous year report and sub-components for comparing statuses
+                List<EmissionsReport> erList = emissionsReportRepo.findByMasterFacilityRecordId(emissionsReport.getMasterFacilityRecord().getId()).stream()
+                        .filter(var -> (var.getYear() != null && var.getYear() < emissionsReport.getYear()))
+                        .sorted(Comparator.comparing(EmissionsReport::getYear))
+                        .collect(Collectors.toList());
+        
+                Short previousReportYr = (!erList.isEmpty()) ? erList.get(erList.size()-1).getYear() : -1;
+                
+                List<ReleasePoint> previousRps = releasePointRepo.retrieveByFacilityYear(
+                        emissionsReport.getMasterFacilityRecord().getId(), 
+                        previousReportYr);
+
                 // Map Release Points
                 for (ReleasePointBulkUploadDto bulkRp : bulkEmissionsReport.getReleasePoints()) {
                     ReleasePoint releasePoint = mapReleasePoint(bulkRp);
-
+                    
+                    for (ReleasePoint previousRp : previousRps) {
+                    	if (releasePoint.getReleasePointIdentifier().equals(previousRp.getReleasePointIdentifier())) {
+                    		
+                			releasePoint.setPreviousYearOperatingStatusCode(previousRp.getOperatingStatusCode());
+                    		previousRps.remove(previousRp);
+                    		break;
+                    	}
+                    }
+                    
                     if (bulkFacility.getId().equals(bulkRp.getFacilitySiteId())) {
                         releasePoint.setFacilitySite(facility);
                         facility.getReleasePoints().add(releasePoint);
                         releasePointMap.put(bulkRp.getId(), releasePoint);
                     }
                 }
+                
+                for (ReleasePoint previousRp : previousRps) {
+                	if (!previousRp.getOperatingStatusCode().getCode().equals("PS")) {
+	            		ReleasePoint rpToAdd = new ReleasePoint(facility, previousRp);
+	            		// id is nulled to stop hibernate from getting mad
+	            		rpToAdd.clearId();
+	            		// previous year status will be the same since we're pulling from the previous year report
+	            		rpToAdd.setPreviousYearOperatingStatusCode(rpToAdd.getOperatingStatusCode());
+	                    facility.getReleasePoints().add(rpToAdd);
+                	}
+                }
 
+                List<EmissionsUnit> previousEus = emissionsUnitRepo.retrieveByFacilityYear(
+                        emissionsReport.getMasterFacilityRecord().getId(), 
+                        previousReportYr);
+                
                 // Map Emissions Units
                 for (EmissionsUnitBulkUploadDto bulkEmissionsUnit : bulkEmissionsReport.getEmissionsUnits()) {
 
@@ -399,12 +460,35 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
                         EmissionsUnit emissionsUnit = mapEmissionsUnit(bulkEmissionsUnit);
                         emissionsUnit.setFacilitySite(facility);
+                        
+                        for (EmissionsUnit previousEu : previousEus) {
+                        	if (emissionsUnit.getUnitIdentifier().equals(previousEu.getUnitIdentifier())) {
+                        		
+                        		emissionsUnit.setPreviousYearOperatingStatusCode(previousEu.getOperatingStatusCode());
+                        		previousEus.remove(previousEu);
+                        		break;
+                        	}
+                        }
 
                         // Map Emissions Processes
+                        List<EmissionsProcess> previousProcs = emissionsProcessRepo.retrieveByParentFacilityYear(
+                        		emissionsUnit.getUnitIdentifier(),
+                                emissionsReport.getMasterFacilityRecord().getId(), 
+                                previousReportYr);
+                        
                         List<EmissionsProcess> processes = bulkEmissionsReport.getEmissionsProcesses().stream()
                             .filter(p -> bulkEmissionsUnit.getId().equals(p.getEmissionsUnitId()))
                             .map(bulkProcess -> {
                                 EmissionsProcess process = mapEmissionsProcess(bulkProcess);
+                                
+                                for (EmissionsProcess previousProc : previousProcs) {
+                                	if (process.getEmissionsProcessIdentifier().equals(previousProc.getEmissionsProcessIdentifier())) {
+                                		
+                                		process.setPreviousYearOperatingStatusCode(previousProc.getOperatingStatusCode());
+                                		previousProcs.remove(previousProc);
+                                		break;
+                                	}
+                                }
 
                                 // Map Reporting Periods
                                 List<ReportingPeriod> periods = bulkEmissionsReport.getReportingPeriods().stream()
@@ -465,12 +549,42 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
                                 return process;
                             }).collect(Collectors.toList());
+                        
+                        for (EmissionsProcess previousProc : previousProcs) {
+                        	if (!previousProc.getOperatingStatusCode().getCode().equals("PS")) {
+	                        	EmissionsProcess procToAdd = mapToNewProcess(previousProc);
+	                        	// update to the current emissions unit
+	                        	procToAdd.setEmissionsUnit(emissionsUnit);
+	                        	procToAdd.clearId();
+	                        	procToAdd.setReleasePointAppts(null);
+	                        	
+	                            processes.add(procToAdd);
+                        	}
+                        }
 
                         emissionsUnit.setEmissionsProcesses(processes);
 
                         facility.getEmissionsUnits().add(emissionsUnit);
 
                     }
+                    
+                }
+                
+                for (EmissionsUnit previousEu : previousEus) {
+                	if (!previousEu.getOperatingStatusCode().getCode().equals("PS")) {
+	                	EmissionsUnit euToAdd = new EmissionsUnit(facility, previousEu);
+	                    // id is nulled to stop hibernate from getting mad
+	                	euToAdd.clearId();
+	                    // previous year status will be the same since we're pulling from the previous year report
+	                	euToAdd.setPreviousYearOperatingStatusCode(euToAdd.getOperatingStatusCode());
+	                	// also need to set previous op code and current op year for processes
+	                	for (EmissionsProcess proc : euToAdd.getEmissionsProcesses()) {
+	                		proc.setPreviousYearOperatingStatusCode(proc.getOperatingStatusCode());
+	                		proc.setStatusYear(euToAdd.getStatusYear());
+	                		proc.setReleasePointAppts(null);
+	                	}
+	                    facility.getEmissionsUnits().add(euToAdd);
+                	}
                 }
 
                 // Map Control Paths
@@ -501,11 +615,24 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                 facility.setControlPaths(controlPaths);
 
                 // Map Controls
+                List<Control> previousControls = controlRepo.retrieveByFacilityYear(
+                        emissionsReport.getMasterFacilityRecord().getId(), 
+                        previousReportYr);
+                
                 List<Control> controls = bulkEmissionsReport.getControls().stream()
                     .filter(c -> bulkFacility.getId().equals(c.getFacilitySiteId()))
                     .map(bulkControl -> {
                         Control control = mapControl(bulkControl);
                         control.setFacilitySite(facility);
+                        
+                        for (Control previousControl : previousControls) {
+                            if (control.getIdentifier().equals(previousControl.getIdentifier())) {
+                                
+                            	control.setPreviousYearOperatingStatusCode(previousControl.getOperatingStatusCode());
+                            	previousControls.remove(previousControl);
+                                break;
+                            }
+                        }
 
                         // Map Control Pollutants
                         List<ControlPollutant> controlPollutants = bulkEmissionsReport.getControlPollutants().stream()
@@ -523,6 +650,19 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
                         return control;
                     }).collect(Collectors.toList());
+                
+                for (Control previousControl : previousControls) {
+                	if (!previousControl.getOperatingStatusCode().getCode().equals("PS")) {
+                		
+	                	Control controlToAdd = new Control(facility, previousControl);
+	                	// id is nulled to stop hibernate from getting mad
+	                	controlToAdd.clearId();
+	                	// previous year status will be the same since we're pulling from the previous year report
+	                	controlToAdd.setPreviousYearOperatingStatusCode(controlToAdd.getOperatingStatusCode());
+	                	
+	                	controls.add(controlToAdd);
+                	}
+                }
 
                 facility.setControls(controls);
 
@@ -1175,5 +1315,40 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
             return result;
         }
+    }
+    
+    public EmissionsProcess mapToNewProcess(EmissionsProcess originalProcess) {
+    	EmissionsProcess newProcess = new EmissionsProcess();
+    	
+    	newProcess.setId(null);
+    	newProcess.setEmissionsUnit(originalProcess.getEmissionsUnit());
+    	newProcess.setAircraftEngineTypeCode(originalProcess.getAircraftEngineTypeCode());
+    	newProcess.setOperatingStatusCode(originalProcess.getOperatingStatusCode());
+    	newProcess.setPreviousYearOperatingStatusCode(originalProcess.getOperatingStatusCode());
+    	newProcess.setEmissionsProcessIdentifier(originalProcess.getEmissionsProcessIdentifier());
+    	newProcess.setStatusYear(originalProcess.getStatusYear());
+    	newProcess.setSccCode(originalProcess.getSccCode());
+    	newProcess.setSccDescription(originalProcess.getSccDescription());
+    	newProcess.setSccShortName(originalProcess.getSccShortName());
+    	newProcess.setDescription(originalProcess.getDescription());
+    	newProcess.setComments(originalProcess.getComments());
+
+        for (ReportingPeriod reportingPeriod : originalProcess.getReportingPeriods()) {
+        	ReportingPeriod rpToAdd = new ReportingPeriod(newProcess, reportingPeriod);
+        	
+        	rpToAdd.setId(null);
+
+        	for (OperatingDetail opDetail : rpToAdd.getOperatingDetails()) {
+        		opDetail.setId(null);
+        	}
+        	for (Emission e : rpToAdd.getEmissions()) {
+        		e.setId(null);
+        	}
+        	
+        	newProcess.getReportingPeriods().add(rpToAdd);
+        	
+        }
+        
+        return newProcess;
     }
 }

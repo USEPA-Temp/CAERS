@@ -21,11 +21,11 @@ import bsCustomFileInput from 'bs-custom-file-input';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { EMPTY } from 'rxjs';
 import { UserService } from 'src/app/core/services/user.service';
-import { ReportAttachmentService } from 'src/app/core/services/report-attachment.service';
-import { ReportAttachment } from 'src/app/shared/models/report-attachment';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ConfigPropertyService } from 'src/app/core/services/config-property.service';
 import { User } from 'src/app/shared/models/user';
+import { AttachmentService } from 'src/app/core/services/attachment.service';
+import { Attachment } from 'src/app/shared/models/attachment';
 
 interface PleaseWaitConfig {
     modal: NgbModalRef;
@@ -54,7 +54,7 @@ export class FileAttachmentModalComponent implements OnInit {
   @Input() cancelButtonText = 'Cancel';
   @Input() confirmButtonText = 'OK';
   @Input() reportId: number;
-  attachment: ReportAttachment;
+  attachment: Attachment;
   selectedFile: File = null;
   maxFileSize: number;
   acceptedMIMEtypes: string [];
@@ -82,7 +82,7 @@ export class FileAttachmentModalComponent implements OnInit {
 
   constructor(public activeModal: NgbActiveModal,
               private fb: FormBuilder,
-              private reportAttachmentService: ReportAttachmentService,
+              private reportAttachmentService: AttachmentService,
               private userService: UserService,
               private sharedService: SharedService,
               private propertyService: ConfigPropertyService,
@@ -157,7 +157,7 @@ export class FileAttachmentModalComponent implements OnInit {
         this.uploadFailed = false;
         this.uploadFile = this.selectedFile.name;
 
-        const reportAttachment = new ReportAttachment();
+        const reportAttachment = new Attachment();
         reportAttachment.reportId = this.reportId;
         Object.assign(reportAttachment, this.attachmentForm.value);
 

@@ -1113,6 +1113,27 @@ public class EmissionsUnitValidatorTest extends BaseValidatorTest {
         errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()).size() == 1);
     }
+	
+	@Test
+    public void operationStatusPSPreviousYearOpCurrentYearFailTest() {
+
+        CefValidatorContext cefContext = createContext();
+        EmissionsUnit testData = createBaseEmissionsUnit();
+
+        OperatingStatusCode opStatusCode = new OperatingStatusCode();
+        OperatingStatusCode psStatusCode = new OperatingStatusCode();
+        opStatusCode.setCode("OP");
+        psStatusCode.setCode("PS");
+        testData.setOperatingStatusCode(opStatusCode);
+        testData.setPreviousYearOperatingStatusCode(psStatusCode);
+        testData.setStatusYear((short) 2019);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
+
+        Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
+        assertTrue(errorMap.containsKey(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()) && errorMap.get(ValidationField.EMISSIONS_UNIT_STATUS_CODE.value()).size() == 1);
+    }
 
     private EmissionsUnit createBaseEmissionsUnit() {
 

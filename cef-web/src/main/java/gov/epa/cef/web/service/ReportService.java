@@ -19,7 +19,7 @@ package gov.epa.cef.web.service;
 import java.util.List;
 
 import gov.epa.cef.web.domain.ReportAction;
-import gov.epa.cef.web.domain.ReportAttachment;
+import gov.epa.cef.web.domain.Attachment;
 import gov.epa.cef.web.service.dto.ReportDownloadDto;
 import gov.epa.cef.web.service.dto.ReportHistoryDto;
 import gov.epa.cef.web.service.dto.ReportSummaryDto;
@@ -50,7 +50,7 @@ public interface ReportService {
      * @param cromerrActivityId
      * @param cromerrDocumentId
      */
-    void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, ReportAttachment reportAttachment, String cromerrActivityId, String cromerrDocumentId);
+    void createReportHistory(List<Long> reportIds, ReportAction reportAction, String comments, Attachment reportAttachment, String cromerrActivityId, String cromerrDocumentId);
     
     /**
      * Create Report History record 
@@ -74,7 +74,7 @@ public interface ReportService {
      * @param comments
      * @param reportAttachment
      */
-    void createReportHistory(Long reportId, ReportAction reportAction, String comments, ReportAttachment reportAttachment);
+    void createReportHistory(Long reportId, ReportAction reportAction, String comments, Attachment reportAttachment);
 
     /**
      * Create Report History record 

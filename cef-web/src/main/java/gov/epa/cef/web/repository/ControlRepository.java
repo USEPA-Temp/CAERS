@@ -46,6 +46,15 @@ public interface ControlRepository extends CrudRepository<Control, Long>, Progra
      */
     @Query("select c from Control c join c.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where c.identifier = :identifier and mfr.id = :mfrId and r.year = :year")
     List<Control> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("mfrId") Long mfrId, @Param("year") Short year);
+    
+    /**
+     * Find Controls with the specified identifier, master facility record id, and year
+     * @param mfrId
+     * @param year
+     * @return
+     */
+    @Query("select c from Control c join c.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where mfr.id = :mfrId and r.year = :year")
+    List<Control> retrieveByFacilityYear(@Param("mfrId") Long mfrId, @Param("year") Short year);
 
     @Cacheable(value = CacheName.ControlMasterIds)
     @Query("select mfr.id from Control c join c.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where c.id = :id")

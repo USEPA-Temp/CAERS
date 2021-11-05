@@ -16,12 +16,9 @@
 */
 package gov.epa.cef.web.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -47,7 +44,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Functions;
 import com.google.common.base.Strings;
-import com.google.common.io.Resources;
 
 import gov.epa.cef.web.domain.Control;
 import gov.epa.cef.web.domain.ControlAssignment;
@@ -95,7 +91,7 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private static final String EXCEL_FILE_PATH = "excel/CEF_BulkUpload_Template.xlsx";
+    private static final String EXCEL_FILE_PATH = "/excel/CEF_BulkUpload_Template.xlsx";
     private static final String EXCEL_GENERIC_LOOKUP_TEXT = "INDEX(%s!$A$2:$A$%d,MATCH(\"%s\",%s!$B$2:$B$%d,0))";
     private static final String EXCEL_GENERIC_LOOKUP_NUMBER = "INDEX(%s!$A$2:$A$%d,MATCH(%s,%s!$B$2:$B$%d,0))";
     private static final int EXCEL_MAPPING_HEADER_ROWS = 23;
@@ -251,9 +247,7 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
 
         logger.info("Begin file manipulation");
 
-        URL template = Resources.getResource(EXCEL_FILE_PATH);
-
-        try (FileInputStream is = new FileInputStream(new File(template.toURI()));
+        try (InputStream is = this.getClass().getResourceAsStream(EXCEL_FILE_PATH);
              TempFile tempFile = TempFile.from(is, UUID.randomUUID().toString());
              XSSFWorkbook wb = XSSFWorkbookFactory.createWorkbook(tempFile.getFile(), false)) {
 
@@ -303,7 +297,7 @@ public class EmissionsReportExportServiceImpl implements EmissionsReportExportSe
 
             logger.info("Finish generate excel");
 
-        } catch (IOException | EncryptedDocumentException | InvalidFormatException | URISyntaxException ex) {
+        } catch (IOException | EncryptedDocumentException | InvalidFormatException ex) {
 
             logger.error("Unable to generate Excel export ", ex);
             throw new IllegalStateException(ex);

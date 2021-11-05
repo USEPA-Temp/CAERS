@@ -225,7 +225,7 @@ export class EditProcessReportingPeriodPanelComponent implements OnInit, OnChang
     }
 
     setDefaultHeatContentRatio(){
-        const materialValue = this.reportingPeriodForm.get('fuelUseMaterialCode').value ? this.fuelUseMaterialValues.filter(
+        const materialValue = this.reportingPeriodForm.get('fuelUseMaterialCode').value ? this.fuelUseMaterialValues?.filter(
                             val => (val.code === (this.reportingPeriodForm.get('fuelUseMaterialCode').value.code)))[0] : null;
         const fuelUom = materialValue && materialValue.heatContentRatioDenominatorUom ? materialValue.heatContentRatioDenominatorUom.code : null;
         const defaultHeatRatio = materialValue ? materialValue.defaultHeatContentRatio : null;

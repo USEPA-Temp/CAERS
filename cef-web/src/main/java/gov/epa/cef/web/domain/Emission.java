@@ -27,6 +27,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import gov.epa.cef.web.domain.common.BaseAuditEntity;
@@ -96,6 +97,10 @@ public class Emission extends BaseAuditEntity {
     @Column(name = "calculated_emissions_tons")
     private BigDecimal calculatedEmissionsTons;
     
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "energy_conversion_factor_id")
+    private EnergyConversionFactor energyConversionFactor;
+    
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "emission")
     private List<EmissionFormulaVariable> variables = new ArrayList<>();
 
@@ -129,6 +134,7 @@ public class Emission extends BaseAuditEntity {
         this.calculatedEmissionsTons = originalEmission.getCalculatedEmissionsTons();
         this.formulaIndicator = originalEmission.getFormulaIndicator();
         this.emissionsFactorFormula = originalEmission.getEmissionsFactorFormula();
+        this.energyConversionFactor = originalEmission.getEnergyConversionFactor();
 
         for (EmissionFormulaVariable variable : originalEmission.getVariables()) {
             this.variables.add(new EmissionFormulaVariable(this, variable));
@@ -263,7 +269,15 @@ public class Emission extends BaseAuditEntity {
         this.emissionsDenominatorUom = emissionsDenominatorUom;
     }
 
-    public List<EmissionFormulaVariable> getVariables() {
+    public EnergyConversionFactor getEnergyConversionFactor() {
+		return energyConversionFactor;
+	}
+
+	public void setEnergyConversionFactor(EnergyConversionFactor energyConversionFactor) {
+		this.energyConversionFactor = energyConversionFactor;
+	}
+
+	public List<EmissionFormulaVariable> getVariables() {
         return variables;
     }
 

@@ -34,6 +34,7 @@ import gov.epa.cef.web.service.dto.CalculationMaterialCodeDto;
 import gov.epa.cef.web.service.dto.CalculationMethodCodeDto;
 import gov.epa.cef.web.service.dto.CodeLookupDto;
 import gov.epa.cef.web.service.dto.EisLatLongToleranceLookupDto;
+import gov.epa.cef.web.service.dto.EnergyConversionFactorDto;
 import gov.epa.cef.web.service.dto.FacilityCategoryCodeDto;
 import gov.epa.cef.web.service.dto.FipsCountyDto;
 import gov.epa.cef.web.service.dto.FipsStateCodeDto;
@@ -374,4 +375,11 @@ public interface LookupService {
      * @return
      */
     List<PointSourceSccCodeDto> retrieveSearchSccCodes(String searchTerm);
+    
+    /**
+	 * Retrieve Energy Conversion Factor by throughput calculation material
+	 * @param calcMaterial
+	 * @return
+	 */
+    EnergyConversionFactorDto findByCalculationMaterialCode(String calcMaterial);
 }
