@@ -25,6 +25,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import gov.epa.cef.web.config.CacheName;
+import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPathPollutant;
 
 public interface ControlPathPollutantRepository extends CrudRepository<ControlPathPollutant, Long>, ProgramIdRetriever, ReportIdRetriever {
@@ -48,4 +49,13 @@ public interface ControlPathPollutantRepository extends CrudRepository<ControlPa
    @Cacheable(value = CacheName.ControlPathPollutantEmissionsReportIds)
    @Query("select r.id from ControlPathPollutant cpp join cpp.controlPath cp join cp.facilitySite fs join fs.emissionsReport r where cpp.id = :id")
    Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+   
+   /**
+    * Retrieve a list of all control path pollutants for a specific program system code and emissions reporting year
+    * @param psc Program System Code
+    * @param emissionsReportYear
+    * @return
+    */
+   @Query("select cpp from ControlPathPollutant cpp join cpp.controlPath cp join cp.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+   List<ControlPathPollutant> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
 }

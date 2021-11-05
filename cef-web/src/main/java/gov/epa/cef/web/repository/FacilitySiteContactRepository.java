@@ -18,6 +18,7 @@ package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.ContactTypeCode;
+import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.FacilitySiteContact;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
@@ -56,4 +57,13 @@ public interface FacilitySiteContactRepository extends CrudRepository<FacilitySi
     @Cacheable(value = CacheName.FacilitySiteContactEmissionsReportIds)
     @Query("select r.id from FacilitySiteContact c join c.facilitySite fs join fs.emissionsReport r where c.id = :id")
     Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+    
+    /**
+     * Retrieve a list of all facility site contacts for a specific program system code and emissions reporting year
+     * @param psc Program System Code
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select fsc from FacilitySiteContact fsc join fsc.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<FacilitySiteContact> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
 }

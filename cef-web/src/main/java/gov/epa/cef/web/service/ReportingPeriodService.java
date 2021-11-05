@@ -22,6 +22,7 @@ import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodBulkEntryDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
 
 public interface ReportingPeriodService {
 
@@ -68,4 +69,11 @@ public interface ReportingPeriodService {
      */
     public List<EmissionBulkEntryHolderDto> bulkUpdate(Long facilitySiteId, List<ReportingPeriodBulkEntryDto> dtos);
 
+    /**
+     * Retrieve a list of reporting periods for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<ReportingPeriodBulkUploadDto>retrieveReportingPeriods(String programSystemCode, Short emissionsReportYear);
 }

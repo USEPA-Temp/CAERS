@@ -17,6 +17,7 @@
 package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.config.CacheName;
+import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
@@ -72,4 +73,14 @@ public interface ReportingPeriodRepository extends CrudRepository<ReportingPerio
     @Cacheable(value = CacheName.ReportingPeriodEmissionsReportIds)
     @Query("select r.id from ReportingPeriod rp join rp.emissionsProcess p join p.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport r where rp.id = :id")
     Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+    
+    
+    /**
+     * Retrieve a list of all reporting periods for a specific program system code and emissions reporting year
+     * @param psc Program System Code
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select rp from ReportingPeriod rp join rp.emissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<ReportingPeriod> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
 }

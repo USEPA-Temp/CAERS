@@ -14,28 +14,21 @@
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
 */
-package gov.epa.cef.web.service;
+package gov.epa.cef.web.annotation;
 
-import java.util.List;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import gov.epa.cef.web.service.dto.OperatingDetailDto;
-import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
-
-public interface OperatingDetailService {
-
-    /**
-     * Update an Operating Detail
-     * @param dto
-     * @return
-     */
-    OperatingDetailDto update(OperatingDetailDto dto);
-
-    /**
-     * Retrieve a list of operating details for the given program system code and emissions report year
-     * @param programSystemCode
-     * @param emissionsReportYear
-     * @return
-     */
-    List<OperatingDetailBulkUploadDto> retrieveOperatingDetails(String programSystemCode, Short emissionsReportYear);
-
+/**
+ * 
+ * Annotation used to identify properties within an object to be used as columns in a CSV file
+ *
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface CsvColumn {
+	int order();
+	String name();
 }

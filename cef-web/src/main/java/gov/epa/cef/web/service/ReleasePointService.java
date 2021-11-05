@@ -18,6 +18,8 @@ package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.service.dto.ReleasePointApptDto;
 import gov.epa.cef.web.service.dto.ReleasePointDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 
 import java.util.List;
 
@@ -84,4 +86,19 @@ public interface ReleasePointService {
      */
     ReleasePointApptDto updateAppt(ReleasePointApptDto dto);
 
+    /**
+     * Retrieve a list of release points for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<ReleasePointBulkUploadDto> retrieveReleasePoints(String programSystemCode, Short emissionsReportYear);
+
+    /**
+     * Retrieve a list of release point apportionments for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<ReleasePointApptBulkUploadDto> retrieveReleasePointAppts(String programSystemCode, Short emissionsReportYear);
 }

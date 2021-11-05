@@ -18,6 +18,7 @@ package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
 
 import java.util.List;
 
@@ -71,4 +72,11 @@ public interface EmissionsProcessService {
      */
     void delete(Long id);
 
+    /**
+     * Retrieve a list of emissions processes for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<EmissionsProcessBulkUploadDto> retrieveEmissionsProcesses(String programSystemCode, Short emissionsReportYear);
 }

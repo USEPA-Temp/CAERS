@@ -20,8 +20,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "reporting_periods.csv")
 public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,6 +36,8 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
 
     @NotNull(message = "Emissions Process ID is required.")
     private Long emissionsProcessId;
+    
+    private String emissionsProcessName;
 
     private String displayName;
 
@@ -41,11 +48,15 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
     @NotNull(message = "Reporting Period Operating Type Code is required.")
     @Size(max = 20, message = "Reporting Period Operating Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsOperatingTypeCode;
+    
+    private String emissionsOperatingTypeCodeDescription;
 
-    @NotNull(message = "Throughput Parameter Type Code is required.")
+	@NotNull(message = "Throughput Parameter Type Code is required.")
     @Size(max = 20, message = "Throughput Parameter Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String calculationParameterTypeCode;
 
+    private String calculationParameterTypeDescription;
+	
     @NotBlank(message = "Throughput Value is required.")
     @Pattern(regexp = PositiveDecimalPattern,
         message = "Throughput Value is not in expected numeric format; found '${validatedValue}'.")
@@ -58,6 +69,8 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
     @NotNull(message = "Throughput Material Code is required.")
     @Size(max = 20, message = "Throughput Material Code can not exceed {max} chars; found '${validatedValue}'.")
     private String calculationMaterialCode;
+
+    private String calculationMaterialDescription;
     
     @Pattern(regexp = PositiveDecimalPattern,
         message = "Fuel Value is not in expected numeric format; found '${validatedValue}'.")
@@ -68,8 +81,10 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
 
     @Size(max = 20, message = "Fuel Material Code can not exceed {max} chars; found '${validatedValue}'.")
     private String fuelUseMaterialCode;
+
+    private String fuelUseMaterialDescription;
     
-    @Pattern(regexp = PositiveDecimalPattern,
+	@Pattern(regexp = PositiveDecimalPattern,
         message = "Heat Content Ratio is not in expected numeric format; found '${validatedValue}'.")
     private String heatContentValue;
 
@@ -84,6 +99,7 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
         super(WorksheetName.ReportingPeriod);
     }
 
+    @CsvColumn(name = "ID", order = 2)
     public Long getId() {
         return id;
     }
@@ -91,6 +107,15 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
         this.id = id;
     }
 
+    @CsvColumn(name = "Emissions Process Name", order = 2)
+    public String getEmissionsProcessName() {
+		return emissionsProcessName;
+	}
+	public void setEmissionsProcessName(String emissionsProcessName) {
+		this.emissionsProcessName = emissionsProcessName;
+	}
+
+    @CsvColumn(name = "Emissions Process ID", order = 1)
     public Long getEmissionsProcessId() {
         return emissionsProcessId;
     }
@@ -105,6 +130,7 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
         this.displayName = displayName;
     }
 
+    @CsvColumn(name = "Reporting Period Type Code", order = 3)
     public String getReportingPeriodTypeCode() {
         return reportingPeriodTypeCode;
     }
@@ -112,6 +138,7 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
         this.reportingPeriodTypeCode = reportingPeriodTypeCode;
     }
 
+    @CsvColumn(name = "Emissions Operating Type Code", order = 4)
     public String getEmissionsOperatingTypeCode() {
         return emissionsOperatingTypeCode;
     }
@@ -119,6 +146,15 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
         this.emissionsOperatingTypeCode = emissionsOperatingTypeCode;
     }
 
+    @CsvColumn(name = "Emissions Operating Type Code Description", order = 4)
+	public String getEmissionsOperatingTypeCodeDescription() {
+		return emissionsOperatingTypeCodeDescription;
+	}
+	public void setEmissionsOperatingTypeCodeDescription(String emissionsOperatingTypeCodeDescription) {
+		this.emissionsOperatingTypeCodeDescription = emissionsOperatingTypeCodeDescription;
+	}
+
+    @CsvColumn(name = "Throughput Parameter Code", order = 5)
     public String getCalculationParameterTypeCode() {
         return calculationParameterTypeCode;
     }
@@ -126,6 +162,15 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
         this.calculationParameterTypeCode = calculationParameterTypeCode;
     }
 
+    @CsvColumn(name = "Throughput Parameter", order = 5)
+    public String getCalculationParameterTypeDescription() {
+		return calculationParameterTypeDescription;
+	}
+	public void setCalculationParameterTypeDescription(String calculationParameterTypeDescription) {
+		this.calculationParameterTypeDescription = calculationParameterTypeDescription;
+	}
+    
+    @CsvColumn(name = "Calculation Parameter Value", order = 6)
     public String getCalculationParameterValue() {
         return calculationParameterValue;
     }
@@ -133,6 +178,7 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
         this.calculationParameterValue = calculationParameterValue;
     }
 
+    @CsvColumn(name = "Calculation Parameter UOM", order = 7)
     public String getCalculationParameterUom() {
         return calculationParameterUom;
     }
@@ -140,6 +186,7 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
         this.calculationParameterUom = calculationParameterUom;
     }
 
+    @CsvColumn(name = "Throughput Material Code", order = 8)
     public String getCalculationMaterialCode() {
         return calculationMaterialCode;
     }
@@ -147,6 +194,15 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
         this.calculationMaterialCode = calculationMaterialCode;
     }
 
+    @CsvColumn(name = "Throughput Material", order = 8)
+	public String getCalculationMaterialDescription() {
+		return calculationMaterialDescription;
+	}
+	public void setCalculationMaterialDescription(String calculationMaterialDescription) {
+		this.calculationMaterialDescription = calculationMaterialDescription;
+	}
+
+    @CsvColumn(name = "Fuel Use Value", order = 9)
     public String getFuelUseValue() {
 		return fuelUseValue;
 	}
@@ -154,6 +210,7 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
 		this.fuelUseValue = fuelUseValue;
 	}
 
+    @CsvColumn(name = "Fuel Use UOM", order = 10)
 	public String getFuelUseUom() {
 		return fuelUseUom;
 	}
@@ -161,6 +218,7 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
 		this.fuelUseUom = fuelUseUom;
 	}
 
+    @CsvColumn(name = "Fuel Material Code", order = 11)
 	public String getFuelUseMaterialCode() {
 		return fuelUseMaterialCode;
 	}
@@ -168,6 +226,15 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
 		this.fuelUseMaterialCode = fuelUseMaterialCode;
 	}
 
+    @CsvColumn(name = "Fuel Material", order = 11)
+	public String getFuelUseMaterialDescription() {
+		return fuelUseMaterialDescription;
+	}
+	public void setFuelUseMaterialDescription(String fuelUseMaterialDescription) {
+		this.fuelUseMaterialDescription = fuelUseMaterialDescription;
+	}
+
+    @CsvColumn(name = "Heat Content Value", order = 12)
 	public String getHeatContentValue() {
 		return heatContentValue;
 	}
@@ -175,6 +242,7 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
 		this.heatContentValue = heatContentValue;
 	}
 
+    @CsvColumn(name = "Heat Content UOM", order = 13)
 	public String getHeatContentUom() {
 		return heatContentUom;
 	}
@@ -182,6 +250,7 @@ public class ReportingPeriodBulkUploadDto extends BaseWorksheetDto implements Se
 		this.heatContentUom = heatContentUom;
 	}
 
+    @CsvColumn(name = "Comments", order = 14)
 	public String getComments() {
         return comments;
     }

@@ -20,8 +20,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "emissions.csv")
 public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -37,6 +42,8 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @NotBlank(message = "Pollutant Code is required.")
     @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
+    
+    private String pollutantName;
 
     private boolean totalManualEntry;
 
@@ -66,6 +73,8 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
     @NotBlank(message = "Emissions Calculation Method is required.")
     @Size(max = 20, message = "Emissions Calculation Method can not exceed {max} chars; found '${validatedValue}'.")
     private String emissionsCalcMethodCode;
+    
+    private String emissionsCalcMethodDescription;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
@@ -88,6 +97,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         super(WorksheetName.Emission);
     }
 
+    @CsvColumn(name = "ID", order = 9)
     public Long getId() {
         return id;
     }
@@ -95,6 +105,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.id = id;
     }
 
+    @CsvColumn(name = "Reporting Period ID", order = 1)
     public Long getReportingPeriodId() {
         return reportingPeriodId;
     }
@@ -110,6 +121,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.displayName = displayName;
     }
 
+    @CsvColumn(name = "Pollutant Code", order = 2)
     public String getPollutantCode() {
         return pollutantCode;
     }
@@ -117,6 +129,15 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.pollutantCode = pollutantCode;
     }
 
+    @CsvColumn(name = "Pollutant Name", order = 2)
+    public String getPollutantName() {
+        return pollutantName;
+    }
+    public void setPollutantName(String pollutantName) {
+        this.pollutantName = pollutantName;
+    }
+
+    @CsvColumn(name = "Is Total Manual Entry", order = 3)
     public boolean isTotalManualEntry() {
         return totalManualEntry;
     }
@@ -124,6 +145,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.totalManualEntry = totalManualEntry;
     }
 
+    @CsvColumn(name = "Overall Control Percent", order = 6)
     public String getOverallControlPercent() {
         return overallControlPercent;
     }
@@ -131,6 +153,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.overallControlPercent = overallControlPercent;
     }
 
+    @CsvColumn(name = "Total Emissions", order = 4)
     public String getTotalEmissions() {
         return totalEmissions;
     }
@@ -138,6 +161,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.totalEmissions = totalEmissions;
     }
 
+    @CsvColumn(name = "Emissions UOM", order = 5)
     public String getEmissionsUomCode() {
         return emissionsUomCode;
     }
@@ -145,6 +169,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.emissionsUomCode = emissionsUomCode;
     }
 
+    @CsvColumn(name = "Emissions Factor", order = 7)
     public String getEmissionsFactor() {
         return emissionsFactor;
     }
@@ -152,6 +177,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.emissionsFactor = emissionsFactor;
     }
 
+    @CsvColumn(name = "Emissions Factor Text", order = 8)
     public String getEmissionsFactorText() {
         return emissionsFactorText;
     }
@@ -159,6 +185,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.emissionsFactorText = emissionsFactorText;
     }
 
+    @CsvColumn(name = "Emissions Calc Method Code", order = 11)
     public String getEmissionsCalcMethodCode() {
         return emissionsCalcMethodCode;
     }
@@ -166,6 +193,15 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.emissionsCalcMethodCode = emissionsCalcMethodCode;
     }
 
+    @CsvColumn(name = "Emissions Calc Method Description", order = 11)
+    public String getEmissionsCalcMethodDescription() {
+    	return emissionsCalcMethodDescription;
+    }
+    public void setEmissionsCalcMethodDescription(String emissionsCalcMethodDescription) {
+    	this.emissionsCalcMethodDescription = emissionsCalcMethodDescription;
+    }
+
+    @CsvColumn(name = "Comment", order = 15)
     public String getComments() {
         return comments;
     }
@@ -173,6 +209,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.comments = comments;
     }
 
+    @CsvColumn(name = "Calculation Comment", order = 14)
     public String getCalculationComment() {
         return calculationComment;
     }
@@ -187,6 +224,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.calculatedEmissionsTons = calculatedEmissionsTons;
     }
 
+    @CsvColumn(name = "Emissions Numerator UOM", order = 12)
     public String getEmissionsNumeratorUom() {
         return emissionsNumeratorUom;
     }
@@ -194,6 +232,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.emissionsNumeratorUom = emissionsNumeratorUom;
     }
 
+    @CsvColumn(name = "Emissions Denominator UOM", order = 13)
     public String getEmissionsDenominatorUom() {
         return emissionsDenominatorUom;
     }
@@ -201,6 +240,7 @@ public class EmissionBulkUploadDto extends BaseWorksheetDto implements Serializa
         this.emissionsDenominatorUom = emissionsDenominatorUom;
     }
 
+    @CsvColumn(name = "Emissions Factor Formula", order = 10)
     public String getEmissionsFactorFormula() {
 
         return emissionsFactorFormula;

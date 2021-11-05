@@ -20,8 +20,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "control_paths.csv")
 public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -50,6 +55,7 @@ public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Seria
         super(WorksheetName.ControlPath);
     }
 
+    @CsvColumn(name = "ID", order = 4)
     public Long getId() {
         return id;
     }
@@ -58,6 +64,7 @@ public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Seria
         this.id = id;
     }
 
+    @CsvColumn(name = "Facility Site ID", order = 1)
     public Long getFacilitySiteId() {
         return facilitySiteId;
     }
@@ -66,6 +73,7 @@ public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Seria
         this.facilitySiteId = facilitySiteId;
     }
 
+    @CsvColumn(name = "Description", order = 3)
     public String getDescription() {
         return description;
     }
@@ -74,6 +82,7 @@ public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Seria
         this.description = description;
     }
 
+    @CsvColumn(name = "Path ID", order = 2)
 	public String getPathId() {
 		return pathId;
 	}
@@ -81,7 +90,8 @@ public class ControlPathBulkUploadDto  extends BaseWorksheetDto implements Seria
 	public void setPathId(String pathId) {
 		this.pathId = pathId;
 	}
-	
+
+    @CsvColumn(name = "Percent Control", order = 5)
 	public String getPercentControl() {
 
         return percentControl;
