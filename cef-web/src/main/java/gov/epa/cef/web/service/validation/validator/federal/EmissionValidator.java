@@ -19,7 +19,9 @@ package gov.epa.cef.web.service.validation.validator.federal;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
+import gov.epa.cef.web.domain.EnergyConversionFactor;
 import gov.epa.cef.web.exception.CalculationException;
+import gov.epa.cef.web.repository.EnergyConversionFactorRepository;
 import gov.epa.cef.web.service.dto.EntityType;
 import gov.epa.cef.web.service.dto.ValidationDetailDto;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
@@ -44,6 +46,9 @@ public class EmissionValidator extends BaseValidator<Emission> {
 
     @Autowired
     private CefConfig cefConfig;
+    
+    @Autowired
+    private EnergyConversionFactorRepository cfRepo;
 
     private static final String ASH_EMISSION_FORMULA_CODE = "A";
     private static final String SULFUR_EMISSION_FORMULA_CODE = "SU";
@@ -301,15 +306,36 @@ public class EmissionValidator extends BaseValidator<Emission> {
 	                // Total emissions cannot be calculated with the given emissions factor because Throughput UoM {0} cannot be converted to Emission Factor Denominator UoM {1}.
 	                // Please adjust Units of Measure or choose the option "I prefer to calculate the total emissions myself."
 	                if (!emission.getReportingPeriod().getCalculationParameterUom().getUnitType().equals(emission.getEmissionsDenominatorUom().getUnitType())) {
+	                		
+	                	EnergyConversionFactor cf = cfRepo.findByCalculationMaterialCode(emission.getReportingPeriod().getCalculationMaterialCode().getCode());
+	                	
+	                	if (cf != null && (Boolean.TRUE.equals(emission.getReportingPeriod().getCalculationParameterUom().getFuelUseUom())
+	                			|| Boolean.TRUE.equals(emission.getReportingPeriod().getCalculationParameterUom().getHeatContentUom()))) {
+	                		
+	                		if ((!(cf.getEmissionsNumeratorUom().getUnitType().equals(emission.getEmissionsDenominatorUom().getUnitType())
+	    	        				&& cf.getEmissionsDenominatorUom().getUnitType().equals(emission.getReportingPeriod().getCalculationParameterUom().getUnitType())))
+	                				&& (!(cf.getEmissionsDenominatorUom().getUnitType().equals(emission.getEmissionsDenominatorUom().getUnitType())
+	    	        				&& cf.getEmissionsNumeratorUom().getUnitType().equals(emission.getReportingPeriod().getCalculationParameterUom().getUnitType())))) {
 
-	                    canCalculate = false;
-	                    valid = false;
-	                    context.addFederalError(
-	                            ValidationField.EMISSION_DENOM_UOM.value(),
-	                            "emission.emissionsDenominatorUom.mismatch",
-	                            createValidationDetails(emission),
-	                            emission.getReportingPeriod().getCalculationParameterUom().getDescription(),
-	                            emission.getEmissionsDenominatorUom().getDescription());
+			                    canCalculate = false;
+			                    valid = false;
+			                    context.addFederalError(
+			                            ValidationField.EMISSION_DENOM_UOM.value(),
+			                            "emission.emissionsDenominatorUom.mismatch",
+			                            createValidationDetails(emission),
+			                            emission.getReportingPeriod().getCalculationParameterUom().getDescription(),
+			                            emission.getEmissionsDenominatorUom().getDescription());
+		                	}
+	                	} else {
+	                		canCalculate = false;
+		                    valid = false;
+		                    context.addFederalError(
+		                            ValidationField.EMISSION_DENOM_UOM.value(),
+		                            "emission.emissionsDenominatorUom.mismatch",
+		                            createValidationDetails(emission),
+		                            emission.getReportingPeriod().getCalculationParameterUom().getDescription(),
+		                            emission.getEmissionsDenominatorUom().getDescription());
+	                	}
 	                }
 
 	                //Total emissions cannot be calculated with the given emissions factor because Emission Factor Numerator UoM {0} cannot be converted to Total Emissions UoM {1}.

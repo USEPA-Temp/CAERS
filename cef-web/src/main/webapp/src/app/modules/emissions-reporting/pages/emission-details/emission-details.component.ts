@@ -355,7 +355,8 @@ export class EmissionDetailsComponent implements OnInit {
 			    .subscribe(result => {
 			      this.energyConversionFactor = result;
 
-			    	if (this.energyConversionFactor.conversionFactor) {
+			    	if (this.energyConversionFactor) {
+	
 						// if cf numerator uom type != ef denominator uom type, or cf denominator uom type != throughput uom type
 		        		// or if cf denominator uom type != ef denominator uom type, or cf numerator uom type != throughput uom type
 						if ((this.energyConversionFactor?.emissionsDenominatorUom?.unitType === this.reportingPeriod?.calculationParameterUom?.unitType
