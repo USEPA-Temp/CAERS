@@ -30,7 +30,7 @@ export class CommunicationService {
 	  constructor(private http: HttpClient) {}
 
 	/** POST upload communication attachment */
-	uploadAttachment(commAttachment: Attachment,
+	uploadAttachment(metadata: Communication,
 		attachment: File): Observable<HttpEvent<Attachment>> {
 
 		const url = `${this.baseUrl}/uploadAttachment`;
@@ -38,7 +38,9 @@ export class CommunicationService {
 		const formData = new FormData();
 		formData.append('file', attachment);
 		formData.append('metadata', new Blob([JSON.stringify({
-			id: commAttachment.id,
+			id: metadata.id,
+			subject: metadata.subject,
+			content: metadata.content
 		})], {
 			type: 'application/json'
 		}));

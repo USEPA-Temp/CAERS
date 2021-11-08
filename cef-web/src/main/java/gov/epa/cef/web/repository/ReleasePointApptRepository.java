@@ -26,6 +26,7 @@ import org.springframework.data.repository.query.Param;
 
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.ReleasePointAppt;
+import gov.epa.cef.web.domain.ReportingPeriod;
 
 public interface ReleasePointApptRepository extends CrudRepository<ReleasePointAppt, Long>, ProgramIdRetriever, ReportIdRetriever {
 	
@@ -48,5 +49,14 @@ public interface ReleasePointApptRepository extends CrudRepository<ReleasePointA
     @Cacheable(value = CacheName.ReleasePointApptEmissionsReportIds)
     @Query("select r.id from ReleasePointAppt rpa join rpa.releasePoint rp join rp.facilitySite fs join fs.emissionsReport r where rpa.id = :id")
     Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+    
+    /**
+     * Retrieve a list of all release point apportionment records for a specific program system code and emissions reporting year
+     * @param psc
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select rpa from ReleasePointAppt rpa join rpa.releasePoint rp join rp.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<ReleasePointAppt> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
 
 }

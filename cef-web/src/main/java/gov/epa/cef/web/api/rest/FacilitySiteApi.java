@@ -20,10 +20,18 @@ import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.FacilityNAICSXrefRepository;
 
 import gov.epa.cef.web.repository.FacilitySiteRepository;
+import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
+import gov.epa.cef.web.service.dto.UserDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilityNAICSBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
+import gov.epa.cef.web.util.CsvBuilder;
+import gov.epa.cef.web.util.WebUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +44,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -50,13 +62,17 @@ public class FacilitySiteApi {
     private final FacilitySiteService facilityService;
 
     private final SecurityService securityService;
+    
+    private UserService userService;
 
     @Autowired
     FacilitySiteApi(SecurityService securityService,
-                    FacilitySiteService facilityService) {
+                    FacilitySiteService facilityService,
+                    UserService userService) {
 
         this.securityService = securityService;
         this.facilityService = facilityService;
+        this.userService = userService;
     }
     
     /**
@@ -150,5 +166,83 @@ public class FacilitySiteApi {
     	this.securityService.facilityEnforcer().enforceEntity(facilityNaicsId, FacilityNAICSXrefRepository.class);
     	
     	facilityService.deleteFacilityNaics(facilityNaicsId);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the facilities based on the reviewer's program system code and the given inventory year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public void getSltFacilities(@PathVariable Short year, HttpServletResponse response) {
+
+        UserDto user = userService.getCurrentUser();
+        String programSystemCode = user.getProgramSystemCode();
+
+        List<Long> facilityIds = facilityService.getFacilityIds(programSystemCode, year);
+        this.securityService.facilityEnforcer().enforceFacilitySites(facilityIds);
+
+    	List<FacilitySiteBulkUploadDto> csvRows = facilityService.retrieveFacilities(programSystemCode, year);
+    	CsvBuilder<FacilitySiteBulkUploadDto> csvBuilder = new CsvBuilder<FacilitySiteBulkUploadDto>(FacilitySiteBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the facilities based on the given program system code and inventory year
+     * @param programSystemCode 
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{programSystemCode}/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN, AppRole.ROLE_ADMIN})
+    public void getSltFacilities(@PathVariable String programSystemCode, @PathVariable Short year, HttpServletResponse response) {
+
+    	List<FacilitySiteBulkUploadDto> csvRows = facilityService.retrieveFacilities(programSystemCode, year);
+    	CsvBuilder<FacilitySiteBulkUploadDto> csvBuilder = new CsvBuilder<FacilitySiteBulkUploadDto>(FacilitySiteBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the facility's NAICS codes based on the reviewer's program system code and the given inventory year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/naics/list/csv/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public void getSltFacilityNaicsCodes(@PathVariable Short year, HttpServletResponse response) {
+
+        UserDto user = userService.getCurrentUser();
+        String programSystemCode = user.getProgramSystemCode();
+
+        List<Long> facilityIds = facilityService.getFacilityIds(programSystemCode, year);
+        this.securityService.facilityEnforcer().enforceFacilitySites(facilityIds);
+
+    	List<FacilityNAICSBulkUploadDto> csvRows = facilityService.retrieveFacilityNaics(programSystemCode, year);
+    	CsvBuilder<FacilityNAICSBulkUploadDto> csvBuilder = new CsvBuilder<FacilityNAICSBulkUploadDto>(FacilityNAICSBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the facility's NAICS codes based on the given program system code and inventory year
+     * @param programSystemCode 
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/naics/list/csv/{programSystemCode}/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN, AppRole.ROLE_ADMIN})
+    public void getSltFacilityNaicsCodes(@PathVariable String programSystemCode, @PathVariable Short year, HttpServletResponse response) {
+
+    	List<FacilityNAICSBulkUploadDto> csvRows = facilityService.retrieveFacilityNaics(programSystemCode, year);
+    	CsvBuilder<FacilityNAICSBulkUploadDto> csvBuilder = new CsvBuilder<FacilityNAICSBulkUploadDto>(FacilityNAICSBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
     }
 }

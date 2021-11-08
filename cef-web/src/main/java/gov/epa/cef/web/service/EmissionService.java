@@ -23,6 +23,8 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionFormulaVariableBulkUploadDto;
 
 public interface EmissionService {
 
@@ -113,4 +115,20 @@ public interface EmissionService {
      * @return
      */
     public EmissionsByFacilityAndCASDto findEmissionsByTrifidAndCAS(String trifid, String pollutantCasId);
+
+    /**
+     * Retrieve a list of emissions for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<EmissionBulkUploadDto> retrieveEmissions(String programSystemCode, Short emissionsReportYear);
+
+    /**
+     * Retrieve a list of emission formula variables for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<EmissionFormulaVariableBulkUploadDto> retrieveEmissionFormulaVariables(String programSystemCode, Short emissionsReportYear);
 }

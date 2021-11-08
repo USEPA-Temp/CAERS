@@ -21,9 +21,10 @@ export class Communication {
 	createdDate: Date;
 	senderName: string;
 	subject: string;
-	recipient_email: string;
+	recipientEmail: string;
 	content: string;
 	programSystemCode: BaseCodeLookup;
 	attachmentId: number;
+	emailStatus: string;
 }
 	

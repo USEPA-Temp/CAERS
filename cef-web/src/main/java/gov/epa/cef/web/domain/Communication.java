@@ -46,6 +46,9 @@ public class Communication extends BaseAuditEntity {
     
     @Column(name = "content", length = 2000)
 	private String content;
+
+    @Column(name = "email_status")
+    private String emailStatus;
     
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "program_system_code")
@@ -100,6 +103,14 @@ public class Communication extends BaseAuditEntity {
 
 	public void setAttachments(Attachment attachments) {
 		this.attachments = attachments;
+	}
+
+	public String getEmailStatus() {
+		return emailStatus;
+	}
+
+	public void setEmailStatus(String emailStatus) {
+		this.emailStatus = emailStatus;
 	}
     
 }

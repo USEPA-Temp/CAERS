@@ -16,7 +16,10 @@
 */
 package gov.epa.cef.web.service;
 
+import java.util.List;
+
 import gov.epa.cef.web.service.dto.OperatingDetailDto;
+import gov.epa.cef.web.service.dto.bulkUpload.OperatingDetailBulkUploadDto;
 
 public interface OperatingDetailService {
 
@@ -26,5 +29,13 @@ public interface OperatingDetailService {
      * @return
      */
     OperatingDetailDto update(OperatingDetailDto dto);
+
+    /**
+     * Retrieve a list of operating details for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<OperatingDetailBulkUploadDto> retrieveOperatingDetails(String programSystemCode, Short emissionsReportYear);
 
 }

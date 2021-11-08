@@ -124,8 +124,7 @@ public class EmissionsProcess extends BaseAuditEntity {
             		}
             	}
         	}
-        	if (!originalApportionment.getReleasePoint().getOperatingStatusCode().getCode().equals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN) &&
-        			cp != null && rp != null) {
+        	if (!originalApportionment.getReleasePoint().getOperatingStatusCode().getCode().equals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN)) {
         		this.releasePointAppts.add(new ReleasePointAppt(rp, this, cp, originalApportionment));
         	}
         }

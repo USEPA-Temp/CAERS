@@ -19,12 +19,19 @@ package gov.epa.cef.web.api.rest;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
+import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
+import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.ReportingPeriodService;
+import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodBulkEntryDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodDto;
 import gov.epa.cef.web.service.dto.ReportingPeriodUpdateResponseDto;
+import gov.epa.cef.web.service.dto.UserDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReportingPeriodBulkUploadDto;
+import gov.epa.cef.web.util.CsvBuilder;
+import gov.epa.cef.web.util.WebUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +44,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
@@ -50,12 +59,21 @@ public class ReportingPeriodApi {
 
     private final SecurityService securityService;
 
+    private UserService userService;
+
+    private final FacilitySiteService facilityService;
+
+
     @Autowired
     ReportingPeriodApi(SecurityService securityService,
-                              ReportingPeriodService reportingPeriodService) {
+                              ReportingPeriodService reportingPeriodService, 
+                              UserService userService,
+                              FacilitySiteService facilityService) {
 
         this.reportingPeriodService = reportingPeriodService;
         this.securityService = securityService;
+        this.userService = userService;
+        this.facilityService = facilityService;
     }
 
     /**
@@ -156,5 +174,44 @@ public class ReportingPeriodApi {
         Collection<EmissionBulkEntryHolderDto> result = reportingPeriodService.bulkUpdate(facilitySiteId, dtos);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the reporting periods based on the reviewer's program system code and the given inventory year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public void getSltReportingPeriods(@PathVariable Short year, HttpServletResponse response) {
+
+        UserDto user = userService.getCurrentUser();
+        String programSystemCode = user.getProgramSystemCode();
+
+        List<Long> facilityIds = facilityService.getFacilityIds(programSystemCode, year);
+        this.securityService.facilityEnforcer().enforceFacilitySites(facilityIds);
+
+    	List<ReportingPeriodBulkUploadDto> csvRows = reportingPeriodService.retrieveReportingPeriods(programSystemCode, year);
+    	CsvBuilder<ReportingPeriodBulkUploadDto> csvBuilder = new CsvBuilder<ReportingPeriodBulkUploadDto>(ReportingPeriodBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the reporting periods based on the given program system code and inventory year
+     * @param programSystemCode 
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{programSystemCode}/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN, AppRole.ROLE_ADMIN})
+    public void getSltReportingPeriods(@PathVariable String programSystemCode, @PathVariable Short year, HttpServletResponse response) {
+
+    	List<ReportingPeriodBulkUploadDto> csvRows = reportingPeriodService.retrieveReportingPeriods(programSystemCode, year);
+    	CsvBuilder<ReportingPeriodBulkUploadDto> csvBuilder = new CsvBuilder<ReportingPeriodBulkUploadDto>(ReportingPeriodBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
     }
 }

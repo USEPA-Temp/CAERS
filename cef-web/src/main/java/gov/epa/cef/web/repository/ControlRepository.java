@@ -18,6 +18,8 @@ package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.config.CacheName;
 import gov.epa.cef.web.domain.Control;
+import gov.epa.cef.web.domain.ReportingPeriod;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -66,4 +68,13 @@ public interface ControlRepository extends CrudRepository<Control, Long>, Progra
     @Cacheable(value = CacheName.ControlEmissionsReportIds)
     @Query("select r.id from Control c join c.facilitySite fs join fs.emissionsReport r where c.id = :id")
     Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+    
+    /**
+     * Retrieve a list of all controls for a specific program system code and emissions reporting year
+     * @param psc Program System Code
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select c from Control c join c.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<Control> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
 }

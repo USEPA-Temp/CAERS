@@ -29,7 +29,6 @@ import gov.epa.cef.web.domain.ControlAssignment;
 import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.ControlPathPollutant;
 import gov.epa.cef.web.domain.EmissionsReport;
-import gov.epa.cef.web.exception.AppValidationException;
 import gov.epa.cef.web.repository.ControlAssignmentRepository;
 import gov.epa.cef.web.repository.ControlPathPollutantRepository;
 import gov.epa.cef.web.repository.ControlPathRepository;
@@ -39,6 +38,9 @@ import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
 import gov.epa.cef.web.service.dto.ControlPathPollutantDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathPollutantBulkUploadDto;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.ControlAssignmentMapper;
 import gov.epa.cef.web.service.mapper.ControlMapper;
 import gov.epa.cef.web.service.mapper.ControlPathMapper;
@@ -79,6 +81,9 @@ public class ControlPathServiceImpl implements ControlPathService {
 
     @Autowired
     private EmissionsReportRepository reportRepo;
+    
+    @Autowired
+    private BulkUploadMapper bulkUploadMapper;
       
     @Override
     public ControlPathDto retrieveById(Long id) {
@@ -346,6 +351,30 @@ public class ControlPathServiceImpl implements ControlPathService {
 	    	reportStatusService.resetEmissionsReportForEntity(Collections.singletonList(result.getId()), ControlAssignmentRepository.class);
     	}
     	return result;
+    }
+
+
+    /**
+     * Retrieve a list of control paths for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */    
+    public List<ControlPathBulkUploadDto> retrieveControlPaths(String programSystemCode, Short emissionsReportYear) {
+    	List<ControlPath> controlPaths = repo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.controlPathToDtoList(controlPaths);
+    }
+
+
+    /**
+     * Retrieve a list of control path pollutants for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<ControlPathPollutantBulkUploadDto> retrieveControlPathPollutants(String programSystemCode, Short emissionsReportYear) {
+    	List<ControlPathPollutant> controlPathPollutants = pollutantRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.controlPathPollutantToDtoList(controlPathPollutants);
     }
 
 }

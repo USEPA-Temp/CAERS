@@ -23,11 +23,19 @@ import gov.epa.cef.web.repository.ControlRepository;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
 import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.repository.ReleasePointRepository;
+import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.ControlPathService;
+import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.ControlAssignmentDto;
 import gov.epa.cef.web.service.dto.ControlPathDto;
 import gov.epa.cef.web.service.dto.ControlPathPollutantDto;
+import gov.epa.cef.web.service.dto.UserDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ControlPathPollutantBulkUploadDto;
+import gov.epa.cef.web.util.CsvBuilder;
+import gov.epa.cef.web.util.WebUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,6 +49,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -51,12 +61,18 @@ public class ControlPathApi {
     private final ControlPathService controlPathService;
 
     private final SecurityService securityService;
+    
+    private final UserService userService;
+    
+    private final FacilitySiteService facilityService;
 
     @Autowired
-    ControlPathApi(SecurityService securityService, ControlPathService controlPathService) {
+    ControlPathApi(SecurityService securityService, ControlPathService controlPathService, UserService userService, FacilitySiteService facilityService) {
 
         this.securityService = securityService;
         this.controlPathService = controlPathService;
+        this.userService = userService;
+        this.facilityService = facilityService;
     }
 
     /**
@@ -334,5 +350,84 @@ public class ControlPathApi {
     	this.securityService.facilityEnforcer().enforceEntity(controlPathPollutantId, ControlPathPollutantRepository.class);
     	
     	controlPathService.deleteControlPathPollutant(controlPathPollutantId);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the control paths based on the reviewer's program system code and the given inventory year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public void getSltControlPaths(@PathVariable Short year, HttpServletResponse response) {
+
+        UserDto user = userService.getCurrentUser();
+        String programSystemCode = user.getProgramSystemCode();
+
+        List<Long> facilityIds = facilityService.getFacilityIds(programSystemCode, year);
+        this.securityService.facilityEnforcer().enforceFacilitySites(facilityIds);
+
+    	List<ControlPathBulkUploadDto> csvRows = controlPathService.retrieveControlPaths(programSystemCode, year);
+    	CsvBuilder<ControlPathBulkUploadDto> csvBuilder = new CsvBuilder<ControlPathBulkUploadDto>(ControlPathBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * 
+     * Retrieve a CSV of all of the control paths based on the given program system code and inventory year
+     * @param programSystemCode 
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{programSystemCode}/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN, AppRole.ROLE_ADMIN})
+    public void getSltControlPaths(@PathVariable String programSystemCode, @PathVariable Short year, HttpServletResponse response) {
+
+    	List<ControlPathBulkUploadDto> csvRows = controlPathService.retrieveControlPaths(programSystemCode, year);
+    	CsvBuilder<ControlPathBulkUploadDto> csvBuilder = new CsvBuilder<ControlPathBulkUploadDto>(ControlPathBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the control path pollutants based on the reviewer's program system code and the given inventory year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/pollutants/list/csv/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public void getSltControlPathPollutants(@PathVariable Short year, HttpServletResponse response) {
+
+        UserDto user = userService.getCurrentUser();
+        String programSystemCode = user.getProgramSystemCode();
+
+        List<Long> facilityIds = facilityService.getFacilityIds(programSystemCode, year);
+        this.securityService.facilityEnforcer().enforceFacilitySites(facilityIds);
+
+    	List<ControlPathPollutantBulkUploadDto> csvRows = controlPathService.retrieveControlPathPollutants(programSystemCode, year);
+    	CsvBuilder<ControlPathPollutantBulkUploadDto> csvBuilder = new CsvBuilder<ControlPathPollutantBulkUploadDto>(ControlPathPollutantBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the control path pollutants based on the given program system code and inventory year
+     * @param programSystemCode 
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/pollutants/list/csv/{programSystemCode}/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN, AppRole.ROLE_ADMIN})
+    public void getSltControlPathPollutants(@PathVariable String programSystemCode, @PathVariable Short year, HttpServletResponse response) {
+
+    	List<ControlPathPollutantBulkUploadDto> csvRows = controlPathService.retrieveControlPathPollutants(programSystemCode, year);
+    	CsvBuilder<ControlPathPollutantBulkUploadDto> csvBuilder = new CsvBuilder<ControlPathPollutantBulkUploadDto>(ControlPathPollutantBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
     }
 }

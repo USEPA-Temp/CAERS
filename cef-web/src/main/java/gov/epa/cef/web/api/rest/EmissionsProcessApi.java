@@ -19,10 +19,18 @@ package gov.epa.cef.web.api.rest;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
 import gov.epa.cef.web.repository.EmissionsUnitRepository;
 import gov.epa.cef.web.repository.ReleasePointRepository;
+import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.EmissionsProcessService;
+import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsProcessDto;
 import gov.epa.cef.web.service.dto.EmissionsProcessSaveDto;
+import gov.epa.cef.web.service.dto.UserDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsProcessBulkUploadDto;
+import gov.epa.cef.web.util.CsvBuilder;
+import gov.epa.cef.web.util.WebUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +43,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/emissionsProcess")
@@ -46,12 +57,21 @@ public class EmissionsProcessApi {
 
     private final SecurityService securityService;
 
+    private UserService userService;
+
+    private final FacilitySiteService facilityService;
+
+
     @Autowired
     EmissionsProcessApi(SecurityService securityService,
-                        EmissionsProcessService processService) {
+                        EmissionsProcessService processService, 
+                        UserService userService,
+                        FacilitySiteService facilityService) {
 
         this.securityService = securityService;
         this.processService = processService;
+        this.userService = userService;
+        this.facilityService = facilityService;
     }
 
     /**
@@ -161,5 +181,44 @@ public class EmissionsProcessApi {
         this.securityService.facilityEnforcer().enforceEntity(id, EmissionsProcessRepository.class);
 
         processService.delete(id);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the emissions processes based on the reviewer's program system code and the given inventory year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public void getSltEmissionsProcesses(@PathVariable Short year, HttpServletResponse response) {
+
+        UserDto user = userService.getCurrentUser();
+        String programSystemCode = user.getProgramSystemCode();
+
+        List<Long> facilityIds = facilityService.getFacilityIds(programSystemCode, year);
+        this.securityService.facilityEnforcer().enforceFacilitySites(facilityIds);
+
+    	List<EmissionsProcessBulkUploadDto> csvRows = processService.retrieveEmissionsProcesses(programSystemCode, year);
+    	CsvBuilder<EmissionsProcessBulkUploadDto> csvBuilder = new CsvBuilder<EmissionsProcessBulkUploadDto>(EmissionsProcessBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the emissions processes based on the given program system code and inventory year
+     * @param programSystemCode 
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{programSystemCode}/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN, AppRole.ROLE_ADMIN})
+    public void getSltEmissionsProcesses(@PathVariable String programSystemCode, @PathVariable Short year, HttpServletResponse response) {
+
+    	List<EmissionsProcessBulkUploadDto> csvRows = processService.retrieveEmissionsProcesses(programSystemCode, year);
+    	CsvBuilder<EmissionsProcessBulkUploadDto> csvBuilder = new CsvBuilder<EmissionsProcessBulkUploadDto>(EmissionsProcessBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
     }
 }

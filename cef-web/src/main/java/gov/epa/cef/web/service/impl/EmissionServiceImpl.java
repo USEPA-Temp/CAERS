@@ -46,6 +46,7 @@ import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EisTriXrefRepository;
+import gov.epa.cef.web.repository.EmissionFormulaVariableRepository;
 import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
@@ -60,6 +61,9 @@ import gov.epa.cef.web.service.dto.EmissionDto;
 import gov.epa.cef.web.service.dto.EmissionFormulaVariableCodeDto;
 import gov.epa.cef.web.service.dto.EmissionFormulaVariableDto;
 import gov.epa.cef.web.service.dto.EmissionsByFacilityAndCASDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionFormulaVariableBulkUploadDto;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.EmissionMapper;
 import gov.epa.cef.web.service.mapper.EmissionsByFacilityAndCASMapper;
 import gov.epa.cef.web.util.CalculationUtils;
@@ -106,6 +110,12 @@ public class EmissionServiceImpl implements EmissionService {
     
     @Autowired
     private EisTriXrefRepository eisTriXrefRepo;
+    
+    @Autowired
+    private EmissionFormulaVariableRepository variablesRepo;
+    
+    @Autowired
+    private BulkUploadMapper bulkUploadMapper;
 
     private static final String POINT_EMISSION_RELEASE_POINT = "stack";
     private static final int TWO_DECIMAL_POINTS = 2;
@@ -643,6 +653,30 @@ public class EmissionServiceImpl implements EmissionService {
             logger.debug("Could not perform emission conversion. {}", ex.getLocalizedMessage());
             return null;
         }
+    }
+
+
+    /**
+     * Retrieve a list of emissions for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */  
+    public List<EmissionBulkUploadDto> retrieveEmissions(String programSystemCode, Short emissionsReportYear) {
+    	List<Emission> emissions = emissionRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.emissionToDtoList(emissions);
+    }
+
+
+    /**
+     * Retrieve a list of emission formula variables for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<EmissionFormulaVariableBulkUploadDto> retrieveEmissionFormulaVariables(String programSystemCode, Short emissionsReportYear) {
+    	List<EmissionFormulaVariable> variables = variablesRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.emissionFormulaVariableToDtoList(variables);
     }
 
 }

@@ -18,6 +18,8 @@ package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.config.CacheName; 
 import gov.epa.cef.web.domain.ControlPath;
+import gov.epa.cef.web.domain.ReportingPeriod;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -89,4 +91,13 @@ public interface ControlPathRepository extends CrudRepository<ControlPath, Long>
      * @return
      */
     List<ControlPath> findByFacilitySiteIdOrderByPathId(Long facilitySiteId);
+    
+    /**
+     * Retrieve a list of all control paths for a specific program system code and emissions reporting year
+     * @param psc Program System Code
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select cp from ControlPath cp join cp.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<ControlPath> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
 }

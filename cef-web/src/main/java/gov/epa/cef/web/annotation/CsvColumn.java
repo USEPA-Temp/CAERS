@@ -14,21 +14,21 @@
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
 */
-package gov.epa.cef.web.repository;
+package gov.epa.cef.web.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
-
-import gov.epa.cef.web.domain.Communication;
-
-public interface CommunicationRepository extends CrudRepository<Communication, Long> {
-	
-	@Transactional
-    @Modifying
-	@Query("delete from Communication where emailStatus = null")
-	void deleteAllEmailStatusNotSent();
-
+/**
+ * 
+ * Annotation used to identify properties within an object to be used as columns in a CSV file
+ *
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface CsvColumn {
+	int order();
+	String name();
 }

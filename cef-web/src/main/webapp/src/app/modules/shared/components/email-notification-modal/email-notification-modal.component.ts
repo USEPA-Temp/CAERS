@@ -131,6 +131,9 @@ export class EmailNotificationModalComponent implements OnInit {
 	Object.assign(this.communication, this.attachmentForm.value);
 	
     if (!this.selectedFile && this.user.isReviewer() && this.isValid()) {
+		this.communicationService.sendSLTNotificationEmail(this.communication)
+			.subscribe(resp => {
+	          });
       this.activeModal.close(this.communication);
 
     } else {
@@ -159,7 +162,7 @@ export class EmailNotificationModalComponent implements OnInit {
         Object.assign(attachment, this.attachmentForm.value);
 
         this.communicationService.uploadAttachment(
-          attachment, this.selectedFile)
+          this.communication, this.selectedFile)
           .subscribe(respEvent =>
             this.onUploadEvent(respEvent),
             errorResp => this.onUploadError(errorResp)

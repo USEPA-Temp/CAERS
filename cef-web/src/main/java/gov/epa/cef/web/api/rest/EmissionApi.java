@@ -19,10 +19,18 @@ package gov.epa.cef.web.api.rest;
 import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.FacilitySiteRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
+import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.EmissionService;
+import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.EmissionDto;
+import gov.epa.cef.web.service.dto.UserDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionFormulaVariableBulkUploadDto;
+import gov.epa.cef.web.util.CsvBuilder;
+import gov.epa.cef.web.util.WebUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +48,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 
 @RestController
@@ -50,12 +60,21 @@ public class EmissionApi {
 
     private final SecurityService securityService;
 
+    private UserService userService;
+    
+    private FacilitySiteService facilityService;
+
+
     @Autowired
     EmissionApi(SecurityService securityService,
-                EmissionService emissionService) {
+                EmissionService emissionService, 
+                UserService userService,
+                FacilitySiteService facilityService) {
 
         this.securityService = securityService;
         this.emissionService = emissionService;
+        this.userService = userService;
+        this.facilityService = facilityService;
     }
 
     /**
@@ -181,5 +200,83 @@ public class EmissionApi {
         EmissionDto result = emissionService.calculateTotalEmissions(dto);
 
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the emissions based on the reviewer's program system code and the given inventory year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public void getSltEmissions(@PathVariable Short year, HttpServletResponse response) {
+
+        UserDto user = userService.getCurrentUser();
+        String programSystemCode = user.getProgramSystemCode();
+
+        List<Long> facilityIds = facilityService.getFacilityIds(programSystemCode, year);
+        this.securityService.facilityEnforcer().enforceFacilitySites(facilityIds);
+
+    	List<EmissionBulkUploadDto> csvRows = emissionService.retrieveEmissions(programSystemCode, year);
+    	CsvBuilder<EmissionBulkUploadDto> csvBuilder = new CsvBuilder<EmissionBulkUploadDto>(EmissionBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the emissions based on the given program system code and inventory year
+     * @param programSystemCode 
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{programSystemCode}/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN, AppRole.ROLE_ADMIN})
+    public void getSltEmissions(@PathVariable String programSystemCode, @PathVariable Short year, HttpServletResponse response) {
+
+    	List<EmissionBulkUploadDto> csvRows = emissionService.retrieveEmissions(programSystemCode, year);
+    	CsvBuilder<EmissionBulkUploadDto> csvBuilder = new CsvBuilder<EmissionBulkUploadDto>(EmissionBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the emission formula variables based on the reviewer's program system code and the given inventory year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/formulaVariables/list/csv/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public void getSltEmissionFormulaVariables(@PathVariable Short year, HttpServletResponse response) {
+
+        UserDto user = userService.getCurrentUser();
+        String programSystemCode = user.getProgramSystemCode();
+
+        List<Long> facilityIds = facilityService.getFacilityIds(programSystemCode, year);
+        this.securityService.facilityEnforcer().enforceFacilitySites(facilityIds);
+
+    	List<EmissionFormulaVariableBulkUploadDto> csvRows = emissionService.retrieveEmissionFormulaVariables(programSystemCode, year);
+    	CsvBuilder<EmissionFormulaVariableBulkUploadDto> csvBuilder = new CsvBuilder<EmissionFormulaVariableBulkUploadDto>(EmissionFormulaVariableBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the emission formula variables based on the given program system code and inventory year
+     * @param programSystemCode 
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/formulaVariables/list/csv/{programSystemCode}/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN, AppRole.ROLE_ADMIN})
+    public void getSltEmissionFormulaVariables(@PathVariable String programSystemCode, @PathVariable Short year, HttpServletResponse response) {
+
+    	List<EmissionFormulaVariableBulkUploadDto> csvRows = emissionService.retrieveEmissionFormulaVariables(programSystemCode, year);
+    	CsvBuilder<EmissionFormulaVariableBulkUploadDto> csvBuilder = new CsvBuilder<EmissionFormulaVariableBulkUploadDto>(EmissionFormulaVariableBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
     }
 }

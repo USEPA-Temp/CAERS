@@ -16,19 +16,22 @@
 */
 package gov.epa.cef.web.repository;
 
+import java.util.List;
 
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.transaction.annotation.Transactional;
 
-import gov.epa.cef.web.domain.Communication;
+import gov.epa.cef.web.domain.EmissionFormulaVariable;
 
-public interface CommunicationRepository extends CrudRepository<Communication, Long> {
-	
-	@Transactional
-    @Modifying
-	@Query("delete from Communication where emailStatus = null")
-	void deleteAllEmailStatusNotSent();
+public interface EmissionFormulaVariableRepository extends CrudRepository<EmissionFormulaVariable, String> {
+	   
+	   /**
+	    * Retrieve a list of all emission formula variables for a specific program system code and emissions reporting year
+	    * @param psc Program System Code
+	    * @param emissionsReportYear
+	    * @return
+	    */
+	   @Query("select efv from EmissionFormulaVariable efv join efv.emission e join e.reportingPeriod rp join rp.emissionsProcess ep join ep.emissionsUnit eu join eu.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+	   List<EmissionFormulaVariable> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
 
 }

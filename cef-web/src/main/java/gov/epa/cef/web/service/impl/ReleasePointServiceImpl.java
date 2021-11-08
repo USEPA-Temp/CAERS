@@ -36,7 +36,10 @@ import gov.epa.cef.web.service.ReleasePointService;
 import gov.epa.cef.web.service.dto.ControlPathDto;
 import gov.epa.cef.web.service.dto.ReleasePointApptDto;
 import gov.epa.cef.web.service.dto.ReleasePointDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointApptBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.ReleasePointBulkUploadDto;
 import gov.epa.cef.web.service.mapper.ReleasePointMapper;
+import gov.epa.cef.web.service.mapper.BulkUploadMapper;
 import gov.epa.cef.web.service.mapper.ControlPathMapper;
 import gov.epa.cef.web.service.mapper.ReleasePointApptMapper;
 
@@ -66,6 +69,9 @@ public class ReleasePointServiceImpl implements ReleasePointService {
     
     @Autowired
     private ControlPathMapper controlPathMapper;
+    
+    @Autowired
+    private BulkUploadMapper bulkUploadMapper;
     
     /**
      * Create a new Release Point from a DTO object
@@ -222,6 +228,30 @@ public class ReleasePointServiceImpl implements ReleasePointService {
         }
 
         return Collections.emptyList();
+    }
+
+
+    /**
+     * Retrieve a list of release points for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<ReleasePointBulkUploadDto> retrieveReleasePoints(String programSystemCode, Short emissionsReportYear) {
+    	List<ReleasePoint> releasePoints = releasePointRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.releasePointToDtoList(releasePoints);
+    }
+
+
+    /**
+     * Retrieve a list of release point apportionments for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */ 
+    public List<ReleasePointApptBulkUploadDto> retrieveReleasePointAppts(String programSystemCode, Short emissionsReportYear) {
+    	List<ReleasePointAppt> releasePointAppts = releasePointApptRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
+    	return bulkUploadMapper.releasePointApptToDtoList(releasePointAppts);
     }
     
 }

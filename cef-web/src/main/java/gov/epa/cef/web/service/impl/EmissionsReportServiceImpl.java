@@ -19,6 +19,7 @@ package gov.epa.cef.web.service.impl;
 import gov.epa.cef.web.api.rest.EmissionsReportApi.ReviewDTO;
 import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
+import gov.epa.cef.web.config.AppPropertyName;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
@@ -32,6 +33,7 @@ import gov.epa.cef.web.domain.ReportStatus;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.NotExistException;
+import gov.epa.cef.web.provider.system.AdminPropertyProvider;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.MasterFacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
@@ -148,6 +150,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     
     @Autowired
     private SecurityService securityService;
+    
+    @Autowired
+    private AdminPropertyProvider propertyProvider;
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
@@ -273,19 +278,21 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 
                 mfrService.updateMasterFacilityRecord(mfr, fs);
                
-                String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;
-                String certifierEmail = securityService.getCurrentApplicationUser().getEmail();
+                if (this.propertyProvider.getBoolean(AppPropertyName.FeatureFacilityAutomatedEmailEnabled)) {
+	                String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;
+	                String certifierEmail = securityService.getCurrentApplicationUser().getEmail();
 
-                //send an email notification to the certifier and cc SLT's predefined address that a report has been submitted
-                notificationService.sendReportSubmittedNotification(
-                		certifierEmail,
-                		sltConfig.getSltEmail(),
-                        cefConfig.getDefaultEmailAddress(),
-                        emissionsReport.getFacilitySites().get(0).getName(),
-                        emissionsReport.getYear().toString(),
-                        sltConfig.getSltEisProgramCode(),
-                        sltConfig.getSltEmail(),
-                        cdxSubmissionUrl);
+	                //send an email notification to the certifier and cc SLT's predefined address that a report has been submitted
+	                notificationService.sendReportSubmittedNotification(
+	                		certifierEmail,
+	                		sltConfig.getSltEmail(),
+	                        cefConfig.getDefaultEmailAddress(),
+	                        emissionsReport.getFacilitySites().get(0).getName(),
+	                        emissionsReport.getYear().toString(),
+	                        sltConfig.getSltEisProgramCode(),
+	                        sltConfig.getSltEmail(),
+	                        cdxSubmissionUrl);
+                }
             }
             return cromerrDocumentId;
         } catch(IOException e) {
@@ -421,31 +428,33 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	     List<EmissionsReportDto> updatedReports = statusService.advancedQAEmissionsReports(reportIds);
 	     reportService.createReportHistory(reportIds, ReportAction.ADVANCED_QA);
 	
-	     StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
-	       .forEach(report -> {
+	     if (this.propertyProvider.getBoolean(AppPropertyName.FeatureFacilityAutomatedEmailEnabled)) {
+	    	 StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
+		       .forEach(report -> {
+		           
+		           SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+		
+		           //there should always be exactly one facility site for a CEF emissions report for now. This may change at
+		           //some point in the future if different report types are included in the system
+		           FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
+	
+		           //check for "Emission Inventory" contacts in the facility site and send them a notification that advanced QA has
+		           // begun for their report
+		           List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
 	           
-	           SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
-	
-	           //there should always be exactly one facility site for a CEF emissions report for now. This may change at
-	           //some point in the future if different report types are included in the system
-	           FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
-	
-	           //check for "Emission Inventory" contacts in the facility site and send them a notification that advanced QA has
-	           // begun for their report
-	           List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
-	
-	           eiContacts.forEach(contact -> {
-	               //if the EI contact has a email address - send them the notification
-	               if (StringUtils.isNotEmpty(contact.getEmail())) {
-	                   notificationService.sendReportAdvancedQANotification(contact.getEmail(),
-	                           cefConfig.getDefaultEmailAddress(),
-	                           reportFacilitySite.getName(),
-	                           report.getYear().toString(),
-	                           sltConfig.getSltEisProgramCode(),
-	                           sltConfig.getSltEmail());
-	               }
-	           });
-	       });
+		           eiContacts.forEach(contact -> {
+		               //if the EI contact has a email address - send them the notification
+		               if (StringUtils.isNotEmpty(contact.getEmail())) {
+		                   notificationService.sendReportAdvancedQANotification(contact.getEmail(),
+		                           cefConfig.getDefaultEmailAddress(),
+		                           reportFacilitySite.getName(),
+		                           report.getYear().toString(),
+		                           sltConfig.getSltEisProgramCode(),
+		                           sltConfig.getSltEmail());
+		               }
+		           });
+		       });
+	     }
 	     return updatedReports;
 	 }
 
@@ -460,32 +469,34 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     	List<EmissionsReportDto> updatedReports = statusService.acceptEmissionsReports(reportIds);
         reportService.createReportHistory(reportIds, ReportAction.ACCEPTED, comments);
 
-    	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
-	      .forEach(report -> {
-	    	  
-	    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+        if (this.propertyProvider.getBoolean(AppPropertyName.FeatureFacilityAutomatedEmailEnabled)) {
+        	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
+		      .forEach(report -> {
+		    	  
+		    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+	
+		    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
+		    	  //some point in the future if different report types are included in the system
+		    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
 
-	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
-	    	  //some point in the future if different report types are included in the system
-	    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
+	    		  //check for "Emission Inventory" contacts in the facility site and send them a notification that their report
+		    	  //has been accepted
+		    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
 
-	    	  //check for "Emission Inventory" contacts in the facility site and send them a notification that their report
-	    	  //has been accepted
-	    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
-
-	    	  eiContacts.forEach(contact -> {
-	    		  //if the EI contact has a email address - send them the notification
-	    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
-			          notificationService.sendReportAcceptedNotification(contact.getEmail(),
-			        		  cefConfig.getDefaultEmailAddress(),
-			        		  reportFacilitySite.getName(),
-			        		  report.getYear().toString(),
-			        		  comments,
-			        		  sltConfig.getSltEisProgramCode(),
-			        		  sltConfig.getSltEmail());
-	    		  }
-	    	  });
-	      });
+		    	  eiContacts.forEach(contact -> {
+		    		  //if the EI contact has a email address - send them the notification
+		    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
+				          notificationService.sendReportAcceptedNotification(contact.getEmail(),
+				        		  cefConfig.getDefaultEmailAddress(),
+				        		  reportFacilitySite.getName(),
+				        		  report.getYear().toString(),
+				        		  comments,
+				        		  sltConfig.getSltEisProgramCode(),
+				        		  sltConfig.getSltEmail());
+		    		  }
+		    	  });
+		      });
+        }
     	return updatedReports;
     }
 
@@ -523,32 +534,34 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     		reportService.createReportHistory(reviewDTO.getReportIds(), ReportAction.REJECTED, reviewDTO.getComments());
     	}
 
-    	StreamSupport.stream(this.erRepo.findAllById(reviewDTO.getReportIds()).spliterator(), false)
-	      .forEach(report -> {
+    	if (this.propertyProvider.getBoolean(AppPropertyName.FeatureFacilityAutomatedEmailEnabled)) {
+    		StreamSupport.stream(this.erRepo.findAllById(reviewDTO.getReportIds()).spliterator(), false)
+		      .forEach(report -> {
+	
+		    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
+		    	  //some point in the future if different report types are included in the system
+		    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
 
-	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
-	    	  //some point in the future if different report types are included in the system
-	    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
-
-	    	  //check for "Emissions Inventory" contacts in the facility site and send them a notification that their report
-	    	  //has been accepted
-	    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
-	    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+	    		  //check for "Emissions Inventory" contacts in the facility site and send them a notification that their report
+		    	  //has been accepted
+		    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
+		    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
 	    	  
-	    	  eiContacts.forEach(contact -> {
-	    		  //if the EI contact has a email address - send them the notification
-	    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
-			          notificationService.sendReportRejectedNotification(contact.getEmail(),
-			        		  sltConfig.getSltEmail(),
-			        		  cefConfig.getDefaultEmailAddress(),
-			        		  reportFacilitySite.getName(),
-			        		  report.getYear().toString(),
-			        		  reviewDTO.getComments(), reviewDTO.getAttachmentId(),
-			        		  sltConfig.getSltEisProgramCode(),
-			        		  sltConfig.getSltEmail());
-	    		  }
-	    	  });
-	      });
+		    	  eiContacts.forEach(contact -> {
+		    		  //if the EI contact has a email address - send them the notification
+		    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
+				          notificationService.sendReportRejectedNotification(contact.getEmail(),
+				        		  sltConfig.getSltEmail(),
+				        		  cefConfig.getDefaultEmailAddress(),
+				        		  reportFacilitySite.getName(),
+				        		  report.getYear().toString(),
+				        		  reviewDTO.getComments(), reviewDTO.getAttachmentId(),
+				        		  sltConfig.getSltEisProgramCode(),
+				        		  sltConfig.getSltEmail());
+		    		  }
+		    	  });
+		      });
+    	}
     	return updatedReports;
     }
     
