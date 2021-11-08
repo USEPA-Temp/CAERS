@@ -440,18 +440,16 @@ public class EmissionServiceImpl implements EmissionService {
         		
         		// Set conversion factor if cf numerator uom == ef denominator uom, and cf denominator uom == throughput uom
         		// or if cf denominator uom == ef denominator uom, and cf numerator uom == throughput uom
-        		if (cf != null
-        				&& (cf.getEmissionsNumeratorUom().getUnitType().equals(efDenom.getUnitType())
-        				&& cf.getEmissionsDenominatorUom().getUnitType().equals(rp.getCalculationParameterUom().getUnitType()))
-        				|| (cf.getEmissionsDenominatorUom().getUnitType().equals(efDenom.getUnitType())
-        				&& cf.getEmissionsNumeratorUom().getUnitType().equals(rp.getCalculationParameterUom().getUnitType()))) {
-        			emission.setEnergyConversionFactor(cf);
-
-        		} else {
-        			throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
-                            String.format("Reporting Period Calculation Unit of Measure %s cannot be converted into Emission Factor Denominator Unit of Measure %s.",
-                                    rp.getCalculationParameterUom().getDescription(), efDenom.getDescription()));
-        		}
+        		if (cf != null && ((cf.getEmissionsNumeratorUom().getUnitType().equals(efDenom.getUnitType())
+	        				&& cf.getEmissionsDenominatorUom().getUnitType().equals(rp.getCalculationParameterUom().getUnitType()))
+	        				|| (cf.getEmissionsDenominatorUom().getUnitType().equals(efDenom.getUnitType())
+	        				&& cf.getEmissionsNumeratorUom().getUnitType().equals(rp.getCalculationParameterUom().getUnitType())))) {
+        					emission.setEnergyConversionFactor(cf);
+	        		} else {
+	        			throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
+	                            String.format("Reporting Period Calculation Unit of Measure cannot be converted into Emission Factor Denominator Unit of Measure."));
+	        		}
+        		
         	} else {
 	            throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
 	                    String.format("Reporting Period Calculation Unit of Measure %s cannot be converted into Emission Factor Denominator Unit of Measure %s.",
