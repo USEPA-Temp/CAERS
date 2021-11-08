@@ -30,6 +30,7 @@ import gov.epa.cef.web.domain.ContactTypeCode;
 import gov.epa.cef.web.domain.ControlMeasureCode;
 import gov.epa.cef.web.domain.EfVariableValidationType;
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFactor;
 import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
@@ -50,6 +51,7 @@ import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
 import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
 import gov.epa.cef.web.repository.ControlRepository;
+import gov.epa.cef.web.repository.EmissionFactorRepository;
 import gov.epa.cef.web.repository.EmissionFormulaVariableCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
@@ -412,6 +414,9 @@ public class CersXmlServiceImplTest {
         when(this.releasePointRepo.retrieveByFacilityYear(any(), any())).thenReturn(Collections.emptyList());
         when(this.controlRepo.retrieveByFacilityYear(any(), any())).thenReturn(Collections.emptyList());
         
+        when(this.efRepo.findBySccCodePollutantEmissionFactorFormulaControlIndicator(any(), any(), any(), any())).thenReturn(mock(EmissionFactor.class));
+        when(this.efRepo.findBySccCodePollutantEmissionFactorControlIndicator(any(), any(), any(), any())).thenReturn(mock(EmissionFactor.class));
+        
     }
     
     @Mock
@@ -518,5 +523,8 @@ public class CersXmlServiceImplTest {
     
     @Mock
     ControlRepository controlRepo;
+    
+    @Mock
+    EmissionFactorRepository efRepo;
     
 }

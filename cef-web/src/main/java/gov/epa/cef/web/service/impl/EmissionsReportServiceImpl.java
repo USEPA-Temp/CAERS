@@ -23,13 +23,18 @@ import gov.epa.cef.web.config.AppPropertyName;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.Attachment;
+import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFactor;
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.ReportStatus;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.NotExistException;
@@ -38,8 +43,10 @@ import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.MasterFacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
 import gov.epa.cef.web.repository.AttachmentRepository;
+import gov.epa.cef.web.repository.EmissionFactorRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.CersXmlService;
+import gov.epa.cef.web.service.EmissionService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.FacilitySiteContactService;
@@ -104,6 +111,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     private MasterFacilityNAICSXrefRepository mfNaicsXrefRepo;
     
     @Autowired
+    private EmissionFactorRepository efRepo;
+    
+    @Autowired
     private EmissionsReportMapper emissionsReportMapper;
 
     @Autowired
@@ -153,6 +163,9 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     
     @Autowired
     private AdminPropertyProvider propertyProvider;
+    
+    @Autowired
+    private EmissionService emissionService;
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
@@ -331,6 +344,16 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                     	facilityNAICS = facilityNaicsMapper.toFacilityNaicsXref(masterFacilityNAICS);
                         facilityNAICS.setFacilitySite(fs);
                         fs.getFacilityNAICS().add(facilityNAICS);
+                    }
+                    
+                    for (EmissionsUnit eu : fs.getEmissionsUnits()) {
+                    	for (EmissionsProcess ep : eu.getEmissionsProcesses()) {
+                    		for (ReportingPeriod rp : ep.getReportingPeriods()) {
+                    			for (Emission e : rp.getEmissions()) {
+                    				e = emissionService.updateEmissionsFactorDescription(e, ep);
+                    			}
+                    		}
+                    	}
                     }
                 });
                 

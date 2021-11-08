@@ -541,6 +541,7 @@ export class EmissionDetailsComponent implements OnInit {
         efCriteria.controlIndicator = false;
       }
 
+	  console.log(efCriteria);
       this.efService.search(efCriteria)
       .subscribe(result => {
         const modalRef = this.modalService.open(EmissionFactorModalComponent, { size: 'xl', backdrop: 'static' });

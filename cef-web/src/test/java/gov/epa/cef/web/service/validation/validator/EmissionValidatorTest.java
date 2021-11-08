@@ -22,8 +22,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,6 +40,7 @@ import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFactor;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsProcess;
@@ -51,6 +54,7 @@ import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.repository.EnergyConversionFactorRepository;
+import gov.epa.cef.web.repository.EmissionFactorRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.ValidationResult;
@@ -61,6 +65,9 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
     @InjectMocks
     private EmissionValidator validator;
+    
+    @Mock
+    private EmissionFactorRepository efRepo;
 
     @Mock
     private CefConfig cefConfig;
@@ -135,6 +142,25 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         when(cefConfig.getEmissionsTotalWarningTolerance()).thenReturn(new BigDecimal(".01"));
         when(cfRepo.findByCalculationMaterialCode("15")).thenReturn(woodCF);
         when(cfRepo.findByCalculationMaterialCode("209")).thenReturn(natGasCF);
+        
+        EmissionFactor ef1 = new EmissionFactor();
+        ef1.setSccCode("10100101");
+        ef1.setPollutantCode("NOX");
+        ef1.setControlIndicator(false);
+        ef1.setDescription("test description");
+        List<EmissionFactor> efList1 = new ArrayList<EmissionFactor>();
+        efList1.add(ef1);
+        
+        EmissionFactor ef2 = new EmissionFactor();
+        ef2.setSccCode("10100101");
+        ef2.setPollutantCode("605");
+        ef2.setControlIndicator(false);
+        ef2.setDescription("test description");
+        List<EmissionFactor> efList2 = new ArrayList<EmissionFactor>();
+        efList1.add(ef2);
+        
+        when(efRepo.findBySccCodePollutantControlIndicator("10100101", "NOX", false)).thenReturn((efList1));
+        when(efRepo.findBySccCodePollutantControlIndicator("10100101", "605", false)).thenReturn((efList2));
     }
 
     @Test
@@ -929,6 +955,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setFacilitySourceTypeCode(sourceType);
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEmissionsReport(new EmissionsReport());
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setYear(new Short("2019"));
+        period.getEmissionsProcess().setSccCode("10100101");
         result.setReportingPeriod(period);
 
         result.setEmissionsUomCode(tonUom);
@@ -945,7 +972,11 @@ public class EmissionValidatorTest extends BaseValidatorTest {
             result.setComments("Comment");
             result.setTotalManualEntry(true);
         }
-
+        
+        Pollutant pollutant = new Pollutant();
+        pollutant.setPollutantCode("NOX");
+        result.setPollutant(pollutant);
+        
         return result;
     }
 
