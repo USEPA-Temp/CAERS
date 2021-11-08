@@ -157,9 +157,10 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         ef2.setControlIndicator(false);
         ef2.setDescription("test description");
         List<EmissionFactor> efList2 = new ArrayList<EmissionFactor>();
-        efList1.add(ef2);
+        efList2.add(ef2);
         
         when(efRepo.findBySccCodePollutantControlIndicator("10100101", "NOX", false)).thenReturn((efList1));
+        when(efRepo.findBySccCodePollutantControlIndicator("10100101", "NOX", true)).thenReturn((efList1));
         when(efRepo.findBySccCodePollutantControlIndicator("10100101", "605", false)).thenReturn((efList2));
     }
 
@@ -401,6 +402,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         period.setCalculationParameterValue(new BigDecimal("209"));
         period.setCalculationParameterUom(e3ft3sUom);
         period.setEmissionsProcess(new EmissionsProcess());
+        period.getEmissionsProcess().setSccCode("10100101");
         period.getEmissionsProcess().setOperatingStatusCode(opStatCode);
         period.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
         period.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
@@ -450,6 +452,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         period.setCalculationParameterValue(new BigDecimal("209"));
         period.setCalculationParameterUom(e3ft3sUom);
         period.setEmissionsProcess(new EmissionsProcess());
+        period.getEmissionsProcess().setSccCode("10100101");
         period.getEmissionsProcess().setOperatingStatusCode(opStatCode);
         period.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
         period.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());

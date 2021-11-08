@@ -32,6 +32,7 @@ import gov.epa.cef.web.domain.EfVariableValidationType;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFactor;
 import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FipsCounty;
@@ -130,6 +131,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyFloat;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -414,8 +418,10 @@ public class CersXmlServiceImplTest {
         when(this.releasePointRepo.retrieveByFacilityYear(any(), any())).thenReturn(Collections.emptyList());
         when(this.controlRepo.retrieveByFacilityYear(any(), any())).thenReturn(Collections.emptyList());
         
-        when(this.efRepo.findBySccCodePollutantEmissionFactorFormulaControlIndicator(any(), any(), any(), any())).thenReturn(mock(EmissionFactor.class));
-        when(this.efRepo.findBySccCodePollutantEmissionFactorControlIndicator(any(), any(), any(), any())).thenReturn(mock(EmissionFactor.class));
+        when(this.efRepo.findBySccCodePollutantEmissionFactorFormulaControlIndicator(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(mock(EmissionFactor.class));
+        when(this.efRepo.findBySccCodePollutantEmissionFactorControlIndicator(anyString(), anyString(), any(BigDecimal.class), anyBoolean())).thenReturn(mock(EmissionFactor.class));
+        
+        when(this.emissionService.updateEmissionsFactorDescription(any(Emission.class), any(EmissionsProcess.class))).thenReturn(mock(Emission.class));
         
     }
     
@@ -508,6 +514,9 @@ public class CersXmlServiceImplTest {
 
     @InjectMocks
     BulkUploadServiceImpl bulkUploadService;
+    
+    @Mock
+    EmissionServiceImpl emissionService;
     
     @Mock
     EmissionsReportRepository emissionsReportRepo;
