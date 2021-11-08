@@ -53,6 +53,7 @@ import gov.epa.cef.web.domain.ControlPath;
 import gov.epa.cef.web.domain.ControlPathPollutant;
 import gov.epa.cef.web.domain.ControlPollutant;
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFactor;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
@@ -80,6 +81,7 @@ import gov.epa.cef.web.repository.CalculationParameterTypeCodeRepository;
 import gov.epa.cef.web.repository.ContactTypeCodeRepository;
 import gov.epa.cef.web.repository.ControlMeasureCodeRepository;
 import gov.epa.cef.web.repository.ControlRepository;
+import gov.epa.cef.web.repository.EmissionFactorRepository;
 import gov.epa.cef.web.repository.EmissionFormulaVariableCodeRepository;
 import gov.epa.cef.web.repository.EmissionsOperatingTypeCodeRepository;
 import gov.epa.cef.web.repository.EmissionsProcessRepository;
@@ -102,6 +104,7 @@ import gov.epa.cef.web.repository.TribalCodeRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
 import gov.epa.cef.web.repository.UnitTypeCodeRepository;
 import gov.epa.cef.web.service.BulkUploadService;
+import gov.epa.cef.web.service.EmissionService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.dto.EisSubmissionStatus;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
@@ -167,6 +170,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
 
     @Autowired
     private EmissionsReportService emissionsReportService;
+    
+    @Autowired
+    private EmissionService emissionService;
 
     @Autowired
     private ExcelParserClient excelParserClient;
@@ -239,6 +245,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
     
     @Autowired
     private EmissionsProcessRepository emissionsProcessRepo;
+    
+    @Autowired
+    private EmissionFactorRepository efRepo;
 
     @Override
     public Function<JsonNode, EmissionsReportBulkUploadDto> parseJsonNode(boolean failUnknownProperties) {
@@ -531,6 +540,9 @@ public class BulkUploadServiceImpl implements BulkUploadService {
                                                         // TODO: handle exception
                                                     }
                                                 }
+                                                
+                                                // looks wonky because the lambda function above expects emissions to be effectively final
+                                                emission.setEmissionsFactorText(emissionService.updateEmissionsFactorDescription(emission, process).getEmissionsFactorText());
 
                                                 return emission;
                                             }).collect(Collectors.toList());

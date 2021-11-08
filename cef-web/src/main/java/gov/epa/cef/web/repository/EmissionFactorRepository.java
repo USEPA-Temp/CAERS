@@ -16,10 +16,28 @@
 */
 package gov.epa.cef.web.repository;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import gov.epa.cef.web.domain.EmissionFactor;
 
 public interface EmissionFactorRepository extends JpaRepository<EmissionFactor, Long> {
 
+	@Query("select ef from EmissionFactor ef where ef.sccCode = :sccCode and ef.pollutantCode = :pollutantCode and ef.controlIndicator = :controlIndicator")
+	List<EmissionFactor> findBySccCodePollutantControlIndicator(@Param("sccCode") String sccCode, @Param("pollutantCode") String pollutantCode, 
+										  						@Param("controlIndicator") boolean controlIndicator);
+	
+	@Query("select ef from EmissionFactor ef where ef.sccCode = :sccCode and ef.pollutantCode = :pollutantCode and ef.emissionFactor = :emissionFactor and ef.controlIndicator = :controlIndicator")
+	EmissionFactor findBySccCodePollutantEmissionFactorControlIndicator(@Param("sccCode") String sccCode, @Param("pollutantCode") String pollutantCode, 
+																		@Param("emissionFactor") BigDecimal emissionFactor,
+																		@Param("controlIndicator") boolean controlIndicator);
+	
+	@Query("select ef from EmissionFactor ef where ef.sccCode = :sccCode and ef.pollutantCode = :pollutantCode and ef.emissionFactorFormula = :emissionFactorFormula and ef.controlIndicator = :controlIndicator")
+	EmissionFactor findBySccCodePollutantEmissionFactorFormulaControlIndicator(@Param("sccCode") String sccCode, @Param("pollutantCode") String pollutantCode, 
+																		@Param("emissionFactorFormula") String emissionFactorFormula,
+																		@Param("controlIndicator") boolean controlIndicator);
 }
