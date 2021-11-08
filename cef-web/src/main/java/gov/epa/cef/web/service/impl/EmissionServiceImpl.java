@@ -687,29 +687,31 @@ public class EmissionServiceImpl implements EmissionService {
     
     public Emission updateEmissionsFactorDescription (Emission emission, EmissionsProcess process) {
     	
+    	String newDescription = "";
+		EmissionFactor ef = new EmissionFactor();
+		
     	if (Boolean.TRUE.equals(emission.getFormulaIndicator())) {
-
-            // set emission factor text using ef repo to get the description
-            EmissionFactor ef = efRepo.findBySccCodePollutantEmissionFactorFormulaControlIndicator(process.getSccCode(),
-																			            		   emission.getPollutant().getPollutantCode(),
-																			            		   emission.getEmissionsFactorFormula(),
-																			            		   emission.getEmissionsCalcMethodCode().getControlIndicator());
-            
-            if (ef != null) {
-            	emission.setEmissionsFactorText(ef.getDescription().substring(0,96).concat("..."));
-                // TODO: add logging when the time comes
-            }
+    		
+            ef = efRepo.findBySccCodePollutantEmissionFactorFormulaControlIndicator(process.getSccCode(),
+															            		    emission.getPollutant().getPollutantCode(),
+															            		    emission.getEmissionsFactorFormula(),
+															            		    emission.getEmissionsCalcMethodCode().getControlIndicator());
         } else {
-            // set emission factor text using ef repo to get the description
-            EmissionFactor ef = efRepo.findBySccCodePollutantEmissionFactorControlIndicator(process.getSccCode(),
-																		            		emission.getPollutant().getPollutantCode(),
-																		            		emission.getEmissionsFactor(),
-																		            		emission.getEmissionsCalcMethodCode().getControlIndicator());
-            
-            if (ef != null) {
-            	emission.setEmissionsFactorText(ef.getDescription().substring(0,96).concat("..."));
-                // TODO: add logging when the time comes
-            }
+        	
+            ef = efRepo.findBySccCodePollutantEmissionFactorControlIndicator(process.getSccCode(),
+														            		 emission.getPollutant().getPollutantCode(),
+														            		 emission.getEmissionsFactor(),
+														            		 emission.getEmissionsCalcMethodCode().getControlIndicator());      
+        }
+    	
+    	if (ef != null) {
+    		if (ef.getDescription().length() > 99) {
+    			newDescription = ef.getDescription().substring(0,96).concat("...");
+    		} else {
+    			newDescription = ef.getDescription();
+    		}
+            // TODO: add logging here when the time comes
+        	emission.setEmissionsFactorText(newDescription);
         }
     	
     	return emission;
