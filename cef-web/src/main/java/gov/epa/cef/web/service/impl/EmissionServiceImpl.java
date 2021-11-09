@@ -434,15 +434,16 @@ public class EmissionServiceImpl implements EmissionService {
             throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT, "Emission Factor Denominator Unit of Measure must be set.");
         }
 
+        
+        // get conversion factor based on throughput material
+        EnergyConversionFactor cf = cfRepo.findByCalculationMaterialCode(rp.getCalculationMaterialCode().getCode());
+        emission.setEnergyConversionFactorId(null);
+
         // if throughput uom type does not match ef denominator uom type
         if (!rp.getCalculationParameterUom().getUnitType().equals(efDenom.getUnitType())) {
         	
         	// if throughput uom is fuel use uom or heat content uom check if there is conversion factor 
         	if (Boolean.TRUE.equals(rp.getCalculationParameterUom().getFuelUseUom()) || Boolean.TRUE.equals(rp.getCalculationParameterUom().getHeatContentUom())) {
-        		
-        		// get conversion factor based on throughput material
-        		EnergyConversionFactor cf = new EnergyConversionFactor();
-        		cf = cfRepo.findByCalculationMaterialCode(rp.getCalculationMaterialCode().getCode());
         		
         		// Set conversion factor if cf numerator uom == ef denominator uom, and cf denominator uom == throughput uom
         		// or if cf denominator uom == ef denominator uom, and cf numerator uom == throughput uom
@@ -450,7 +451,7 @@ public class EmissionServiceImpl implements EmissionService {
 	        				&& cf.getEmissionsDenominatorUom().getUnitType().equals(rp.getCalculationParameterUom().getUnitType()))
 	        				|| (cf.getEmissionsDenominatorUom().getUnitType().equals(efDenom.getUnitType())
 	        				&& cf.getEmissionsNumeratorUom().getUnitType().equals(rp.getCalculationParameterUom().getUnitType())))) {
-        					emission.setEnergyConversionFactor(cf);
+        					emission.setEnergyConversionFactorId(cf.getId());
 	        		} else {
 	        			throw new ApplicationException(ApplicationErrorCode.E_INVALID_ARGUMENT,
 	                            String.format("Reporting Period Calculation Unit of Measure cannot be converted into Emission Factor Denominator Unit of Measure."));
@@ -481,40 +482,39 @@ public class EmissionServiceImpl implements EmissionService {
         BigDecimal totalEmissions = rp.getCalculationParameterValue();
 		
         // apply energy conversion
-        if (emission.getEnergyConversionFactor() != null) {
-        	
+        if (emission.getEnergyConversionFactorId() != null) {
         	// if cf numerator uom type == ef denominator uom type , and cf denominator uom type == throughput uom type 
-        	if (emission.getEnergyConversionFactor().getEmissionsNumeratorUom().getUnitType().equals(efDenom.getUnitType())
-        			&& emission.getEnergyConversionFactor().getEmissionsDenominatorUom().getUnitType().equals(rp.getCalculationParameterUom().getUnitType())) {
+        	if (cf.getEmissionsNumeratorUom().getUnitType().equals(efDenom.getUnitType())
+        			&& cf.getEmissionsDenominatorUom().getUnitType().equals(rp.getCalculationParameterUom().getUnitType())) {
         		
-	        	totalEmissions = totalEmissions.divide(emission.getEnergyConversionFactor().getConversionFactor(), MathContext.DECIMAL128);
+	        	totalEmissions = totalEmissions.divide(cf.getConversionFactor(), MathContext.DECIMAL128);
 	        	
 	        	// convert units for throughput to match cf denominator
-	        	if (!emission.getEnergyConversionFactor().getEmissionsDenominatorUom().getCode().equals(rp.getCalculationParameterUom().getCode())) {
-		        	totalEmissions = CalculationUtils.convertUnits(rp.getCalculationParameterUom().getCalculationVariable(), emission.getEnergyConversionFactor().getEmissionsDenominatorUom().getCalculationVariable(), leapYear).multiply(totalEmissions);
+	        	if (!cf.getEmissionsDenominatorUom().getCode().equals(rp.getCalculationParameterUom().getCode())) {
+		        	totalEmissions = CalculationUtils.convertUnits(rp.getCalculationParameterUom().getCalculationVariable(), cf.getEmissionsDenominatorUom().getCalculationVariable(), leapYear).multiply(totalEmissions);
 	        	}
 		        
 		        // convert units for cf numerator to match ef denominator
-		        if (emission.getEnergyConversionFactor().getEmissionsNumeratorUom().getUnitType().equals(efDenom.getUnitType())
-		        		&& !efDenom.getCode().equals(emission.getEnergyConversionFactor().getEmissionsNumeratorUom().getCode())) {
-		            totalEmissions = CalculationUtils.convertUnits(emission.getEnergyConversionFactor().getEmissionsNumeratorUom().getCalculationVariable(), efDenom.getCalculationVariable(), leapYear).multiply(totalEmissions);
+		        if (cf.getEmissionsNumeratorUom().getUnitType().equals(efDenom.getUnitType())
+		        		&& !efDenom.getCode().equals(cf.getEmissionsNumeratorUom().getCode())) {
+		            totalEmissions = CalculationUtils.convertUnits(cf.getEmissionsNumeratorUom().getCalculationVariable(), efDenom.getCalculationVariable(), leapYear).multiply(totalEmissions);
 		        }
         	}
 	        
         	// if cf denominator uom type == ef denominator uom type, and cf numerator uom type == throughput uom type
-        	if (emission.getEnergyConversionFactor().getEmissionsDenominatorUom().getUnitType().equals(efDenom.getUnitType())
-        			&& emission.getEnergyConversionFactor().getEmissionsNumeratorUom().getUnitType().equals(rp.getCalculationParameterUom().getUnitType())) {
+        	if (cf.getEmissionsDenominatorUom().getUnitType().equals(efDenom.getUnitType())
+        			&& cf.getEmissionsNumeratorUom().getUnitType().equals(rp.getCalculationParameterUom().getUnitType())) {
         		
-        		totalEmissions = emission.getEnergyConversionFactor().getConversionFactor().multiply(totalEmissions);
+        		totalEmissions = cf.getConversionFactor().multiply(totalEmissions);
         		
 		        // convert units for throughput to match cf numerator
-		        if (!emission.getEnergyConversionFactor().getEmissionsNumeratorUom().getCode().equals(rp.getCalculationParameterUom().getCode())) {
-		        	totalEmissions = CalculationUtils.convertUnits(rp.getCalculationParameterUom().getCalculationVariable(), emission.getEnergyConversionFactor().getEmissionsNumeratorUom().getCalculationVariable(), leapYear).multiply(totalEmissions);
+		        if (!cf.getEmissionsNumeratorUom().getCode().equals(rp.getCalculationParameterUom().getCode())) {
+		        	totalEmissions = CalculationUtils.convertUnits(rp.getCalculationParameterUom().getCalculationVariable(), cf.getEmissionsNumeratorUom().getCalculationVariable(), leapYear).multiply(totalEmissions);
 				}
 		        
 		        // convert units for cf denominator to match ef denominator
-		        if (!efDenom.getCode().equals(emission.getEnergyConversionFactor().getEmissionsDenominatorUom().getCode())) {
-		            totalEmissions = CalculationUtils.convertUnits(emission.getEnergyConversionFactor().getEmissionsDenominatorUom().getCalculationVariable(), efDenom.getCalculationVariable(), leapYear).multiply(totalEmissions);
+		        if (!efDenom.getCode().equals(cf.getEmissionsDenominatorUom().getCode())) {
+		            totalEmissions = CalculationUtils.convertUnits(cf.getEmissionsDenominatorUom().getCalculationVariable(), efDenom.getCalculationVariable(), leapYear).multiply(totalEmissions);
 		        }
         	}
         }
@@ -522,7 +522,7 @@ public class EmissionServiceImpl implements EmissionService {
         // apply emission factor
         totalEmissions = emission.getEmissionsFactor().multiply(totalEmissions);
 
-        if (emission.getEnergyConversionFactor() == null) {
+        if (emission.getEnergyConversionFactorId() == null) {
 	        // convert units for ef denominator and throughput
 	        if (rp.getCalculationParameterUom() != null 
 	                && !rp.getCalculationParameterUom().getCode().equals(efDenom.getCode())) {
