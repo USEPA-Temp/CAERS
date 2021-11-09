@@ -39,5 +39,5 @@ export class Emission {
   emissionsDenominatorUom: UnitMeasureCode;
   calculatedEmissionsTons: number;
   variables: EmissionFormulaVariable[];
-  energyConversionFactor: EnergyConversionFactor;
+  energyConversionFactorId: number;
 }

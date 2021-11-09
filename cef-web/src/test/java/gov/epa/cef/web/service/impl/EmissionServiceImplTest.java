@@ -16,6 +16,7 @@
 */
 package gov.epa.cef.web.service.impl;
 
+import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.Emission;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
@@ -28,6 +29,7 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
+import gov.epa.cef.web.repository.EnergyConversionFactorRepository;
 import gov.epa.cef.web.repository.ReportHistoryRepository;
 import gov.epa.cef.web.repository.ReportingPeriodRepository;
 import gov.epa.cef.web.repository.UnitMeasureCodeRepository;
@@ -44,8 +46,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.data.domain.Sort;
-
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,7 +55,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
@@ -77,6 +76,9 @@ public class EmissionServiceImplTest extends BaseServiceTest {
 
     @Mock
     private UnitMeasureCodeRepository uomRepo;
+    
+    @Mock
+    private EnergyConversionFactorRepository cfRepo;
 
     @Mock
     EmissionsByFacilityAndCASMapper emissionsByFacilityAndCASMapper;
@@ -108,6 +110,9 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         	testMaxDate = null;
         }
         Optional<Date> returnDate = Optional.of(testMaxDate);
+        
+        CalculationMaterialCode cmc = new CalculationMaterialCode();
+        cmc.setCode("698");
 
         EmissionsByFacilityAndCAS emission1 = new EmissionsByFacilityAndCAS();
         emission1.setId(1L);
@@ -199,6 +204,7 @@ public class EmissionServiceImplTest extends BaseServiceTest {
         rp.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
         rp.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
         rp.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEmissionsReport(emissionsReport);
+        rp.setCalculationMaterialCode(cmc);
 
         variableDtoList = new ArrayList<EmissionFormulaVariableDto>();
         variableDtoList.add(createEmissionFormulaVariableDto(new BigDecimal(1), "A"));

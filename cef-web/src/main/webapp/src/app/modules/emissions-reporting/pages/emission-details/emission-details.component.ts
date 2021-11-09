@@ -335,7 +335,7 @@ export class EmissionDetailsComponent implements OnInit {
     if (!this.canCalculate()) {
       this.emissionForm.markAllAsTouched();
     } else {
-
+	  this.energyConversionFactor = null;
       if (!this.reportingPeriod.calculationParameterUom) {
         this.calcParamUom = false;
       } else {
@@ -411,7 +411,7 @@ export class EmissionDetailsComponent implements OnInit {
 	      if (!(this.efNumeratorMismatch || this.efDenominatorMismatch) && this.calcParamValue) {
 	        const calcEmission = new Emission();
 	        Object.assign(calcEmission, this.emissionForm.value);
-	
+			calcEmission.energyConversionFactorId = this.energyConversionFactor ? this.energyConversionFactor.id: null;
 	        calcEmission.variables = this.generateFormulaVariableDtos();
 	        calcEmission.reportingPeriodId = this.reportingPeriod.id;
 	
@@ -478,7 +478,7 @@ export class EmissionDetailsComponent implements OnInit {
 
       const saveEmission = new Emission();
       Object.assign(saveEmission, this.emissionForm.value);
-	  saveEmission.energyConversionFactor = this.energyConversionFactor;
+	  saveEmission.energyConversionFactorId = this.energyConversionFactor ? this.energyConversionFactor.id: null;
 
       saveEmission.variables = this.generateFormulaVariableDtos();
       if (this.emission) {
