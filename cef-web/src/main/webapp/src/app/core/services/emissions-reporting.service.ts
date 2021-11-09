@@ -87,7 +87,6 @@ export class EmissionsReportingService {
     /** POST request to the server to create a report for the current year from most previous copy */
     createReportFromPreviousCopy(masterFacilityRecordId: number, reportYear: number, thresholdInfo?: string): Observable<HttpResponse<EmissionsReport>> {
         const url = `${this.baseUrl}/facility/${masterFacilityRecordId}`;
-        console.log(thresholdInfo);
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
             masterFacilityRecordId,

@@ -15,11 +15,7 @@
  * not, see <https://www.gnu.org/licenses/>.
 */
 import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ToastrService } from 'ngx-toastr';
-import { FacilitySiteService } from 'src/app/core/services/facility-site.service';
-import { LookupService } from 'src/app/core/services/lookup.service';
 import { ThresholdStatus } from 'src/app/shared/enums/threshold-status';
 
 @Component({

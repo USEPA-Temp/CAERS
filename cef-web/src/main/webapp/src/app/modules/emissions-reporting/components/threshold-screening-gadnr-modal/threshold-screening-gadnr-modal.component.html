@@ -14,113 +14,108 @@
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
 -->
-<!-- <form [formGroup]="naicsForm"> -->
-  <div class="modal-header">
-    <h4 class="modal-title w-100">Emission Reporting Opt-In</h4>
-    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
+<div class="modal-header">
+  <h4 class="modal-title w-100">Emission Reporting Opt-In</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
 
-  <div class="modal-body">
-    <div>
-        <p>You are about to report facility emissions data for the {{year}} Reporting Year.</p>
-        <p>Was this facility operating in {{year}}?</p>
-        <div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" [(ngModel)]="selectedStatus" id="exampleRadios1" value="OP">
-              <label class="form-check-label" for="exampleRadios1">
-                Yes, Operating
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" [(ngModel)]="selectedStatus" id="exampleRadios2" value="TS">
-              <label class="form-check-label" for="exampleRadios2">
-                No, Temporarily Shutdown
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" [(ngModel)]="selectedStatus" id="exampleRadios3" value="PS">
-              <label class="form-check-label" for="exampleRadios3">
-                No, Permanently Shutdown
-              </label>
-            </div>
-        </div>
-<!--         <span>{{selectedStatus}}</span> -->
-    </div>
-    
-    <div *ngIf="selectedStatus === 'OP'">
-        <hr>
-        <div class="h3">Facility Emissions Thresholds</div>
-        <p>Note that the thresholds below pertain to <i>potential emissions</i>, except for lead. The threshold for lead (Pb) is based on actual emissions.</p>
-        <table class="table table-sm table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>Pollutant</th>
-                    <th>Threshold (tpy)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>VOC</td>
-                    <td>100</td>
-                </tr>
-                <tr>
-                    <td>SOx</td>
-                    <td>100</td>
-                </tr>
-                <tr>
-                    <td>NOx</td>
-                    <td>100</td>
-                </tr>
-                <tr>
-                    <td>CO</td>
-                    <td>1000</td>
-                </tr>
-                <tr>
-                    <td>PB</td>
-                    <td>0.5</td>
-                </tr>
-                <tr>
-                    <td>PM10</td>
-                    <td>100</td>
-                </tr>
-                <tr>
-                    <td>PM25</td>
-                    <td>100</td>
-                </tr>
-                <tr>
-                    <td>NH3</td>
-                    <td>100</td>
-                </tr>
-            </tbody>
-        </table>
-        <div class="h4">Is the facility below ALL of the thresholds listed?</div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" [(ngModel)]="belowThreshold" id="belowThresholdYCb" value="true">
-          <label class="form-check-label" for="belowThresholdYCb">
-            Yes
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="radio" [(ngModel)]="belowThreshold" id="belowThresholdNCb" value="false">
-          <label class="form-check-label" for="belowThresholdNCb">
-            No
-          </label>
-        </div>
-        <p *ngIf="belowThreshold == 'true'" class="validation-warning">
-            This facility is below the AERR emissions reporting thresholds for the {{year}} inventory year and this, will not submit an Emissions Inventory Report this year. 
-            This facility will be updated with a status of "Operating", but will not report emissions."
-        </p>
-        
-<!--         <span>{{belowThreshold}}</span> -->
-    
-    </div>
+<div class="modal-body">
+  <div>
+      <p>You are about to report facility emissions data for the {{year}} Reporting Year.</p>
+      <p>Was this facility operating in {{year}}?</p>
+      <div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" [(ngModel)]="selectedStatus" id="exampleRadios1" value="OP">
+            <label class="form-check-label" for="exampleRadios1">
+              Yes, Operating
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" [(ngModel)]="selectedStatus" id="exampleRadios2" value="TS">
+            <label class="form-check-label" for="exampleRadios2">
+              No, Temporarily Shutdown
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" [(ngModel)]="selectedStatus" id="exampleRadios3" value="PS">
+            <label class="form-check-label" for="exampleRadios3">
+              No, Permanently Shutdown
+            </label>
+          </div>
+      </div>
+  </div>
+  
+  <div *ngIf="selectedStatus === 'OP'">
+      <hr>
+      <div class="h3">Facility Emissions Thresholds</div>
+      <p>Note that the thresholds below pertain to <i>potential emissions</i>, except for lead. The threshold for lead (Pb) is based on actual emissions.</p>
+      <table class="table table-sm table-striped table-bordered">
+          <thead>
+              <tr>
+                  <th>Pollutant</th>
+                  <th>Threshold (tpy)</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>VOC</td>
+                  <td>100</td>
+              </tr>
+              <tr>
+                  <td>SOx</td>
+                  <td>100</td>
+              </tr>
+              <tr>
+                  <td>NOx</td>
+                  <td>100</td>
+              </tr>
+              <tr>
+                  <td>CO</td>
+                  <td>1000</td>
+              </tr>
+              <tr>
+                  <td>PB</td>
+                  <td>0.5</td>
+              </tr>
+              <tr>
+                  <td>PM10</td>
+                  <td>100</td>
+              </tr>
+              <tr>
+                  <td>PM25</td>
+                  <td>100</td>
+              </tr>
+              <tr>
+                  <td>NH3</td>
+                  <td>100</td>
+              </tr>
+          </tbody>
+      </table>
+      <div class="h4">Is the facility below ALL of the thresholds listed?</div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" [(ngModel)]="belowThreshold" id="belowThresholdYCb" value="true">
+        <label class="form-check-label" for="belowThresholdYCb">
+          Yes
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" [(ngModel)]="belowThreshold" id="belowThresholdNCb" value="false">
+        <label class="form-check-label" for="belowThresholdNCb">
+          No
+        </label>
+      </div>
+      <p *ngIf="belowThreshold == 'true'" class="validation-warning">
+          This facility is below the AERR emissions reporting thresholds for the {{year}} inventory year and this, will not submit an Emissions Inventory Report this year. 
+          This facility will be updated with a status of "Operating", but will not report emissions."
+      </p>
   
   </div>
 
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="onClose()">Cancel</button>
-    <button type="button" class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit()">Submit</button>
-  </div>
-<!-- </form> -->
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="onClose()">Cancel</button>
+  <button type="button" class="btn btn-success" (click)="onSubmit()" [disabled]="!canSubmit()">Submit</button>
+</div>
