@@ -85,12 +85,14 @@ export class EmissionsReportingService {
     }
 
     /** POST request to the server to create a report for the current year from most previous copy */
-    createReportFromPreviousCopy(masterFacilityRecordId: number, reportYear: number): Observable<HttpResponse<EmissionsReport>> {
+    createReportFromPreviousCopy(masterFacilityRecordId: number, reportYear: number, thresholdInfo?: string): Observable<HttpResponse<EmissionsReport>> {
         const url = `${this.baseUrl}/facility/${masterFacilityRecordId}`;
+        console.log(thresholdInfo);
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
             masterFacilityRecordId,
-            source: 'previous'
+            source: 'previous',
+            thresholdStatus: thresholdInfo
         }, {
             observe: 'response'
         });
@@ -98,13 +100,14 @@ export class EmissionsReportingService {
 
     /** POST request to the server to create a report for the current year from scratch */
     createReportFromScratch(masterFacilityRecordId: number,
-                            reportYear: number): Observable<HttpResponse<EmissionsReport>> {
+                            reportYear: number, thresholdInfo?: string): Observable<HttpResponse<EmissionsReport>> {
 
         const url = `${this.baseUrl}/facility/${masterFacilityRecordId}`;
         return this.http.post<EmissionsReport>(url, {
             year: reportYear,
             masterFacilityRecordId,
-            source: 'fromScratch'
+            source: 'fromScratch',
+            thresholdStatus: thresholdInfo,
         }, {
             observe: 'response'
         });

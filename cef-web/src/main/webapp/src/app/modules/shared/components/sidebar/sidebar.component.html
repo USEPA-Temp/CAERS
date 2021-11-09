@@ -56,48 +56,50 @@
             </div>
         </div>
 
-        <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
-                [routerLinkActiveOptions]="{exact: true}" #historyRla="routerLinkActive">
-            <div class="nav-link pl-0 pr-0">
-                <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
-                        [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/history" 
-                        >
-                    <span>Report History
-                          <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !historyRla.isActive}" size="lg"></fa-icon>
-                    </span>
-                </a>
+        <ng-container *ngIf="!facilitySite.emissionsReport.thresholdStatus || facilitySite.emissionsReport?.thresholdStatus === 'OPERATING_ABOVE_THRESHOLD'">
+            <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
+                    [routerLinkActiveOptions]="{exact: true}" #historyRla="routerLinkActive">
+                <div class="nav-link pl-0 pr-0">
+                    <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
+                            [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/history" 
+                            >
+                        <span>Report History
+                              <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !historyRla.isActive}" size="lg"></fa-icon>
+                        </span>
+                    </a>
+                </div>
             </div>
-        </div>
-
-        <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
-                [routerLinkActiveOptions]="{exact: true}" #validationRla="routerLinkActive"
-                *ngIf="facilitySite.emissionsReport.status !== 'APPROVED' && !hideSideBar">
-            <div class="nav-link pl-0 pr-0">
-                <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
-                        [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/validation" 
-                        >
-                    <span>Quality Checks
-                          <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !validationRla.isActive}" size="lg"></fa-icon>
-                    </span>
-                </a>
+    
+            <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
+                    [routerLinkActiveOptions]="{exact: true}" #validationRla="routerLinkActive"
+                    *ngIf="facilitySite.emissionsReport.status !== 'APPROVED' && !hideSideBar">
+                <div class="nav-link pl-0 pr-0">
+                    <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
+                            [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/validation" 
+                            >
+                        <span>Quality Checks
+                              <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !validationRla.isActive}" size="lg"></fa-icon>
+                        </span>
+                    </a>
+                </div>
             </div>
-        </div>
-
-        <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
-                [routerLinkActiveOptions]="{exact: true}" #bulkEntryRla="routerLinkActive"
-                *ngIf="bulkEntryEnabled">
-            <div class="nav-link pl-0 pr-0">
-                <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
-                        [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/bulkEntry" 
-                        >
-                    <span>Data Bulk Entry
-                          <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !bulkEntryRla.isActive}" size="lg"></fa-icon>
-                    </span>
-                </a>
+    
+            <div class="nav-item d-flex flex-row justify-content-between" [routerLinkActive]="'active'"
+                    [routerLinkActiveOptions]="{exact: true}" #bulkEntryRla="routerLinkActive"
+                    *ngIf="bulkEntryEnabled">
+                <div class="nav-link pl-0 pr-0">
+                    <a class="text-primary font-weight-bold text-left" [routerLinkActive]="'active text-success'"
+                            [routerLinkActiveOptions]="{exact: true}" routerLink="{{facilitySite.emissionsReport.id}}/bulkEntry" 
+                            >
+                        <span>Data Bulk Entry
+                              <fa-icon icon="angle-left" class="text-success p-1" [ngClass]="{'d-none': !bulkEntryRla.isActive}" size="lg"></fa-icon>
+                        </span>
+                    </a>
+                </div>
             </div>
-        </div>
-
-        <app-collapse-nav [desc]="'Facility Inventory'" [targetId]="'facilityInventoryCollapse'" [linkUrl]="facilitySite.emissionsReport.id" [navItems]="facilityNavItems" [paginate]="false"></app-collapse-nav>
-        <app-collapse-nav [desc]="'Emissions Inventory'" [targetId]="'emissionUnitCollapse'" [linkUrl]="facilitySite.emissionsReport.id" [navItems]="emissionsNavItems" [paginate]="paginate"></app-collapse-nav>
+    
+            <app-collapse-nav [desc]="'Facility Inventory'" [targetId]="'facilityInventoryCollapse'" [linkUrl]="facilitySite.emissionsReport.id" [navItems]="facilityNavItems" [paginate]="false"></app-collapse-nav>
+            <app-collapse-nav [desc]="'Emissions Inventory'" [targetId]="'emissionUnitCollapse'" [linkUrl]="facilitySite.emissionsReport.id" [navItems]="emissionsNavItems" [paginate]="paginate"></app-collapse-nav>
+        </ng-container>
     </div>
 </div>

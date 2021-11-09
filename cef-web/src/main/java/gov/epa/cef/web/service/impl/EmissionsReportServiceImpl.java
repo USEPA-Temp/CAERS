@@ -26,8 +26,10 @@ import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.ThresholdStatus;
 import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReportAction;
 import gov.epa.cef.web.domain.Attachment;
 import gov.epa.cef.web.domain.Emission;
@@ -63,6 +65,7 @@ import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
+import gov.epa.cef.web.util.ConstantUtils;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
@@ -325,11 +328,11 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @return
      */
     @Override
-    public EmissionsReportDto createEmissionReportCopy(Long masterFacilityRecordId, short reportYear) {
-        return findMostRecentEmissionsReport(masterFacilityRecordId)
+    public EmissionsReportDto createEmissionReportCopy(EmissionsReportStarterDto reportDto) {
+        return findMostRecentEmissionsReport(reportDto.getMasterFacilityRecordId())
             .map(mostRecentReport -> {
                 EmissionsReport cloneReport = new EmissionsReport(mostRecentReport);
-                cloneReport.setYear(reportYear);
+                cloneReport.setYear(reportDto.getYear());
                 cloneReport.setStatus(ReportStatus.IN_PROGRESS);
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.setHasSubmitted(false);
@@ -349,14 +352,35 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                     for (EmissionsUnit eu : fs.getEmissionsUnits()) {
                     	for (EmissionsProcess ep : eu.getEmissionsProcesses()) {
                     		for (ReportingPeriod rp : ep.getReportingPeriods()) {
-                    			for (Emission e : rp.getEmissions()) {
-                    				e = emissionService.updateEmissionsFactorDescription(e, ep);
-                    			}
+                    		    if (ThresholdStatus.OPERATING_BELOW_THRESHOLD.equals(reportDto.getThresholdStatus())) {
+                    		        rp.getEmissions().clear();
+                    		    } else {
+                        			for (Emission e : rp.getEmissions()) {
+                        				e = emissionService.updateEmissionsFactorDescription(e, ep);
+                        			}
+                    		    }
                     		}
                     	}
                     }
                 });
-                
+
+                if (reportDto.getThresholdStatus() != null) {
+                    if (ThresholdStatus.PERM_SHUTDOWN.equals(reportDto.getThresholdStatus())) {
+                        cloneReport.setThresholdStatus(ThresholdStatus.PERM_SHUTDOWN);
+                        updateFacilityStatus(cloneReport.getFacilitySites().get(0), new OperatingStatusCode().withCode("PS"), cloneReport.getYear());
+                        cloneReport.setValidationStatus(ValidationStatus.PASSED);
+                    } else if (ThresholdStatus.TEMP_SHUTDOWN.equals(reportDto.getThresholdStatus())) {
+                        cloneReport.setThresholdStatus(ThresholdStatus.TEMP_SHUTDOWN);
+                        updateFacilityStatus(cloneReport.getFacilitySites().get(0), new OperatingStatusCode().withCode("TS"), cloneReport.getYear());
+                        cloneReport.setValidationStatus(ValidationStatus.PASSED);
+                    } else if (ThresholdStatus.OPERATING_BELOW_THRESHOLD.equals(reportDto.getThresholdStatus())) {
+                        cloneReport.setThresholdStatus(ThresholdStatus.OPERATING_BELOW_THRESHOLD);
+                        cloneReport.setValidationStatus(ValidationStatus.PASSED);
+                    } else if (ThresholdStatus.OPERATING_ABOVE_THRESHOLD.equals(reportDto.getThresholdStatus())) {
+                        cloneReport.setThresholdStatus(ThresholdStatus.OPERATING_ABOVE_THRESHOLD);
+                    }
+                }
+
                 cloneReport.clearId();
 
             	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.COPIED_FWD);
@@ -365,6 +389,46 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
             })
             .orElse(null);
 
+    }
+    
+    private void updateFacilityStatus(FacilitySite facilitySite, OperatingStatusCode code, Short tempStatusYear) {
+        if(!(code.getCode().equals(facilitySite.getOperatingStatusCode().getCode()))) {
+            
+            if(code.getCode().contentEquals(ConstantUtils.STATUS_OPERATING)
+                    || code.getCode().contentEquals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN)
+                    || code.getCode().contentEquals(ConstantUtils.STATUS_TEMPORARILY_SHUTDOWN)) {
+                
+                facilitySite.getEmissionsUnits().forEach(unit -> {
+                    if(!unit.getOperatingStatusCode().getCode().contentEquals("PS")){
+                        unit.setOperatingStatusCode(code);
+                        unit.setStatusYear(tempStatusYear);
+                        unit.getEmissionsProcesses().forEach(process -> {
+                            if(!process.getOperatingStatusCode().getCode().contentEquals("PS")){
+                                process.setOperatingStatusCode(code);
+                                process.setStatusYear(tempStatusYear);
+                            }
+                        });
+                    }
+                });
+                
+                facilitySite.getControls().forEach(control -> {
+                    if(!control.getOperatingStatusCode().getCode().contentEquals("PS")){
+                        control.setOperatingStatusCode(code);
+                        control.setStatusYear(tempStatusYear);
+                    }
+                });
+                
+                facilitySite.getReleasePoints().forEach(releasePoint -> {
+                    if(!releasePoint.getOperatingStatusCode().getCode().contentEquals("PS")){
+                        releasePoint.setOperatingStatusCode(code);
+                        releasePoint.setStatusYear(tempStatusYear);
+                    }
+                });
+            }
+        }
+        
+        facilitySite.setOperatingStatusCode(code);
+        facilitySite.setStatusYear(tempStatusYear);
     }
 
     public EmissionsReportDto createEmissionReport(EmissionsReportStarterDto reportDto) {

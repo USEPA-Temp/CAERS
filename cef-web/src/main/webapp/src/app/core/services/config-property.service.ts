@@ -74,4 +74,9 @@ export class ConfigPropertyService {
     return this.http.get<AppProperty>(url);
   }
 
+  retrieveSLTThresholdScreeningGADNREnabled(slt: string): Observable<boolean> {
+    const url = `${this.baseUrl}/thresholdScreening/gadnr/${slt}/enabled`;
+    return this.http.get<boolean>(url);
+  }
+
 }

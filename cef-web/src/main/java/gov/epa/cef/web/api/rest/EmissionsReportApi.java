@@ -504,7 +504,7 @@ public class EmissionsReportApi {
 
         switch (reportDto.getSource()) {
             case previous:
-                result = this.emissionsReportService.createEmissionReportCopy(masterFacilityRecordId, reportDto.getYear());
+                result = this.emissionsReportService.createEmissionReportCopy(reportDto);
                 break;
             case fromScratch:
                 result = this.emissionsReportService.createEmissionReport(reportDto);

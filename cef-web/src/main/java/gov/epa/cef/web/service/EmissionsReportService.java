@@ -94,7 +94,7 @@ public interface EmissionsReportService {
      * @param currentReportYear The year of the report that is being created
      * @return
      */
-    EmissionsReportDto createEmissionReportCopy(Long masterFacilityRecordId, short currentReportYear);
+    EmissionsReportDto createEmissionReportCopy(EmissionsReportStarterDto reportDto);
 
     /**
      * Save the emissions report to the database.

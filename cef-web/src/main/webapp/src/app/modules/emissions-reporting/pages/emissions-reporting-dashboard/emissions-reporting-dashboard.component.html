@@ -27,13 +27,13 @@
           <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', 'upload', report.year]"
              class="btn btn-primary" [attr.aria-label]="'upload'+ report.year +'report'"
              [id]="'upload'+ report.year +'Report'"
-             *ngIf="isOneOf(report.status, ['NEW', 'IN_PROGRESS', 'RETURNED', 'VALIDATED'])">
+             *ngIf="isOneOf(report.status, ['NEW', 'IN_PROGRESS', 'RETURNED', 'VALIDATED']) && allowUpload(report)">
             <span>Upload Report</span>
           </a>
 
           <a href="javascript:void(0);" class="btn btn-primary" [attr.aria-label]="'create new'+ report.year +'report'"
              [id]="'createNew'+ report.year +'Report'"
-             (click)="createNewReport()" *ngIf="report.status === 'NEW'">Create New Report</a>
+             (click)="openThresholdScreeningModal(report.year)" *ngIf="report.status === 'NEW'">Create New Report</a>
 
           <a [routerLink]="['/facility', report.masterFacilityRecordId, 'report', report.id, 'summary']"
              class="btn btn-primary" [attr.aria-label]="'continue'+ report.year +'report'"

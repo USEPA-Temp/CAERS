@@ -29,6 +29,7 @@ public class EmissionsReportDto implements Serializable {
     private Short year;
     private String status;
     private String validationStatus;
+    private String thresholdStatus;
     private Boolean hasSubmitted;
     private String eisLastSubmissionStatus;
     private String fileName;
@@ -90,7 +91,15 @@ public class EmissionsReportDto implements Serializable {
         this.validationStatus = validationStatus;
     }
 
-	public Boolean getHasSubmitted() {
+	public String getThresholdStatus() {
+        return thresholdStatus;
+    }
+
+    public void setThresholdStatus(String thresholdStatus) {
+        this.thresholdStatus = thresholdStatus;
+    }
+
+    public Boolean getHasSubmitted() {
 		return hasSubmitted;
 	}
 
