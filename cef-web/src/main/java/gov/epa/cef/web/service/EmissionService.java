@@ -19,6 +19,7 @@ package gov.epa.cef.web.service;
 import java.util.List;
 
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.service.dto.EmissionBulkEntryHolderDto;
 import gov.epa.cef.web.service.dto.EmissionDto;
@@ -131,4 +132,11 @@ public interface EmissionService {
      * @return
      */
     List<EmissionFormulaVariableBulkUploadDto> retrieveEmissionFormulaVariables(String programSystemCode, Short emissionsReportYear);
+    
+    /**
+     * Update emission factor description where possible
+     * @param emission
+     * @return
+     */
+    Emission updateEmissionsFactorDescription(Emission emission, EmissionsProcess process);
 }

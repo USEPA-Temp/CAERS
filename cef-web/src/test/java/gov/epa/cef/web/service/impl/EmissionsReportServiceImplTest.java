@@ -41,6 +41,7 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.CersXmlService;
+import gov.epa.cef.web.service.EmissionService;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserService;
@@ -72,6 +73,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -106,6 +108,9 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Mock
     private FacilitySiteService facilitySiteService;
+    
+    @Mock
+    private EmissionService emissionService;
 
     @InjectMocks
     private EmissionsReportServiceImpl emissionsReportServiceImpl;
@@ -163,6 +168,8 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
         fxr.setId(1L);
         fxr.setNaicsCode(naics);
         when(facilityNaicsMapper.toFacilityNaicsXref(previousEmissionsReport.getMasterFacilityRecord().getMasterFacilityNAICS().get(0))).thenReturn(fxr);
+        
+        when(this.emissionService.updateEmissionsFactorDescription(any(Emission.class), any(EmissionsProcess.class))).thenReturn(mock(Emission.class));
     }
 
     @Test

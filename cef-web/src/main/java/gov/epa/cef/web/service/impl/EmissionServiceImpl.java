@@ -36,8 +36,10 @@ import org.springframework.stereotype.Service;
 
 import gov.epa.cef.web.domain.EisTriXref;
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFactor;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionsByFacilityAndCAS;
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EnergyConversionFactor;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
@@ -46,6 +48,7 @@ import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.exception.ApplicationErrorCode;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.repository.EisTriXrefRepository;
+import gov.epa.cef.web.repository.EmissionFactorRepository;
 import gov.epa.cef.web.repository.EmissionFormulaVariableRepository;
 import gov.epa.cef.web.repository.EmissionRepository;
 import gov.epa.cef.web.repository.EmissionsByFacilityAndCASRepository;
@@ -95,6 +98,9 @@ public class EmissionServiceImpl implements EmissionService {
     
     @Autowired
     private EnergyConversionFactorRepository cfRepo;
+    
+    @Autowired
+    private EmissionFactorRepository efRepo;
 
     @Autowired
     private EmissionFactorServiceImpl efService;
@@ -677,6 +683,38 @@ public class EmissionServiceImpl implements EmissionService {
     public List<EmissionFormulaVariableBulkUploadDto> retrieveEmissionFormulaVariables(String programSystemCode, Short emissionsReportYear) {
     	List<EmissionFormulaVariable> variables = variablesRepo.findByPscAndEmissionsReportYear(programSystemCode, emissionsReportYear);
     	return bulkUploadMapper.emissionFormulaVariableToDtoList(variables);
+    }
+    
+    public Emission updateEmissionsFactorDescription (Emission emission, EmissionsProcess process) {
+    	
+    	String newDescription = "";
+		EmissionFactor ef = null;
+		
+    	if (Boolean.TRUE.equals(emission.getFormulaIndicator())) {
+    		
+            ef = efRepo.findBySccCodePollutantEmissionFactorFormulaControlIndicator(process.getSccCode(),
+															            		    emission.getPollutant().getPollutantCode(),
+															            		    emission.getEmissionsFactorFormula(),
+															            		    emission.getEmissionsCalcMethodCode().getControlIndicator());
+        } else {
+        	
+            ef = efRepo.findBySccCodePollutantEmissionFactorControlIndicator(process.getSccCode(),
+														            		 emission.getPollutant().getPollutantCode(),
+														            		 emission.getEmissionsFactor(),
+														            		 emission.getEmissionsCalcMethodCode().getControlIndicator());      
+        }
+    	
+    	if (ef != null) {
+    		if (ef.getDescription().length() > 99) {
+    			newDescription = ef.getDescription().substring(0,96).concat("...");
+    		} else {
+    			newDescription = ef.getDescription();
+    		}
+            // TODO: add logging here when the time comes
+        	emission.setEmissionsFactorText(newDescription);
+        }
+    	
+    	return emission;
     }
 
 }
