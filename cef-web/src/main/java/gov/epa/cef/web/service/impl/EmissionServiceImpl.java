@@ -688,7 +688,7 @@ public class EmissionServiceImpl implements EmissionService {
     public Emission updateEmissionsFactorDescription (Emission emission, EmissionsProcess process) {
     	
     	String newDescription = "";
-		EmissionFactor ef = new EmissionFactor();
+		EmissionFactor ef = null;
 		
     	if (Boolean.TRUE.equals(emission.getFormulaIndicator())) {
     		
