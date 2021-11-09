@@ -52,8 +52,8 @@
                 </div>
             </div>
 
-            <div *ngIf="facilitySite.emissionsReport.status==='IN_PROGRESS' || facilitySite.emissionsReport.status==='RETURNED'">
-                <div class="float-right pr-3">
+            <div *ngIf="(facilitySite.emissionsReport.status==='IN_PROGRESS' || facilitySite.emissionsReport.status==='RETURNED')">
+                <div class="float-right pr-3" *ngIf="!facilitySite.emissionsReport.thresholdStatus || facilitySite.emissionsReport?.thresholdStatus === 'OPERATING_ABOVE_THRESHOLD'">
                     <button *ngIf="user?.canPrepare()"
                             id="runQualityChecksBtn"
                             class="btn btn-primary btn-md my-3 ml-1"

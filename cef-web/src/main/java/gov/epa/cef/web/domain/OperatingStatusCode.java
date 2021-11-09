@@ -59,4 +59,9 @@ public class OperatingStatusCode extends BaseLookupEntity {
     public void setFacilityStatus(Boolean facilityStatus) {
         this.facilityStatus = facilityStatus;
     }
+
+    public OperatingStatusCode withCode(String code) {
+        this.setCode(code);
+        return this;
+    }
 }

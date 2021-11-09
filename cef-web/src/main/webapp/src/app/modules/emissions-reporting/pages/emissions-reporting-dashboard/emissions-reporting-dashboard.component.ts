@@ -33,6 +33,8 @@ import { ConfigPropertyService } from 'src/app/core/services/config-property.ser
 import { OperatingStatus } from 'src/app/shared/enums/operating-status';
 import { MasterFacilityRecord } from 'src/app/shared/models/master-facility-record';
 import { UtilityService } from 'src/app/core/services/utility.service';
+import { ThresholdScreeningGadnrModalComponent } from '../../components/threshold-screening-gadnr-modal/threshold-screening-gadnr-modal.component';
+import { ThresholdStatus } from 'src/app/shared/enums/threshold-status';
 
 @Component({
     selector: 'app-emissions-reporting-dashboard',
@@ -46,6 +48,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
     emissionsReport: EmissionsReport;
     operatingFacilityStatusValues: BaseCodeLookup[];
     excelExportEnabled = false;
+    thresholdScreeningEnabled = false;
 
     @ViewChild('FailedToCreateMessageBox', {static: true})
     _failedToCreateTemplate: TemplateRef<any>;
@@ -75,6 +78,11 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                     .subscribe(reports => {this.reports = reports.sort((a, b) => b.year - a.year);
                     });
                 }
+                
+                this.propertyService.retrieveSLTThresholdScreeningGADNREnabled(this.facility.programSystemCode.code)
+                .subscribe(result => {
+                    this.thresholdScreeningEnabled = result;
+                });
             });
         this.sharedService.emitChange(null);
         this.facilitySite = new FacilitySite();
@@ -83,6 +91,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         .subscribe(result => {
             this.excelExportEnabled = result;
         });
+        
 
         this.lookupService.retrieveFacilityOperatingStatus()
         .subscribe(result => {
@@ -100,11 +109,30 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         }
         return false;
     }
+    
+    allowUpload(report: EmissionsReport) {
+        return !(this.thresholdScreeningEnabled && (report.status === 'NEW' || (report.thresholdStatus && report.thresholdStatus != ThresholdStatus.OPERATING_ABOVE_THRESHOLD)));
+    }
+
+    openThresholdScreeningModal(year: number) {
+
+        if (this.thresholdScreeningEnabled) {
+            const modalRef = this.modalService.open(ThresholdScreeningGadnrModalComponent, { size: 'xl' });
+            modalRef.componentInstance.year = year;
+            modalRef.result.then((result: string) => {
+              this.createNewReport(result);
+            }, () => {
+              // needed for dismissing without errors
+            });
+        } else {
+            this.createNewReport();
+        }
+    }
 
     /**
      * Create a new report. Either a copy of the previous report (if one exists) or a new report
      */
-    createNewReport() {
+    createNewReport(thresholdInfo?: string) {
 
         const modalWindow = this.modalService.open(BusyModalComponent, {
             backdrop: 'static',
@@ -114,7 +142,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
         modalWindow.componentInstance.message = 'Please wait while we generate your new report.';
 
         const reportingYear = new Date().getFullYear() - 1;
-        this.reportService.createReportFromPreviousCopy(this.facility.id, reportingYear)
+        this.reportService.createReportFromPreviousCopy(this.facility.id, reportingYear, thresholdInfo)
                 .subscribe(reportResp => {
                     if (reportResp.status === 204) {
                         // 204 No Content
@@ -124,7 +152,7 @@ export class EmissionsReportingDashboardComponent implements OnInit {
                         this.lookupService.retrieveProgramSystemCodeByDescription(this.facility.programSystemCode?.description)
                         .subscribe(result => {
                             this.facilitySite.programSystemCode = result;
-                            this.reportService.createReportFromScratch(this.facility.id, reportingYear)
+                            this.reportService.createReportFromScratch(this.facility.id, reportingYear, thresholdInfo)
                             .subscribe(reportResp => {
                                 modalWindow.dismiss();
                                 this.reportCompleted(reportResp.body);

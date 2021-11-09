@@ -113,6 +113,17 @@ public class PropertyApi {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    /**
+     * Retrieve GADNR threshold screening enabled property
+     * @return
+     */
+    @GetMapping(value = "/thresholdScreening/gadnr/{slt}/enabled")
+    @ResponseBody
+    public ResponseEntity<Boolean> retrieveThresholdScreeningGADNREnabled(@NotNull @PathVariable String slt) {
+        Boolean result = sltPropertyProvider.getBoolean(SLTPropertyName.SLTFeatureThresholdScreeningGADNREnabled, slt);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     
     
     /**

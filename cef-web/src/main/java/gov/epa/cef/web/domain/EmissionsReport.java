@@ -98,6 +98,10 @@ public class EmissionsReport extends BaseAuditEntity {
     @Column(name = "validation_status")
     private ValidationStatus validationStatus;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "threshold_status")
+    private ThresholdStatus thresholdStatus;
+
     @Column(name = "year", nullable = false)
     private Short year;
 
@@ -120,6 +124,7 @@ public class EmissionsReport extends BaseAuditEntity {
         this.programSystemCode = originalEmissionsReport.programSystemCode;
         this.year = originalEmissionsReport.year;
         this.status = originalEmissionsReport.status;
+        this.thresholdStatus = originalEmissionsReport.thresholdStatus;
         this.validationStatus = originalEmissionsReport.validationStatus;
         for (FacilitySite facilitySite : originalEmissionsReport.facilitySites) {
             this.facilitySites.add(new FacilitySite(this, facilitySite));
@@ -303,6 +308,14 @@ public class EmissionsReport extends BaseAuditEntity {
     public void setValidationStatus(ValidationStatus validationStatus) {
 
         this.validationStatus = validationStatus;
+    }
+
+    public ThresholdStatus getThresholdStatus() {
+        return thresholdStatus;
+    }
+
+    public void setThresholdStatus(ThresholdStatus thresholdStatus) {
+        this.thresholdStatus = thresholdStatus;
     }
 
     public Short getYear() {

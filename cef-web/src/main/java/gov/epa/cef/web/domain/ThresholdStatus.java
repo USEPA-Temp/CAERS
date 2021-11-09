@@ -14,21 +14,11 @@
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
 */
-import { FacilitySite } from 'src/app/shared/models/facility-site';
-import { BaseCodeLookup } from 'src/app/shared/models/base-code-lookup';
+package gov.epa.cef.web.domain;
 
-export class EmissionsReport {
-  id: number;
-  facilityId: string;
-  eisProgramId: string;
-  masterFacilityRecordId: number;
-  status: string;
-  programSystemCode: BaseCodeLookup;
-  validationStatus: string;
-  thresholdStatus: string;
-  year: number;
-  facilitySite: FacilitySite;
-  hasSubmitted: boolean;
-  fileName: string;
-  returnedReport: boolean;
+public enum ThresholdStatus {
+    OPERATING_BELOW_THRESHOLD,
+    OPERATING_ABOVE_THRESHOLD,
+    TEMP_SHUTDOWN,
+    PERM_SHUTDOWN
 }

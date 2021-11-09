@@ -46,6 +46,7 @@ import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
@@ -223,9 +224,11 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Test
     public void createEmissionReportCopy_Should_ReturnValidDeepCopy_WhenValidFacilityAndYearPassed() {
+        EmissionsReportStarterDto starter = new EmissionsReportStarterDto();
+        starter.setMasterFacilityRecordId(3L);
+        starter.setYear((short) 2020);
     	EmissionsReport originalEmissionsReport = createHydratedEmissionsReport();
-    	EmissionsReportDto emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(
-    	    3L, (short) 2020);
+    	EmissionsReportDto emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(starter);
     	assertEquals(ReportStatus.IN_PROGRESS.toString(), emissionsReportCopy.getStatus());
     	assertEquals(ValidationStatus.UNVALIDATED.toString(), emissionsReportCopy.getValidationStatus());
     	assertEquals("2020", emissionsReportCopy.getYear().toString());
@@ -234,8 +237,10 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Test
     public void createEmissionReportCopy_Should_ReturnNull_WhenPreviousDoesNotExist() {
-        EmissionsReportDto nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(
-            4L, (short) 2020);
+        EmissionsReportStarterDto starter = new EmissionsReportStarterDto();
+        starter.setMasterFacilityRecordId(4L);
+        starter.setYear((short) 2020);
+        EmissionsReportDto nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(starter);
 
         assertNull(nullEmissionsReportCopy);
     }

@@ -85,6 +85,7 @@ import { DataBulkEntryComponent } from './pages/data-bulk-entry/data-bulk-entry.
 import { BulkEntryReportingPeriodTableComponent } from './components/bulk-entry-reporting-period-table/bulk-entry-reporting-period-table.component';
 import { BulkEntryEmissionsTableComponent } from './components/bulk-entry-emissions-table/bulk-entry-emissions-table.component';
 import {faBan, faPlus, faQuestionCircle, fas, faUserCircle} from "@fortawesome/free-solid-svg-icons";
+import { ThresholdScreeningGadnrModalComponent } from './components/threshold-screening-gadnr-modal/threshold-screening-gadnr-modal.component';
 
 @NgModule({
   declarations: [
@@ -147,7 +148,8 @@ import {faBan, faPlus, faQuestionCircle, fas, faUserCircle} from "@fortawesome/f
     UserFeedbackComponent,
     DataBulkEntryComponent,
     BulkEntryReportingPeriodTableComponent,
-    BulkEntryEmissionsTableComponent
+    BulkEntryEmissionsTableComponent,
+    ThresholdScreeningGadnrModalComponent
   ],
   imports: [
     CommonModule,

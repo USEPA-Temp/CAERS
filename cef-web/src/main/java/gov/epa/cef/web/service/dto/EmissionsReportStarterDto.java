@@ -18,6 +18,8 @@ package gov.epa.cef.web.service.dto;
 
 import com.google.common.base.MoreObjects;
 
+import gov.epa.cef.web.domain.ThresholdStatus;
+
 public class EmissionsReportStarterDto {
 
     public enum SourceType {
@@ -37,6 +39,8 @@ public class EmissionsReportStarterDto {
     private SourceType source;
 
     private String stateFacilityId;
+
+    private ThresholdStatus thresholdStatus;
 
     private Short year;
 
@@ -106,6 +110,14 @@ public class EmissionsReportStarterDto {
     public void setSource(SourceType source) {
 
         this.source = source;
+    }
+
+    public ThresholdStatus getThresholdStatus() {
+        return thresholdStatus;
+    }
+
+    public void setThresholdStatus(ThresholdStatus thresholdStatus) {
+        this.thresholdStatus = thresholdStatus;
     }
 
     public Short getYear() {
