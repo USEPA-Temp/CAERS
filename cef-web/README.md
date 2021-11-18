@@ -1,5 +1,5 @@
 # Common Air Emissions Reporting System (CAERS)
-
+testing jira integration
 ## Getting Started
 The CAERS project includes a PostreSQL database, Java Web Services that execute on the server, and uses Angular 2 as its front-end framework.  This document identifies how to set up your environment in order to  run CAERS locally, whether it's on a local web server or as a Spring Boot app.  We start with the installation of the software that is expected in your local environment.  After that is the database setup instruction for creating the schema, running the migrations, and loading sample data to start with.  Then you can build and run all on your local machine!  Of course, you could use the .war file that's built and install it on a web server running on a different server too.
 
