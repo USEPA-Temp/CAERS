@@ -19,6 +19,7 @@ package gov.epa.cef.web.service;
 import java.util.List;
 
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteContactBulkUploadDto;
 
 public interface FacilitySiteContactService {
 
@@ -58,4 +59,12 @@ public interface FacilitySiteContactService {
 
 	List<FacilitySiteContactDto> retrieveInventoryContactsForFacility(Long facilitySiteId);
 
+    /**
+     * Retrieve a list of facility contacts for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+
+	List<FacilitySiteContactBulkUploadDto> retrieveFacilitySiteContacts(String programSystemCode, Short emissionsReportYear);
 }

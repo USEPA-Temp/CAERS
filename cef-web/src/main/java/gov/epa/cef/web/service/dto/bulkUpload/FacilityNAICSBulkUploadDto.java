@@ -19,8 +19,13 @@ package gov.epa.cef.web.service.dto.bulkUpload;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "facility_naics.csv")
 public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -35,6 +40,8 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
     @Pattern(regexp = "^\\d{0,6}$",
         message = "NAICS is not in expected numeric format; found '${validatedValue}'.")
 	private String code;
+    
+    private String description;
 
 	private String naicsCodeType;
     
@@ -45,6 +52,7 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
         super(WorksheetName.FacilityNaics);
     }
 
+    @CsvColumn(name = "ID", order = 1)
     public Long getId() {
 		return id;
 	}
@@ -53,6 +61,7 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
 		this.id = id;
 	}
 
+    @CsvColumn(name = "Facility Site ID", order = 2)
 	public Long getFacilitySiteId() {
 		return facilitySiteId;
 	}
@@ -61,6 +70,7 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
 		this.facilitySiteId = facilitySiteId;
 	}
 
+    @CsvColumn(name = "Code", order = 3)
 	public String getCode() {
 		return code;
 	}
@@ -69,6 +79,15 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
 		this.code = code;
 	}
 
+    @CsvColumn(name = "NAICS Description", order = 3)
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+    @CsvColumn(name = "NAICS Code Type", order = 4)
 	public String getNaicsCodeType() {
 		return naicsCodeType;
 	}
@@ -76,7 +95,7 @@ public class FacilityNAICSBulkUploadDto extends BaseWorksheetDto implements Seri
 	public void setNaicsCodeType(String naicsCodeType) {
 		this.naicsCodeType = naicsCodeType;
 	}
-	
+
     public Boolean isPrimaryFlag() {
 		return primaryFlag;
 	}

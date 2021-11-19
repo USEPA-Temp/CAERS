@@ -20,9 +20,14 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
 
+@CsvFileName(name = "facility_sites.csv")
 public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -40,6 +45,8 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
 
     @Size(max = 20, message = "Source Type Code can not exceed {max} chars; found '${validatedValue}'.")
     private String facilitySourceTypeCode;
+    
+    private String facilitySourceTypeCodeDescription;
 
     @NotBlank(message = "Facility Name is required.")
     @Size(max = 80, message = "Facility Name can not exceed {max} chars; found '${validatedValue}'.")
@@ -51,6 +58,8 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @NotBlank(message = "Operating Status Code is required.")
     @Size(max = 20, message = "Operating Status Code can not exceed {max} chars; found '${validatedValue}'.")
     private String operatingStatusCode;
+    
+    private String operatingStatusDescription;
 
     @NotBlank(message = "Operating Status Year is required.")
     @Pattern(regexp = YearPattern,
@@ -60,6 +69,8 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
     @NotBlank(message = "Program System Code is required.")
     @Size(max = 20, message = "Program System Code can not exceed {max} chars; found '${validatedValue}'.")
     private String programSystemCode;
+    
+    private String programSystemCodeDescription;
 
     @NotBlank(message = "Street Address is required.")
     @Size(max = 100, message = "Street Address can not exceed {max} chars; found '${validatedValue}'.")
@@ -124,6 +135,8 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
 
     @Size(max = 20, message = "Tribal Code can not exceed {max} chars; found '${validatedValue}'.")
     private String tribalCode;
+    
+    private String tribalCodeDescription;
 
     @Size(max = 400, message = "Comments can not exceed {max} chars; found '${validatedValue}'.")
     private String comments;
@@ -132,7 +145,8 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
 
         super(WorksheetName.FacilitySite);
     }
-
+    
+    @CsvColumn(name = "ID", order = 1)
     public Long getId() {
         return id;
     }
@@ -147,6 +161,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.masterFacilityRecordId = masterFacilityRecordId;
     }
 
+    @CsvColumn(name = "Facility Category Code", order = 3)
     public String getFacilityCategoryCode() {
         return facilityCategoryCode;
     }
@@ -154,6 +169,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.facilityCategoryCode = facilityCategoryCode;
     }
 
+    @CsvColumn(name = "Facility Source Type Code", order = 4)
     public String getFacilitySourceTypeCode() {
         return facilitySourceTypeCode;
     }
@@ -161,6 +177,15 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.facilitySourceTypeCode = facilitySourceTypeCode;
     }
 
+    @CsvColumn(name = "Facility Source Type Code Description", order = 4)
+    public String getFacilitySourceTypeCodeDescription() {
+    	return facilitySourceTypeCodeDescription;
+    }
+    public void setFacilitySourceTypeCodeDescription(String facilitySourceTypeCodeDescription) {
+    	this.facilitySourceTypeCodeDescription = facilitySourceTypeCodeDescription;
+    }
+
+    @CsvColumn(name = "Program System Code", order = 9)
     public String getProgramSystemCode() {
         return programSystemCode;
     }
@@ -168,6 +193,15 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.programSystemCode = programSystemCode;
     }
 
+    @CsvColumn(name = "Program System Code Description", order = 9)
+    public String getProgramSystemCodeDescription() {
+        return programSystemCodeDescription;
+    }
+    public void setProgramSystemCodeDescription(String programSystemCodeDescription) {
+        this.programSystemCodeDescription = programSystemCodeDescription;
+    }
+
+    @CsvColumn(name = "Operating Status Code", order = 7)
     public String getOperatingStatusCode() {
         return operatingStatusCode;
     }
@@ -175,6 +209,15 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.operatingStatusCode = operatingStatusCode;
     }
 
+    @CsvColumn(name = "Operating Status Description", order = 7)
+    public String getOperatingStatusDescription() {
+    	return operatingStatusDescription;
+    }
+    public void setOperatingStatusDescription(String operatingStatusDescription) {
+    	this.operatingStatusDescription = operatingStatusDescription;
+    }
+
+    @CsvColumn(name = "Tribal Code", order = 26)
     public String getTribalCode() {
         return tribalCode;
     }
@@ -182,6 +225,15 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.tribalCode = tribalCode;
     }
 
+    @CsvColumn(name = "Tribal Code Description", order = 26)
+    public String getTribalCodeDescription() {
+        return tribalCodeDescription;
+    }
+    public void setTribalCodeDescription(String tribalCodeDescription) {
+        this.tribalCodeDescription = tribalCodeDescription;
+    }
+
+    @CsvColumn(name = "EIS Program ID", order = 25)
     public String getEisProgramId() {
         return eisProgramId;
     }
@@ -189,6 +241,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.eisProgramId = eisProgramId;
     }
 
+    @CsvColumn(name = "Alt Site Identifier", order = 2)
     public String getAltSiteIdentifier() {
         return altSiteIdentifier;
     }
@@ -196,6 +249,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.altSiteIdentifier = altSiteIdentifier;
     }
 
+    @CsvColumn(name = "Name", order = 5)
     public String getName() {
         return name;
     }
@@ -203,6 +257,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.name = name;
     }
 
+    @CsvColumn(name = "Description", order = 6)
     public String getDescription() {
         return description;
     }
@@ -210,6 +265,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.description = description;
     }
 
+    @CsvColumn(name = "Status Year", order = 8)
     public String getStatusYear() {
         return statusYear;
     }
@@ -217,6 +273,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.statusYear = statusYear;
     }
 
+    @CsvColumn(name = "Street Address", order = 10)
     public String getStreetAddress() {
         return streetAddress;
     }
@@ -224,6 +281,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.streetAddress = streetAddress;
     }
 
+    @CsvColumn(name = "City", order = 11)
     public String getCity() {
         return city;
     }
@@ -231,6 +289,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.city = city;
     }
 
+    @CsvColumn(name = "County", order = 15)
     public String getCounty() {
         return county;
     }
@@ -238,6 +297,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.county = county;
     }
 
+    @CsvColumn(name = "County Code", order = 14)
     public String getCountyCode() {
         return countyCode;
     }
@@ -245,6 +305,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.countyCode = countyCode;
     }
 
+    @CsvColumn(name = "State Code", order = 13)
     public String getStateCode() {
         return stateCode;
     }
@@ -252,6 +313,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.stateCode = stateCode;
     }
 
+    @CsvColumn(name = "State FIPS Code", order = 12)
     public String getStateFipsCode() {
         return stateFipsCode;
     }
@@ -259,6 +321,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.stateFipsCode = stateFipsCode;
     }
 
+    @CsvColumn(name = "Country", order = 16)
     public String getCountryCode() {
         return countryCode;
     }
@@ -266,6 +329,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.countryCode = countryCode;
     }
 
+    @CsvColumn(name = "Postal Code", order = 17)
     public String getPostalCode() {
         return postalCode;
     }
@@ -273,6 +337,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.postalCode = postalCode;
     }
 
+    @CsvColumn(name = "Latitude", order = 18)
     public String getLatitude() {
         return latitude;
     }
@@ -280,6 +345,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.latitude = latitude;
     }
 
+    @CsvColumn(name = "Longitude", order = 19)
     public String getLongitude() {
         return longitude;
     }
@@ -287,6 +353,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.longitude = longitude;
     }
 
+    @CsvColumn(name = "Mailing Street Address", order = 20)
     public String getMailingStreetAddress() {
         return mailingStreetAddress;
     }
@@ -294,6 +361,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.mailingStreetAddress = mailingStreetAddress;
     }
 
+    @CsvColumn(name = "Mailing City", order = 21)
     public String getMailingCity() {
         return mailingCity;
     }
@@ -301,6 +369,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.mailingCity = mailingCity;
     }
 
+    @CsvColumn(name = "Mailing State Code", order = 22)
     public String getMailingStateCode() {
         return mailingStateCode;
     }
@@ -308,6 +377,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.mailingStateCode = mailingStateCode;
     }
 
+    @CsvColumn(name = "Mailing Postal Code", order = 23)
     public String getMailingPostalCode() {
         return mailingPostalCode;
     }
@@ -315,6 +385,7 @@ public class FacilitySiteBulkUploadDto extends BaseWorksheetDto implements Seria
         this.mailingPostalCode = mailingPostalCode;
     }
 
+    @CsvColumn(name = "Mailing Country Code", order = 24)
     public String getMailingCountryCode() {
         return mailingCountryCode;
     }

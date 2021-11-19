@@ -17,9 +17,17 @@
 package gov.epa.cef.web.api.rest;
 
 import gov.epa.cef.web.repository.FacilitySiteContactRepository;
+import gov.epa.cef.web.security.AppRole;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.FacilitySiteContactService;
+import gov.epa.cef.web.service.FacilitySiteService;
+import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.FacilitySiteContactDto;
+import gov.epa.cef.web.service.dto.UserDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteContactBulkUploadDto;
+import gov.epa.cef.web.util.CsvBuilder;
+import gov.epa.cef.web.util.WebUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +40,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/facilitySiteContact")
@@ -42,13 +53,21 @@ public class FacilitySiteContactApi {
     private final FacilitySiteContactService facilitySiteContactService;
 
     private final SecurityService securityService;
+    
+    private final UserService userService;
+
+    private final FacilitySiteService facilityService;
 
     @Autowired
     FacilitySiteContactApi(SecurityService securityService,
-                           FacilitySiteContactService facilitySiteContactService) {
+                           FacilitySiteContactService facilitySiteContactService,
+                           UserService userService,
+                           FacilitySiteService facilityService) {
 
         this.facilitySiteContactService = facilitySiteContactService;
         this.securityService = securityService;
+        this.userService = userService;
+        this.facilityService = facilityService;
     }
 
     /**
@@ -128,5 +147,44 @@ public class FacilitySiteContactApi {
         this.securityService.facilityEnforcer().enforceEntity(contactId, FacilitySiteContactRepository.class);
 
         facilitySiteContactService.delete(contactId);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the facility contacts based on the reviewer's program system code and the given inventory year
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_REVIEWER})
+    public void getSltFacilityContacts(@PathVariable Short year, HttpServletResponse response) {
+
+        UserDto user = userService.getCurrentUser();
+        String programSystemCode = user.getProgramSystemCode();
+
+        List<Long> facilityIds = facilityService.getFacilityIds(programSystemCode, year);
+        this.securityService.facilityEnforcer().enforceFacilitySites(facilityIds);
+
+    	List<FacilitySiteContactBulkUploadDto> csvRows = facilitySiteContactService.retrieveFacilitySiteContacts(programSystemCode, year);
+    	CsvBuilder<FacilitySiteContactBulkUploadDto> csvBuilder = new CsvBuilder<FacilitySiteContactBulkUploadDto>(FacilitySiteContactBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
+    }
+    
+
+    /***
+     * Retrieve a CSV of all of the facility contacts based on the given program system code and inventory year
+     * @param programSystemCode 
+     * @param year
+     * @return
+     */
+    @GetMapping(value = "/list/csv/{programSystemCode}/{year}")
+    @RolesAllowed(value = {AppRole.ROLE_CAERS_ADMIN, AppRole.ROLE_ADMIN})
+    public void getSltFacilityContacts(@PathVariable String programSystemCode, @PathVariable Short year, HttpServletResponse response) {
+
+    	List<FacilitySiteContactBulkUploadDto> csvRows = facilitySiteContactService.retrieveFacilitySiteContacts(programSystemCode, year);
+    	CsvBuilder<FacilitySiteContactBulkUploadDto> csvBuilder = new CsvBuilder<FacilitySiteContactBulkUploadDto>(FacilitySiteContactBulkUploadDto.class, csvRows);
+    	
+    	WebUtils.WriteCsv(response, csvBuilder);
     }
 }

@@ -17,6 +17,7 @@
 package gov.epa.cef.web.repository;
 
 import gov.epa.cef.web.config.CacheName;
+import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.ReleasePoint;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
@@ -45,6 +46,16 @@ public interface ReleasePointRepository extends CrudRepository<ReleasePoint, Lon
     @Query("select rp from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr "
             + "where rp.releasePointIdentifier = :identifier and mfr.id = :mfrId and r.year = :year")
     List<ReleasePoint> retrieveByIdentifierFacilityYear(@Param("identifier") String identifier, @Param("mfrId") Long mfrId, @Param("year") Short year);
+    
+    /**
+     * Find Release Points with the specified master facility record id and year
+     * @param mfrId
+     * @param year
+     * @return
+     */
+    @Query("select rp from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr "
+            + "where mfr.id = :mfrId and r.year = :year")
+    List<ReleasePoint> retrieveByFacilityYear(@Param("mfrId") Long mfrId, @Param("year") Short year);
 
     @Cacheable(value = CacheName.ReleasePointMasterIds)
     @Query("select mfr.id from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport r join r.masterFacilityRecord mfr where rp.id = :id")
@@ -58,4 +69,13 @@ public interface ReleasePointRepository extends CrudRepository<ReleasePoint, Lon
     @Cacheable(value = CacheName.ReleasePointEmissionsReportIds)
     @Query("select r.id from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport r where rp.id = :id")
     Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+    
+    /**
+     * Retrieve a list of all release points for a specific program system code and emissions reporting year
+     * @param psc
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select rp from ReleasePoint rp join rp.facilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<ReleasePoint> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
 }

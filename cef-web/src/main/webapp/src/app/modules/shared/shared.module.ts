@@ -54,9 +54,10 @@ import {FileAttachmentModalComponent} from './components/file-attachment-modal/f
 import {ReportAttachmentTableComponent} from './components/report-attachment-table/report-attachment-table.component';
 import {LegacyItemValidatorDirective} from './directives/legacy-item-validator.directive';
 import {EisTransactionAttachmentModalComponent} from './components/eis-transaction-attachment-modal/eis-transaction-attachment-modal.component';
-import { CommentModalComponent } from './components/comment-modal/comment-modal.component';
-import { HorizontalNavComponent } from './components/horizontal-nav/horizontal-nav.component';
-import { RequiredAsteriskComponent } from './components/required-asterisk/required-asterisk.component';
+import {CommentModalComponent} from './components/comment-modal/comment-modal.component';
+import {HorizontalNavComponent} from './components/horizontal-nav/horizontal-nav.component';
+import {RequiredAsteriskComponent} from './components/required-asterisk/required-asterisk.component';
+import {EmailNotificationModalComponent} from './components/email-notification-modal/email-notification-modal.component';
 
 @NgModule({
     declarations: [
@@ -76,6 +77,7 @@ import { RequiredAsteriskComponent } from './components/required-asterisk/requir
         NumberValidatorDirective,
         BaseConfirmationModalComponent,
         FileAttachmentModalComponent,
+		EmailNotificationModalComponent,
         BulkUploadComponent,
         StripPeriodEndingPipe,
         LegacyUomValidatorDirective,
@@ -113,6 +115,7 @@ import { RequiredAsteriskComponent } from './components/required-asterisk/requir
     entryComponents: [
         BaseConfirmationModalComponent,
         FileAttachmentModalComponent,
+		EmailNotificationModalComponent,
         EisTransactionAttachmentModalComponent
     ]
 })

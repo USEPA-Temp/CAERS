@@ -14,27 +14,15 @@
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
 */
-package gov.epa.cef.web.service.mapper;
+import { BaseCodeLookup } from "./base-code-lookup";
+import { UnitMeasureCode } from "./unit-measure-code";
 
-import java.util.List;
-
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
-import gov.epa.cef.web.domain.ReportAttachment;
-import gov.epa.cef.web.service.dto.ReportAttachmentDto;
-
-@Mapper(componentModel = "spring", uses = {})
-public interface ReportAttachmentMapper {
-	
-	List<ReportAttachmentDto> toDtoList(List<ReportAttachment> reportAttachmentsList);
-	
-	@Mapping(source="reportId", target="emissionsReport.id")
-	@Mapping(target="attachment", ignore = true)
-	ReportAttachment fromDto(ReportAttachmentDto source);
-	
-	@Mapping(source="emissionsReport.id", target="reportId")
-	@Mapping(target="attachment", ignore = true)
-	ReportAttachmentDto toDto(ReportAttachment attachment);
-	
+export class EnergyConversionFactor {
+	id: number;
+	emissionsNumeratorUom: UnitMeasureCode;
+	emissionsDenominatorUom: UnitMeasureCode;
+	calculationMaterialCode: BaseCodeLookup;
+	conversionFactor: number;
+	note: string;
+	source: string;
 }

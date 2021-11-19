@@ -85,7 +85,7 @@ public class EmissionsReport extends BaseAuditEntity {
     private List<UserFeedback> userFeedback = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
-    private List<ReportAttachment> reportAttachments = new ArrayList<>();
+    private List<Attachment> reportAttachments = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsReport")
     private List<ReportHistory> reportHistory = new ArrayList<>();
@@ -97,6 +97,10 @@ public class EmissionsReport extends BaseAuditEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "validation_status")
     private ValidationStatus validationStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "threshold_status")
+    private ThresholdStatus thresholdStatus;
 
     @Column(name = "year", nullable = false)
     private Short year;
@@ -120,6 +124,7 @@ public class EmissionsReport extends BaseAuditEntity {
         this.programSystemCode = originalEmissionsReport.programSystemCode;
         this.year = originalEmissionsReport.year;
         this.status = originalEmissionsReport.status;
+        this.thresholdStatus = originalEmissionsReport.thresholdStatus;
         this.validationStatus = originalEmissionsReport.validationStatus;
         for (FacilitySite facilitySite : originalEmissionsReport.facilitySites) {
             this.facilitySites.add(new FacilitySite(this, facilitySite));
@@ -259,12 +264,12 @@ public class EmissionsReport extends BaseAuditEntity {
 		this.userFeedback = userFeedback;
 	}
 
-	public List<ReportAttachment> getReportAttachments() {
+	public List<Attachment> getReportAttachments() {
 
         return this.reportAttachments;
     }
 
-    public void setReportAttachments(List<ReportAttachment> reportAttachments) {
+    public void setReportAttachments(List<Attachment> reportAttachments) {
 
         this.reportAttachments.clear();
         if (reportAttachments != null) {
@@ -303,6 +308,14 @@ public class EmissionsReport extends BaseAuditEntity {
     public void setValidationStatus(ValidationStatus validationStatus) {
 
         this.validationStatus = validationStatus;
+    }
+
+    public ThresholdStatus getThresholdStatus() {
+        return thresholdStatus;
+    }
+
+    public void setThresholdStatus(ThresholdStatus thresholdStatus) {
+        this.thresholdStatus = thresholdStatus;
     }
 
     public Short getYear() {

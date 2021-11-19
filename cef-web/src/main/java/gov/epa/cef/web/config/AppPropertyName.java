@@ -32,6 +32,7 @@ public enum AppPropertyName implements IPropertyKey {
     FeatureCersV2Enabled("feature.cers-v2.enabled"),
     FeatureExcelExportEnabled("feature.excel-export.enabled"),
     FeatureUserFeedbackEnabled("feature.user-feedback.enabled"),
+    FeatureFacilityAutomatedEmailEnabled("feature.facility-automated-email.enabled"),
     LastSccUpdateDate("task.scc-update.last-ran"),
     SccUpdateTaskCron("task.scc-update.cron"),
     SccUpdateTaskEnabled("task.scc-update.enabled");

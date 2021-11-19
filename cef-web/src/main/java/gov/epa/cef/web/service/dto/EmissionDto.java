@@ -41,6 +41,7 @@ public class EmissionDto implements Serializable {
     private BigDecimal calculatedEmissionsTons;
     private UnitMeasureCodeDto emissionsNumeratorUom;
     private UnitMeasureCodeDto emissionsDenominatorUom;
+    private Long energyConversionFactorId;
     private List<EmissionFormulaVariableDto> variables;
 
     public Long getId() {
@@ -179,7 +180,15 @@ public class EmissionDto implements Serializable {
         this.emissionsDenominatorUom = emissionsDenominatorUom;
     }
 
-    public List<EmissionFormulaVariableDto> getVariables() {
+	public Long getEnergyConversionFactorId() {
+		return energyConversionFactorId;
+	}
+
+	public void setEnergyConversionFactorId(Long energyConversionFactorId) {
+		this.energyConversionFactorId = energyConversionFactorId;
+	}
+
+	public List<EmissionFormulaVariableDto> getVariables() {
         return variables;
     }
 

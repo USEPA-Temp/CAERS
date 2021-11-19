@@ -16,9 +16,13 @@
 */
 package gov.epa.cef.web.service;
 
+import java.util.List;
+
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.service.dto.FacilityNAICSDto;
 import gov.epa.cef.web.service.dto.FacilitySiteDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilityNAICSBulkUploadDto;
+import gov.epa.cef.web.service.dto.bulkUpload.FacilitySiteBulkUploadDto;
 
 public interface FacilitySiteService {
 
@@ -75,4 +79,31 @@ public interface FacilitySiteService {
      * @return
      */
     FacilitySite transform(FacilitySiteDto dto);
+
+
+    /**
+     * Retrieve a list of facility site IDs for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<Long> getFacilityIds(String programSystemCode, Short year);
+
+
+    /**
+     * Retrieve a list of facilities for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<FacilitySiteBulkUploadDto> retrieveFacilities(String programSystemCode, Short emissionsReportYear);
+
+
+    /**
+     * Retrieve a list of facility NAICS codes for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<FacilityNAICSBulkUploadDto> retrieveFacilityNaics(String programSystemCode, Short emissionsReportYear);
 }

@@ -20,8 +20,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import gov.epa.cef.web.annotation.CsvColumn;
+import gov.epa.cef.web.annotation.CsvFileName;
+
 import java.io.Serializable;
 
+@CsvFileName(name = "control_path_pollutants.csv")
 public class ControlPathPollutantBulkUploadDto extends BaseWorksheetDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,10 +36,14 @@ public class ControlPathPollutantBulkUploadDto extends BaseWorksheetDto implemen
 
     @NotNull(message = "Control Path ID is required.")
     private Long controlPathId;
+    
+    private String pathName;
 
     @NotBlank(message = "Pollutant Code is required.")
     @Size(max = 12, message = "Pollutant Code can not exceed {max} chars; found '${validatedValue}'.")
     private String pollutantCode;
+    
+    private String pollutantName;
 
     @NotBlank(message = "Percent Reduction is required.")
     @Pattern(regexp = "^\\d{0,3}(\\.\\d{1})?$",
@@ -46,6 +55,7 @@ public class ControlPathPollutantBulkUploadDto extends BaseWorksheetDto implemen
         super(WorksheetName.ControlPathPollutant);
     }
 
+    @CsvColumn(name = "ID", order = 1)
     public Long getId() {
         return id;
     }
@@ -54,6 +64,7 @@ public class ControlPathPollutantBulkUploadDto extends BaseWorksheetDto implemen
         this.id = id;
     }
 
+    @CsvColumn(name = "Control Path ID", order = 2)
     public Long getControlPathId() {
         return controlPathId;
     }
@@ -62,6 +73,15 @@ public class ControlPathPollutantBulkUploadDto extends BaseWorksheetDto implemen
         this.controlPathId = controlPathId;
     }
 
+    @CsvColumn(name = "Control Path Name", order = 2)
+    public String getPathName() {
+    	return pathName;
+    }
+    public void setPathName(String pathName) {
+    	this.pathName = pathName;
+    }
+
+    @CsvColumn(name = "Pollutant Code", order = 3)
     public String getPollutantCode() {
         return pollutantCode;
     }
@@ -70,6 +90,15 @@ public class ControlPathPollutantBulkUploadDto extends BaseWorksheetDto implemen
         this.pollutantCode = pollutant;
     }
 
+    @CsvColumn(name = "Pollutant Name", order = 3)
+    public String getPollutantName() {
+    	return pollutantName;
+    }
+    public void setPollutantName(String pollutantName) {
+    	this.pollutantName = pollutantName;
+    }
+
+    @CsvColumn(name = "Percent Reduction", order = 4)
     public String getPercentReduction() {
         return percentReduction;
     }

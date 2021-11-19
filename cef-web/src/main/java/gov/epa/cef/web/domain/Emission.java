@@ -96,6 +96,9 @@ public class Emission extends BaseAuditEntity {
     @Column(name = "calculated_emissions_tons")
     private BigDecimal calculatedEmissionsTons;
     
+    @Column(name = "energy_conversion_factor_id")
+    private Long energyConversionFactorId;
+    
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "emission")
     private List<EmissionFormulaVariable> variables = new ArrayList<>();
 
@@ -129,6 +132,7 @@ public class Emission extends BaseAuditEntity {
         this.calculatedEmissionsTons = originalEmission.getCalculatedEmissionsTons();
         this.formulaIndicator = originalEmission.getFormulaIndicator();
         this.emissionsFactorFormula = originalEmission.getEmissionsFactorFormula();
+        this.energyConversionFactorId = originalEmission.getEnergyConversionFactorId();
 
         for (EmissionFormulaVariable variable : originalEmission.getVariables()) {
             this.variables.add(new EmissionFormulaVariable(this, variable));
@@ -263,7 +267,16 @@ public class Emission extends BaseAuditEntity {
         this.emissionsDenominatorUom = emissionsDenominatorUom;
     }
 
-    public List<EmissionFormulaVariable> getVariables() {
+	public Long getEnergyConversionFactorId() {
+		return energyConversionFactorId;
+	}
+
+
+	public void setEnergyConversionFactorId(Long energyConversionFactorId) {
+		this.energyConversionFactorId = energyConversionFactorId;
+	}
+
+	public List<EmissionFormulaVariable> getVariables() {
         return variables;
     }
 

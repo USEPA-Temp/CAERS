@@ -22,8 +22,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,19 +37,24 @@ import org.mockito.junit.MockitoJUnitRunner;
 import com.baidu.unbiz.fluentvalidator.ValidationError;
 
 import gov.epa.cef.web.config.CefConfig;
+import gov.epa.cef.web.domain.CalculationMaterialCode;
 import gov.epa.cef.web.domain.CalculationMethodCode;
 import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFactor;
 import gov.epa.cef.web.domain.EmissionFormulaVariable;
 import gov.epa.cef.web.domain.EmissionFormulaVariableCode;
 import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.EmissionsReport;
 import gov.epa.cef.web.domain.EmissionsUnit;
+import gov.epa.cef.web.domain.EnergyConversionFactor;
 import gov.epa.cef.web.domain.FacilitySite;
 import gov.epa.cef.web.domain.FacilitySourceTypeCode;
 import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.Pollutant;
 import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.UnitMeasureCode;
+import gov.epa.cef.web.repository.EnergyConversionFactorRepository;
+import gov.epa.cef.web.repository.EmissionFactorRepository;
 import gov.epa.cef.web.service.validation.CefValidatorContext;
 import gov.epa.cef.web.service.validation.ValidationField;
 import gov.epa.cef.web.service.validation.ValidationResult;
@@ -58,13 +65,21 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
     @InjectMocks
     private EmissionValidator validator;
+    
+    @Mock
+    private EmissionFactorRepository efRepo;
 
     @Mock
     private CefConfig cefConfig;
+    
+    @Mock
+    private EnergyConversionFactorRepository cfRepo;
 
     private UnitMeasureCode curieUom;
     private UnitMeasureCode lbUom;
     private UnitMeasureCode tonUom;
+    private UnitMeasureCode btuUom;
+    private UnitMeasureCode e3ft3sUom;
 
     @Before
     public void init() {
@@ -73,21 +88,80 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         curieUom.setDescription("CURIES");
         curieUom.setUnitType("RADIOACTIVITY");
         curieUom.setCalculationVariable("1");
+        curieUom.setFuelUseUom(false);
+        curieUom.setHeatContentUom(false);
 
         lbUom = new UnitMeasureCode();
         lbUom.setCode("LB");
         lbUom.setDescription("POUNDS");
         lbUom.setUnitType("MASS");
         lbUom.setCalculationVariable("[lb]");
+        lbUom.setFuelUseUom(true);
+        lbUom.setHeatContentUom(false);
 
         tonUom = new UnitMeasureCode();
         tonUom.setCode("TON");
         tonUom.setDescription("TONS");
         tonUom.setUnitType("MASS");
         tonUom.setCalculationVariable("sTon");
+        tonUom.setFuelUseUom(true);
+        tonUom.setHeatContentUom(false);
+        
+        btuUom = new UnitMeasureCode();
+        btuUom.setCode("E6BTU");
+        btuUom.setDescription("MILLION BTUS");
+        btuUom.setUnitType("ENERGY");
+        btuUom.setCalculationVariable("[M] * btu");
+        btuUom.setFuelUseUom(true);
+        btuUom.setHeatContentUom(true);
+        
+        e3ft3sUom = new UnitMeasureCode();
+        e3ft3sUom.setCode("E3FT3S");
+        e3ft3sUom.setDescription("1000 STANDARD CUBIC FEET");
+        e3ft3sUom.setUnitType("SCF");
+        e3ft3sUom.setCalculationVariable("1000");
+        e3ft3sUom.setFuelUseUom(true);
+        e3ft3sUom.setHeatContentUom(false);
+        
+        CalculationMaterialCode woodCmc = new CalculationMaterialCode();
+        woodCmc.setCode("15");
+        CalculationMaterialCode natGasCmc = new CalculationMaterialCode();
+        natGasCmc.setCode("209");
+        
+        EnergyConversionFactor woodCF = new EnergyConversionFactor();
+        woodCF.setCalculationMaterialCode(woodCmc);
+        woodCF.setEmissionsDenominatorUom(btuUom);
+        woodCF.setEmissionsNumeratorUom(tonUom);
+        
+        EnergyConversionFactor natGasCF = new EnergyConversionFactor();
+        natGasCF.setCalculationMaterialCode(natGasCmc);
+        natGasCF.setEmissionsDenominatorUom(btuUom);
+        natGasCF.setEmissionsNumeratorUom(e3ft3sUom);
 
         when(cefConfig.getEmissionsTotalErrorTolerance()).thenReturn(new BigDecimal(".05"));
         when(cefConfig.getEmissionsTotalWarningTolerance()).thenReturn(new BigDecimal(".01"));
+        when(cfRepo.findByCalculationMaterialCode("15")).thenReturn(woodCF);
+        when(cfRepo.findByCalculationMaterialCode("209")).thenReturn(natGasCF);
+        
+        EmissionFactor ef1 = new EmissionFactor();
+        ef1.setSccCode("10100101");
+        ef1.setPollutantCode("NOX");
+        ef1.setControlIndicator(false);
+        ef1.setDescription("test description");
+        List<EmissionFactor> efList1 = new ArrayList<EmissionFactor>();
+        efList1.add(ef1);
+        
+        EmissionFactor ef2 = new EmissionFactor();
+        ef2.setSccCode("10100101");
+        ef2.setPollutantCode("605");
+        ef2.setControlIndicator(false);
+        ef2.setDescription("test description");
+        List<EmissionFactor> efList2 = new ArrayList<EmissionFactor>();
+        efList2.add(ef2);
+        
+        when(efRepo.findBySccCodePollutantControlIndicator("10100101", "NOX", false)).thenReturn((efList1));
+        when(efRepo.findBySccCodePollutantControlIndicator("10100101", "NOX", true)).thenReturn((efList1));
+        when(efRepo.findBySccCodePollutantControlIndicator("10100101", "605", false)).thenReturn((efList2));
     }
 
     @Test
@@ -302,6 +376,49 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_NUM_UOM.value()) && errorMap.get(ValidationField.EMISSION_NUM_UOM.value()).size() == 1);
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_DENOM_UOM.value()) && errorMap.get(ValidationField.EMISSION_DENOM_UOM.value()).size() == 1);
     }
+    
+    @Test
+    public void totalDirectEntryFalse_DenomMismatch_PassTest() {
+
+        CefValidatorContext cefContext = createContext();
+        Emission testData = createBaseEmission(false);
+        testData.setEmissionsDenominatorUom(tonUom);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+        cefContext = createContext();
+		CalculationMaterialCode cmc = new CalculationMaterialCode();
+		cmc.setCode("209");
+		
+		ReportingPeriod period = new ReportingPeriod();
+		OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        
+        FacilitySourceTypeCode sourceType = new FacilitySourceTypeCode();
+        sourceType.setCode("100");
+        
+        period.setCalculationMaterialCode(cmc);
+        period.setCalculationParameterValue(new BigDecimal("209"));
+        period.setCalculationParameterUom(e3ft3sUom);
+        period.setEmissionsProcess(new EmissionsProcess());
+        period.getEmissionsProcess().setSccCode("10100101");
+        period.getEmissionsProcess().setOperatingStatusCode(opStatCode);
+        period.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
+        period.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2020);
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setOperatingStatusCode(opStatCode);
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setFacilitySourceTypeCode(sourceType);
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEmissionsReport(new EmissionsReport());
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setYear(new Short("2019"));
+        testData.setReportingPeriod(period);
+        testData.setTotalEmissions(new BigDecimal("0.000198"));
+        testData.setEmissionsDenominatorUom(btuUom);
+        
+        assertTrue(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() == null || cefContext.result.getErrors().isEmpty());
+        
+    }
 
     /**
      * There should be one error when Calculation Method Code has false total direct entry and Emission Denominator UoM type doesn't equal Throughput UoM type
@@ -319,6 +436,37 @@ public class EmissionValidatorTest extends BaseValidatorTest {
 
         Map<String, List<ValidationError>> errorMap = mapErrors(cefContext.result.getErrors());
         assertTrue(errorMap.containsKey(ValidationField.EMISSION_DENOM_UOM.value()) && errorMap.get(ValidationField.EMISSION_DENOM_UOM.value()).size() == 1);
+
+		cefContext = createContext();
+		CalculationMaterialCode cmc = new CalculationMaterialCode();
+		cmc.setCode("209");
+		
+		ReportingPeriod period = new ReportingPeriod();
+		OperatingStatusCode opStatCode = new OperatingStatusCode();
+        opStatCode.setCode("OP");
+        
+        FacilitySourceTypeCode sourceType = new FacilitySourceTypeCode();
+        sourceType.setCode("100");
+        
+        period.setCalculationMaterialCode(cmc);
+        period.setCalculationParameterValue(new BigDecimal("209"));
+        period.setCalculationParameterUom(e3ft3sUom);
+        period.setEmissionsProcess(new EmissionsProcess());
+        period.getEmissionsProcess().setSccCode("10100101");
+        period.getEmissionsProcess().setOperatingStatusCode(opStatCode);
+        period.getEmissionsProcess().setEmissionsUnit(new EmissionsUnit());
+        period.getEmissionsProcess().getEmissionsUnit().setFacilitySite(new FacilitySite());
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setStatusYear((short) 2020);
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setOperatingStatusCode(opStatCode);
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setFacilitySourceTypeCode(sourceType);
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEmissionsReport(new EmissionsReport());
+        period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setYear(new Short("2019"));
+        testData.setReportingPeriod(period);
+        testData.setTotalEmissions(new BigDecimal("0.000198"));
+        testData.setEmissionsDenominatorUom(tonUom);
+
+        assertFalse(this.validator.validate(cefContext, testData));
+        assertTrue(cefContext.result.getErrors() != null && cefContext.result.getErrors().size() == 1);
 
         cefContext = createContext();
         testData.getReportingPeriod().getEmissionsProcess().getOperatingStatusCode().setCode("TS");
@@ -794,8 +942,11 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         sourceType.setCode("100");
         OperatingStatusCode opStatCode = new OperatingStatusCode();
         opStatCode.setCode("OP");
+        CalculationMaterialCode cmc = new CalculationMaterialCode();
+        cmc.setCode("15");
 
         ReportingPeriod period = new ReportingPeriod();
+        period.setCalculationMaterialCode(cmc);
         period.setCalculationParameterValue(new BigDecimal("10"));
         period.setCalculationParameterUom(tonUom);
         period.setEmissionsProcess(new EmissionsProcess());
@@ -807,6 +958,7 @@ public class EmissionValidatorTest extends BaseValidatorTest {
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setFacilitySourceTypeCode(sourceType);
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().setEmissionsReport(new EmissionsReport());
         period.getEmissionsProcess().getEmissionsUnit().getFacilitySite().getEmissionsReport().setYear(new Short("2019"));
+        period.getEmissionsProcess().setSccCode("10100101");
         result.setReportingPeriod(period);
 
         result.setEmissionsUomCode(tonUom);
@@ -823,7 +975,11 @@ public class EmissionValidatorTest extends BaseValidatorTest {
             result.setComments("Comment");
             result.setTotalManualEntry(true);
         }
-
+        
+        Pollutant pollutant = new Pollutant();
+        pollutant.setPollutantCode("NOX");
+        result.setPollutant(pollutant);
+        
         return result;
     }
 

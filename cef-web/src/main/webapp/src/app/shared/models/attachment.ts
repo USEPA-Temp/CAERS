@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License along with CAERS.  If 
  * not, see <https://www.gnu.org/licenses/>.
 */
-export class ReportAttachment {
+export class Attachment {
   id: number;
   reportId: number;
+  communicationId: number;
   attachment: Blob;
   fileName: string;
   comments: string;

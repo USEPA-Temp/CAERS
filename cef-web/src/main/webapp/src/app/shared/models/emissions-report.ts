@@ -25,6 +25,7 @@ export class EmissionsReport {
   status: string;
   programSystemCode: BaseCodeLookup;
   validationStatus: string;
+  thresholdStatus: string;
   year: number;
   facilitySite: FacilitySite;
   hasSubmitted: boolean;

@@ -54,4 +54,22 @@ public interface FacilitySiteRepository extends CrudRepository<FacilitySite, Lon
     @Cacheable(value = CacheName.FacilityEmissionsReportIds)
     @Query("select r.id from FacilitySite fs join fs.emissionsReport r where fs.id = :id")
     Optional<Long> retrieveEmissionsReportById(@Param("id") Long id);
+    
+    /**
+     * Retrieve a list of all facilities for a specific program system code and emissions reporting year
+     * @param psc Program System Code
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select fs from FacilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<FacilitySite> findByPscAndEmissionsReportYear(String psc, Short emissionsReportYear);
+    
+    /**
+     * Retrieve a list of all facility site ids for a specific program system code and emissions reporting year
+     * @param psc Program System Code
+     * @param emissionsReportYear
+     * @return
+     */
+    @Query("select fs.id from FacilitySite fs join fs.emissionsReport er where er.programSystemCode.code = :psc and er.year = :emissionsReportYear")
+    List<Long> findFacilityIds(String psc, Short emissionsReportYear);
 }

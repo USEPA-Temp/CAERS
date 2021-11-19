@@ -41,10 +41,12 @@ import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.service.CersXmlService;
+import gov.epa.cef.web.service.EmissionService;
 import gov.epa.cef.web.service.FacilitySiteService;
 import gov.epa.cef.web.service.ReportService;
 import gov.epa.cef.web.service.UserService;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.mapper.EmissionsReportMapper;
 import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
@@ -72,6 +74,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -106,6 +109,9 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Mock
     private FacilitySiteService facilitySiteService;
+    
+    @Mock
+    private EmissionService emissionService;
 
     @InjectMocks
     private EmissionsReportServiceImpl emissionsReportServiceImpl;
@@ -163,6 +169,8 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
         fxr.setId(1L);
         fxr.setNaicsCode(naics);
         when(facilityNaicsMapper.toFacilityNaicsXref(previousEmissionsReport.getMasterFacilityRecord().getMasterFacilityNAICS().get(0))).thenReturn(fxr);
+        
+        when(this.emissionService.updateEmissionsFactorDescription(any(Emission.class), any(EmissionsProcess.class))).thenReturn(mock(Emission.class));
     }
 
     @Test
@@ -216,9 +224,11 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Test
     public void createEmissionReportCopy_Should_ReturnValidDeepCopy_WhenValidFacilityAndYearPassed() {
+        EmissionsReportStarterDto starter = new EmissionsReportStarterDto();
+        starter.setMasterFacilityRecordId(3L);
+        starter.setYear((short) 2020);
     	EmissionsReport originalEmissionsReport = createHydratedEmissionsReport();
-    	EmissionsReportDto emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(
-    	    3L, (short) 2020);
+    	EmissionsReportDto emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(starter);
     	assertEquals(ReportStatus.IN_PROGRESS.toString(), emissionsReportCopy.getStatus());
     	assertEquals(ValidationStatus.UNVALIDATED.toString(), emissionsReportCopy.getValidationStatus());
     	assertEquals("2020", emissionsReportCopy.getYear().toString());
@@ -227,8 +237,10 @@ public class EmissionsReportServiceImplTest extends BaseServiceTest {
 
     @Test
     public void createEmissionReportCopy_Should_ReturnNull_WhenPreviousDoesNotExist() {
-        EmissionsReportDto nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(
-            4L, (short) 2020);
+        EmissionsReportStarterDto starter = new EmissionsReportStarterDto();
+        starter.setMasterFacilityRecordId(4L);
+        starter.setYear((short) 2020);
+        EmissionsReportDto nullEmissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(starter);
 
         assertNull(nullEmissionsReportCopy);
     }

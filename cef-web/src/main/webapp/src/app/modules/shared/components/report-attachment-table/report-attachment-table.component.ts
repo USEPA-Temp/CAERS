@@ -22,13 +22,13 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import { FacilitySite } from 'src/app/shared/models/facility-site';
 import { FileAttachmentModalComponent } from '../file-attachment-modal/file-attachment-modal.component';
 import { FileDownloadService } from 'src/app/core/services/file-download.service';
-import { ReportAttachmentService } from 'src/app/core/services/report-attachment.service';
 import { ReportService } from 'src/app/core/services/report.service';
 import { ReportHistory } from 'src/app/shared/models/report-history';
 import { SharedService } from 'src/app/core/services/shared.service';
 import { ActivatedRoute } from '@angular/router';
 import { User } from 'src/app/shared/models/user';
 import { AppRole } from 'src/app/shared/enums/app-role';
+import { AttachmentService } from 'src/app/core/services/attachment.service';
 
 @Component({
   selector: 'app-report-attachment-table',
@@ -45,7 +45,7 @@ export class ReportAttachmentTableComponent extends BaseSortableTable implements
     constructor(
                 private userContextService: UserContextService,
                 private reportService: ReportService,
-                private reportAttachmentService: ReportAttachmentService,
+                private reportAttachmentService: AttachmentService,
                 private fileDownloadService: FileDownloadService,
                 private sharedService: SharedService,
                 private modalService: NgbModal,

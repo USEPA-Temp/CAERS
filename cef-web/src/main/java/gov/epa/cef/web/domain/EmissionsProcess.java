@@ -71,8 +71,12 @@ public class EmissionsProcess extends BaseAuditEntity {
 
     @Column(name = "comments", length = 400)
     private String comments;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "previous_year_status_code", nullable = true)
+    private OperatingStatusCode previousYearOperatingStatusCode;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")
     private List<ReleasePointAppt> releasePointAppts = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "emissionsProcess")
@@ -105,7 +109,7 @@ public class EmissionsProcess extends BaseAuditEntity {
         for (ReleasePointAppt originalApportionment : originalProcess.getReleasePointAppts()) {
         	ReleasePoint rp = null;
         	for(ReleasePoint newReleasePoint : this.emissionsUnit.getFacilitySite().getReleasePoints()) {
-        		if (newReleasePoint.getId().equals(originalApportionment.getReleasePoint().getId())) {
+        		if (newReleasePoint.getId() != null && newReleasePoint.getId().equals(originalApportionment.getReleasePoint().getId())) {
         			rp = newReleasePoint;
         			break;
         		}
@@ -114,7 +118,7 @@ public class EmissionsProcess extends BaseAuditEntity {
         	ControlPath cp = null;
         	if (originalApportionment.getControlPath() != null) {
             	for(ControlPath newControlPath : this.emissionsUnit.getFacilitySite().getControlPaths()) {
-            		if (newControlPath.getId().equals(originalApportionment.getControlPath().getId())) {
+            		if (newControlPath.getId() != null && newControlPath.getId().equals(originalApportionment.getControlPath().getId())) {
             			cp = newControlPath;
             			break;
             		}
@@ -202,6 +206,14 @@ public class EmissionsProcess extends BaseAuditEntity {
     public void setComments(String comments) {
         this.comments = comments;
     }
+    
+    public OperatingStatusCode getPreviousYearOperatingStatusCode() {
+		return previousYearOperatingStatusCode;
+	}
+
+	public void setPreviousYearOperatingStatusCode(OperatingStatusCode previousYearOperatingStatusCode) {
+		this.previousYearOperatingStatusCode = previousYearOperatingStatusCode;
+	}
 
     public List<ReleasePointAppt> getReleasePointAppts() {
         return this.releasePointAppts;

@@ -65,14 +65,6 @@ At the bottom of the document are some helpful tips on how to create new Angular
     - url: "jdbc:postgresql://localhost:5432/CEF"
     - username: cef
     - password: password
-- Set up a connection to the CDX development database.  
-    - **Only attempt connecting to the dev database if you're able to connect to the CDX VPN (external contributors will not have this ability and should develop against their new local database)**
-    - Make sure your local pgAdmin can connect to the CDX development database. Note: you will need to be on the CDX VPN to be able to access this database (Request a [CDX developer account](https://alm.cgifederal.com/collaborate/display/CDXO/Request+a+CDX+developer+account)).
-    - host: 172.20.6.6
-    - port: 5432
-    - database: CEF
-    - username: USERNAME_REMOVED
-    - password: PASSWORD_REMOVED
 
 ## Building CAERS
 - ### Maven build

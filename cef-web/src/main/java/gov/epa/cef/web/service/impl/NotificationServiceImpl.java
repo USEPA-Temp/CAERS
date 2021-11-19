@@ -17,27 +17,34 @@
 package gov.epa.cef.web.service.impl;
 
 import gov.epa.cef.web.config.AppPropertyName;
-import gov.epa.cef.web.domain.ReportAttachment;
+import gov.epa.cef.web.domain.Communication;
+import gov.epa.cef.web.domain.Attachment;
 import gov.epa.cef.web.exception.NotExistException;
 import gov.epa.cef.web.provider.system.AdminPropertyProvider;
-import gov.epa.cef.web.repository.ReportAttachmentRepository;
+import gov.epa.cef.web.repository.AttachmentRepository;
 import gov.epa.cef.web.service.NotificationService;
 import gov.epa.cef.web.service.dto.UserFeedbackDto;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Map;
+
+import javax.mail.internet.InternetAddress;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
@@ -71,6 +78,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     private final String USER_FEEDBACK_SUBMITTED_SUBJECT = "User feedback Submitted for {0} {1}";
     private final String USER_FEEDBACK_SUBMITTED_BODY_TEMPLATE = "userFeedback";
+    
+    private final String SLT_NOTIFICATION_GENERIC_BODY_TEMPLATE = "sltNotification";
 
     @Autowired
     public JavaMailSender emailSender;
@@ -84,7 +93,7 @@ public class NotificationServiceImpl implements NotificationService {
     private AdminPropertyProvider propertyProvider;
     
     @Autowired
-    private ReportAttachmentRepository reportAttachmentsRepo;
+    private AttachmentRepository attachmentsRepo;
 
     /**
      * Utility method to send a simple email message in plain text.
@@ -134,6 +143,39 @@ public class NotificationServiceImpl implements NotificationService {
         }
     }
     
+    public void sendMassHtmlMessage(String bcc, String cc, String from, String subject, String body,   
+    		MultipartFile file) {
+    	MimeMessagePreparator messagePreparator = mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
+            messageHelper.setFrom(from);
+            messageHelper.setSubject(subject);
+            messageHelper.setText(body, true);
+            if (cc != null) {
+            	messageHelper.setCc(cc);
+            }
+            if (bcc != null) {
+            	messageHelper.setBcc(InternetAddress.parse(bcc));
+            }
+
+            if (file != null && !file.isEmpty()) {
+            	String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            	InputStreamSource source = new InputStreamSource() {
+
+    				@Override
+    				public InputStream getInputStream() throws IOException {
+    					return file.getInputStream();
+    				}
+            	};
+            	messageHelper.addAttachment(fileName, source);
+            }
+        };
+        try {
+        	emailSender.send(messagePreparator);
+        } catch (MailException e) {
+        	logger.error("sendMassHTMLMessage - unable to send email message. - {}", e.getMessage());
+        }
+    }
+    
     public void sendHtmlMessage(String to, String from, String subject, String body) {
     	sendHtmlMessage(to, null, from, subject, body);
     }
@@ -177,7 +219,7 @@ public class NotificationServiceImpl implements NotificationService {
         context.setVariable("slt", slt);
         
         if (attachmentId != null) {
-            ReportAttachment attachment = reportAttachmentsRepo.findById(attachmentId)
+            Attachment attachment = attachmentsRepo.findById(attachmentId)
                     .orElseThrow(() -> new NotExistException("Report Attachment", attachmentId));
             
             context.setVariable("attachment", attachment.getFileName());
@@ -243,6 +285,22 @@ public class NotificationServiceImpl implements NotificationService {
         context.setVariable("facilityName", facilityName);
         String emailBody = templateEngine.process(USER_ASSOCIATION_ACCEPTED_BODY_TEMPLATE, context);
         sendHtmlMessage(to, from, emailSubject, emailBody);
+    }
+    
+    public void sendSLTNotification(String cc, String from, String sltEmail, Communication communication, MultipartFile file) {
+        String emailSubject = communication.getSubject();
+        Context context = new Context();
+        context.setVariable("content", communication.getContent());
+        context.setVariable("sltEmail", sltEmail);
+        context.setVariable("slt", communication.getProgramSystemCode().getCode());
+        context.setVariable("sltDescription", communication.getProgramSystemCode().getDescription());
+        
+        if (file != null && !file.isEmpty()) {
+        	context.setVariable("attachmentName", file.getOriginalFilename());
+        }
+        
+        String emailBody = templateEngine.process(SLT_NOTIFICATION_GENERIC_BODY_TEMPLATE, context);
+        sendMassHtmlMessage(communication.getRecipientEmail(), cc, from, emailSubject, emailBody, file);
     }
 
     public void sendUserAssociationRejectedNotification(String to, String from, String facilityName, String role, String comments)

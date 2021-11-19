@@ -17,6 +17,7 @@
 package gov.epa.cef.web.service;
 
 import gov.epa.cef.web.service.dto.EmissionsUnitDto;
+import gov.epa.cef.web.service.dto.bulkUpload.EmissionsUnitBulkUploadDto;
 
 import java.util.List;
 
@@ -62,4 +63,12 @@ public interface EmissionsUnitService {
      * @return
      */
     EmissionsUnitDto update(EmissionsUnitDto dto);
+
+    /**
+     * Retrieve a list of emissions units for the given program system code and emissions report year
+     * @param programSystemCode
+     * @param emissionsReportYear
+     * @return
+     */
+    List<EmissionsUnitBulkUploadDto> retrieveEmissionsUnits(String programSystemCode, Short emissionsReportYear);
 }

@@ -53,6 +53,7 @@ import gov.epa.cef.web.domain.UnitMeasureCode;
 import gov.epa.cef.web.domain.UnitTypeCode;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.service.dto.EmissionsReportDto;
+import gov.epa.cef.web.service.dto.EmissionsReportStarterDto;
 import gov.epa.cef.web.service.impl.EmissionsReportServiceImpl;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,7 +143,10 @@ public class EmissionsReportRepoTest extends BaseRepositoryTest {
 		originalEmissionsReport = reportRepo.save(originalEmissionsReport);
 
 		// copy report
-		EmissionsReportDto emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(9999991L, (short) 2020);
+		EmissionsReportStarterDto starter = new EmissionsReportStarterDto();
+        starter.setMasterFacilityRecordId(9999991L);
+        starter.setYear((short) 2020);
+		EmissionsReportDto emissionsReportCopy = emissionsReportServiceImpl.createEmissionReportCopy(starter);
 
 		assertEquals(ReportStatus.IN_PROGRESS.toString(), emissionsReportCopy.getStatus());
 		assertEquals(ValidationStatus.UNVALIDATED.toString(), emissionsReportCopy.getValidationStatus());

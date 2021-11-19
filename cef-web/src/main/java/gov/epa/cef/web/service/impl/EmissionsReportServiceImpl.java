@@ -19,25 +19,36 @@ package gov.epa.cef.web.service.impl;
 import gov.epa.cef.web.api.rest.EmissionsReportApi.ReviewDTO;
 import gov.epa.cef.web.client.soap.DocumentDataSource;
 import gov.epa.cef.web.client.soap.SignatureServiceClient;
+import gov.epa.cef.web.config.AppPropertyName;
 import gov.epa.cef.web.config.CefConfig;
 import gov.epa.cef.web.config.SLTBaseConfig;
 import gov.epa.cef.web.domain.EmissionsReport;
+import gov.epa.cef.web.domain.EmissionsUnit;
 import gov.epa.cef.web.domain.FacilityNAICSXref;
 import gov.epa.cef.web.domain.FacilitySite;
+import gov.epa.cef.web.domain.ThresholdStatus;
 import gov.epa.cef.web.domain.MasterFacilityNAICSXref;
 import gov.epa.cef.web.domain.MasterFacilityRecord;
+import gov.epa.cef.web.domain.OperatingStatusCode;
 import gov.epa.cef.web.domain.ReportAction;
-import gov.epa.cef.web.domain.ReportAttachment;
+import gov.epa.cef.web.domain.Attachment;
+import gov.epa.cef.web.domain.Emission;
+import gov.epa.cef.web.domain.EmissionFactor;
+import gov.epa.cef.web.domain.EmissionsProcess;
 import gov.epa.cef.web.domain.ReportStatus;
+import gov.epa.cef.web.domain.ReportingPeriod;
 import gov.epa.cef.web.domain.ValidationStatus;
 import gov.epa.cef.web.exception.ApplicationException;
 import gov.epa.cef.web.exception.NotExistException;
+import gov.epa.cef.web.provider.system.AdminPropertyProvider;
 import gov.epa.cef.web.repository.EmissionsReportRepository;
 import gov.epa.cef.web.repository.MasterFacilityNAICSXrefRepository;
 import gov.epa.cef.web.repository.MasterFacilityRecordRepository;
-import gov.epa.cef.web.repository.ReportAttachmentRepository;
+import gov.epa.cef.web.repository.AttachmentRepository;
+import gov.epa.cef.web.repository.EmissionFactorRepository;
 import gov.epa.cef.web.security.SecurityService;
 import gov.epa.cef.web.service.CersXmlService;
+import gov.epa.cef.web.service.EmissionService;
 import gov.epa.cef.web.service.EmissionsReportService;
 import gov.epa.cef.web.service.EmissionsReportStatusService;
 import gov.epa.cef.web.service.FacilitySiteContactService;
@@ -54,6 +65,7 @@ import gov.epa.cef.web.service.mapper.FacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.LookupEntityMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityNAICSMapper;
 import gov.epa.cef.web.service.mapper.MasterFacilityRecordMapper;
+import gov.epa.cef.web.util.ConstantUtils;
 import gov.epa.cef.web.util.SLTConfigHelper;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentFormatType;
 import net.exchangenetwork.wsdl.register.sign._1.SignatureDocumentType;
@@ -96,10 +108,13 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     private MasterFacilityRecordRepository mfrRepo;
 
     @Autowired
-    private ReportAttachmentRepository reportAttachmentsRepo;
+    private AttachmentRepository reportAttachmentsRepo;
     
     @Autowired
     private MasterFacilityNAICSXrefRepository mfNaicsXrefRepo;
+    
+    @Autowired
+    private EmissionFactorRepository efRepo;
     
     @Autowired
     private EmissionsReportMapper emissionsReportMapper;
@@ -148,6 +163,12 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     
     @Autowired
     private SecurityService securityService;
+    
+    @Autowired
+    private AdminPropertyProvider propertyProvider;
+    
+    @Autowired
+    private EmissionService emissionService;
 
     /* (non-Javadoc)
      * @see gov.epa.cef.web.service.impl.ReportService#findByFacilityId(java.lang.String)
@@ -273,19 +294,21 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                 
                 mfrService.updateMasterFacilityRecord(mfr, fs);
                
-                String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;
-                String certifierEmail = securityService.getCurrentApplicationUser().getEmail();
+                if (this.propertyProvider.getBoolean(AppPropertyName.FeatureFacilityAutomatedEmailEnabled)) {
+	                String cdxSubmissionUrl = cefConfig.getCdxConfig().getSubmissionHistoryUrl() + activityId;
+	                String certifierEmail = securityService.getCurrentApplicationUser().getEmail();
 
-                //send an email notification to the certifier and cc SLT's predefined address that a report has been submitted
-                notificationService.sendReportSubmittedNotification(
-                		certifierEmail,
-                		sltConfig.getSltEmail(),
-                        cefConfig.getDefaultEmailAddress(),
-                        emissionsReport.getFacilitySites().get(0).getName(),
-                        emissionsReport.getYear().toString(),
-                        sltConfig.getSltEisProgramCode(),
-                        sltConfig.getSltEmail(),
-                        cdxSubmissionUrl);
+	                //send an email notification to the certifier and cc SLT's predefined address that a report has been submitted
+	                notificationService.sendReportSubmittedNotification(
+	                		certifierEmail,
+	                		sltConfig.getSltEmail(),
+	                        cefConfig.getDefaultEmailAddress(),
+	                        emissionsReport.getFacilitySites().get(0).getName(),
+	                        emissionsReport.getYear().toString(),
+	                        sltConfig.getSltEisProgramCode(),
+	                        sltConfig.getSltEmail(),
+	                        cdxSubmissionUrl);
+                }
             }
             return cromerrDocumentId;
         } catch(IOException e) {
@@ -305,11 +328,11 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
      * @return
      */
     @Override
-    public EmissionsReportDto createEmissionReportCopy(Long masterFacilityRecordId, short reportYear) {
-        return findMostRecentEmissionsReport(masterFacilityRecordId)
+    public EmissionsReportDto createEmissionReportCopy(EmissionsReportStarterDto reportDto) {
+        return findMostRecentEmissionsReport(reportDto.getMasterFacilityRecordId())
             .map(mostRecentReport -> {
                 EmissionsReport cloneReport = new EmissionsReport(mostRecentReport);
-                cloneReport.setYear(reportYear);
+                cloneReport.setYear(reportDto.getYear());
                 cloneReport.setStatus(ReportStatus.IN_PROGRESS);
                 cloneReport.setValidationStatus(ValidationStatus.UNVALIDATED);
                 cloneReport.setHasSubmitted(false);
@@ -325,8 +348,39 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
                         facilityNAICS.setFacilitySite(fs);
                         fs.getFacilityNAICS().add(facilityNAICS);
                     }
+                    
+                    for (EmissionsUnit eu : fs.getEmissionsUnits()) {
+                    	for (EmissionsProcess ep : eu.getEmissionsProcesses()) {
+                    		for (ReportingPeriod rp : ep.getReportingPeriods()) {
+                    		    if (ThresholdStatus.OPERATING_BELOW_THRESHOLD.equals(reportDto.getThresholdStatus())) {
+                    		        rp.getEmissions().clear();
+                    		    } else {
+                        			for (Emission e : rp.getEmissions()) {
+                        				e = emissionService.updateEmissionsFactorDescription(e, ep);
+                        			}
+                    		    }
+                    		}
+                    	}
+                    }
                 });
-                
+
+                if (reportDto.getThresholdStatus() != null) {
+                    if (ThresholdStatus.PERM_SHUTDOWN.equals(reportDto.getThresholdStatus())) {
+                        cloneReport.setThresholdStatus(ThresholdStatus.PERM_SHUTDOWN);
+                        updateFacilityStatus(cloneReport.getFacilitySites().get(0), new OperatingStatusCode().withCode("PS"), cloneReport.getYear());
+                        cloneReport.setValidationStatus(ValidationStatus.PASSED);
+                    } else if (ThresholdStatus.TEMP_SHUTDOWN.equals(reportDto.getThresholdStatus())) {
+                        cloneReport.setThresholdStatus(ThresholdStatus.TEMP_SHUTDOWN);
+                        updateFacilityStatus(cloneReport.getFacilitySites().get(0), new OperatingStatusCode().withCode("TS"), cloneReport.getYear());
+                        cloneReport.setValidationStatus(ValidationStatus.PASSED);
+                    } else if (ThresholdStatus.OPERATING_BELOW_THRESHOLD.equals(reportDto.getThresholdStatus())) {
+                        cloneReport.setThresholdStatus(ThresholdStatus.OPERATING_BELOW_THRESHOLD);
+                        cloneReport.setValidationStatus(ValidationStatus.PASSED);
+                    } else if (ThresholdStatus.OPERATING_ABOVE_THRESHOLD.equals(reportDto.getThresholdStatus())) {
+                        cloneReport.setThresholdStatus(ThresholdStatus.OPERATING_ABOVE_THRESHOLD);
+                    }
+                }
+
                 cloneReport.clearId();
 
             	this.reportService.createReportHistory(this.emissionsReportMapper.toDto(this.erRepo.save(cloneReport)).getId(), ReportAction.COPIED_FWD);
@@ -335,6 +389,46 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
             })
             .orElse(null);
 
+    }
+    
+    private void updateFacilityStatus(FacilitySite facilitySite, OperatingStatusCode code, Short tempStatusYear) {
+        if(!(code.getCode().equals(facilitySite.getOperatingStatusCode().getCode()))) {
+            
+            if(code.getCode().contentEquals(ConstantUtils.STATUS_OPERATING)
+                    || code.getCode().contentEquals(ConstantUtils.STATUS_PERMANENTLY_SHUTDOWN)
+                    || code.getCode().contentEquals(ConstantUtils.STATUS_TEMPORARILY_SHUTDOWN)) {
+                
+                facilitySite.getEmissionsUnits().forEach(unit -> {
+                    if(!unit.getOperatingStatusCode().getCode().contentEquals("PS")){
+                        unit.setOperatingStatusCode(code);
+                        unit.setStatusYear(tempStatusYear);
+                        unit.getEmissionsProcesses().forEach(process -> {
+                            if(!process.getOperatingStatusCode().getCode().contentEquals("PS")){
+                                process.setOperatingStatusCode(code);
+                                process.setStatusYear(tempStatusYear);
+                            }
+                        });
+                    }
+                });
+                
+                facilitySite.getControls().forEach(control -> {
+                    if(!control.getOperatingStatusCode().getCode().contentEquals("PS")){
+                        control.setOperatingStatusCode(code);
+                        control.setStatusYear(tempStatusYear);
+                    }
+                });
+                
+                facilitySite.getReleasePoints().forEach(releasePoint -> {
+                    if(!releasePoint.getOperatingStatusCode().getCode().contentEquals("PS")){
+                        releasePoint.setOperatingStatusCode(code);
+                        releasePoint.setStatusYear(tempStatusYear);
+                    }
+                });
+            }
+        }
+        
+        facilitySite.setOperatingStatusCode(code);
+        facilitySite.setStatusYear(tempStatusYear);
     }
 
     public EmissionsReportDto createEmissionReport(EmissionsReportStarterDto reportDto) {
@@ -421,31 +515,33 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
 	     List<EmissionsReportDto> updatedReports = statusService.advancedQAEmissionsReports(reportIds);
 	     reportService.createReportHistory(reportIds, ReportAction.ADVANCED_QA);
 	
-	     StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
-	       .forEach(report -> {
+	     if (this.propertyProvider.getBoolean(AppPropertyName.FeatureFacilityAutomatedEmailEnabled)) {
+	    	 StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
+		       .forEach(report -> {
+		           
+		           SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+		
+		           //there should always be exactly one facility site for a CEF emissions report for now. This may change at
+		           //some point in the future if different report types are included in the system
+		           FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
+	
+		           //check for "Emission Inventory" contacts in the facility site and send them a notification that advanced QA has
+		           // begun for their report
+		           List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
 	           
-	           SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
-	
-	           //there should always be exactly one facility site for a CEF emissions report for now. This may change at
-	           //some point in the future if different report types are included in the system
-	           FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
-	
-	           //check for "Emission Inventory" contacts in the facility site and send them a notification that advanced QA has
-	           // begun for their report
-	           List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
-	
-	           eiContacts.forEach(contact -> {
-	               //if the EI contact has a email address - send them the notification
-	               if (StringUtils.isNotEmpty(contact.getEmail())) {
-	                   notificationService.sendReportAdvancedQANotification(contact.getEmail(),
-	                           cefConfig.getDefaultEmailAddress(),
-	                           reportFacilitySite.getName(),
-	                           report.getYear().toString(),
-	                           sltConfig.getSltEisProgramCode(),
-	                           sltConfig.getSltEmail());
-	               }
-	           });
-	       });
+		           eiContacts.forEach(contact -> {
+		               //if the EI contact has a email address - send them the notification
+		               if (StringUtils.isNotEmpty(contact.getEmail())) {
+		                   notificationService.sendReportAdvancedQANotification(contact.getEmail(),
+		                           cefConfig.getDefaultEmailAddress(),
+		                           reportFacilitySite.getName(),
+		                           report.getYear().toString(),
+		                           sltConfig.getSltEisProgramCode(),
+		                           sltConfig.getSltEmail());
+		               }
+		           });
+		       });
+	     }
 	     return updatedReports;
 	 }
 
@@ -460,32 +556,34 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     	List<EmissionsReportDto> updatedReports = statusService.acceptEmissionsReports(reportIds);
         reportService.createReportHistory(reportIds, ReportAction.ACCEPTED, comments);
 
-    	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
-	      .forEach(report -> {
-	    	  
-	    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+        if (this.propertyProvider.getBoolean(AppPropertyName.FeatureFacilityAutomatedEmailEnabled)) {
+        	StreamSupport.stream(this.erRepo.findAllById(reportIds).spliterator(), false)
+		      .forEach(report -> {
+		    	  
+		    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+	
+		    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
+		    	  //some point in the future if different report types are included in the system
+		    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
 
-	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
-	    	  //some point in the future if different report types are included in the system
-	    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
+	    		  //check for "Emission Inventory" contacts in the facility site and send them a notification that their report
+		    	  //has been accepted
+		    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
 
-	    	  //check for "Emission Inventory" contacts in the facility site and send them a notification that their report
-	    	  //has been accepted
-	    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
-
-	    	  eiContacts.forEach(contact -> {
-	    		  //if the EI contact has a email address - send them the notification
-	    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
-			          notificationService.sendReportAcceptedNotification(contact.getEmail(),
-			        		  cefConfig.getDefaultEmailAddress(),
-			        		  reportFacilitySite.getName(),
-			        		  report.getYear().toString(),
-			        		  comments,
-			        		  sltConfig.getSltEisProgramCode(),
-			        		  sltConfig.getSltEmail());
-	    		  }
-	    	  });
-	      });
+		    	  eiContacts.forEach(contact -> {
+		    		  //if the EI contact has a email address - send them the notification
+		    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
+				          notificationService.sendReportAcceptedNotification(contact.getEmail(),
+				        		  cefConfig.getDefaultEmailAddress(),
+				        		  reportFacilitySite.getName(),
+				        		  report.getYear().toString(),
+				        		  comments,
+				        		  sltConfig.getSltEisProgramCode(),
+				        		  sltConfig.getSltEmail());
+		    		  }
+		    	  });
+		      });
+        }
     	return updatedReports;
     }
 
@@ -500,7 +598,7 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     	List<EmissionsReportDto> updatedReports = statusService.rejectEmissionsReports(reviewDTO.getReportIds());
 
     	if(reviewDTO.getAttachmentId() != null) {
-    		ReportAttachment attachment = this.reportAttachmentsRepo.findById(reviewDTO.getAttachmentId())
+    		Attachment attachment = this.reportAttachmentsRepo.findById(reviewDTO.getAttachmentId())
     			.orElseThrow(() -> new NotExistException("Report Attachment", reviewDTO.getAttachmentId()));
 
     		this.erRepo.findAllById(reviewDTO.getReportIds())
@@ -510,11 +608,11 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     				reportService.createReportHistory(report.getId(), ReportAction.REJECTED, reviewDTO.getComments(), attachment);
 
     			} else {
-    				ReportAttachment copyAttachment = new ReportAttachment(attachment);
+    				Attachment copyAttachment = new Attachment(attachment);
     	    		copyAttachment.clearId();
     	    		copyAttachment.setEmissionsReport(report);
 
-    	    		ReportAttachment result = reportAttachmentsRepo.save(copyAttachment);
+    	    		Attachment result = reportAttachmentsRepo.save(copyAttachment);
     	    		reportService.createReportHistory(report.getId(), ReportAction.REJECTED, reviewDTO.getComments(), result);
     			}
     		});
@@ -523,32 +621,34 @@ public class EmissionsReportServiceImpl implements EmissionsReportService {
     		reportService.createReportHistory(reviewDTO.getReportIds(), ReportAction.REJECTED, reviewDTO.getComments());
     	}
 
-    	StreamSupport.stream(this.erRepo.findAllById(reviewDTO.getReportIds()).spliterator(), false)
-	      .forEach(report -> {
+    	if (this.propertyProvider.getBoolean(AppPropertyName.FeatureFacilityAutomatedEmailEnabled)) {
+    		StreamSupport.stream(this.erRepo.findAllById(reviewDTO.getReportIds()).spliterator(), false)
+		      .forEach(report -> {
+	
+		    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
+		    	  //some point in the future if different report types are included in the system
+		    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
 
-	    	  //there should always be exactly one facility site for a CEF emissions report for now. This may change at
-	    	  //some point in the future if different report types are included in the system
-	    	  FacilitySite reportFacilitySite = report.getFacilitySites().get(0);
-
-	    	  //check for "Emissions Inventory" contacts in the facility site and send them a notification that their report
-	    	  //has been accepted
-	    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
-	    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
+	    		  //check for "Emissions Inventory" contacts in the facility site and send them a notification that their report
+		    	  //has been accepted
+		    	  List<FacilitySiteContactDto> eiContacts = contactService.retrieveInventoryContactsForFacility(reportFacilitySite.getId());
+		    	  SLTBaseConfig sltConfig = sltConfigHelper.getCurrentSLTConfig(report.getProgramSystemCode().getCode());
 	    	  
-	    	  eiContacts.forEach(contact -> {
-	    		  //if the EI contact has a email address - send them the notification
-	    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
-			          notificationService.sendReportRejectedNotification(contact.getEmail(),
-			        		  sltConfig.getSltEmail(),
-			        		  cefConfig.getDefaultEmailAddress(),
-			        		  reportFacilitySite.getName(),
-			        		  report.getYear().toString(),
-			        		  reviewDTO.getComments(), reviewDTO.getAttachmentId(),
-			        		  sltConfig.getSltEisProgramCode(),
-			        		  sltConfig.getSltEmail());
-	    		  }
-	    	  });
-	      });
+		    	  eiContacts.forEach(contact -> {
+		    		  //if the EI contact has a email address - send them the notification
+		    		  if (StringUtils.isNotEmpty(contact.getEmail())) {
+				          notificationService.sendReportRejectedNotification(contact.getEmail(),
+				        		  sltConfig.getSltEmail(),
+				        		  cefConfig.getDefaultEmailAddress(),
+				        		  reportFacilitySite.getName(),
+				        		  report.getYear().toString(),
+				        		  reviewDTO.getComments(), reviewDTO.getAttachmentId(),
+				        		  sltConfig.getSltEisProgramCode(),
+				        		  sltConfig.getSltEmail());
+		    		  }
+		    	  });
+		      });
+    	}
     	return updatedReports;
     }
     
